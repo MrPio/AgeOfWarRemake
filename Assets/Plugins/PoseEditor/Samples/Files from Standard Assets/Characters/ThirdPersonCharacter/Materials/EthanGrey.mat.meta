@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 621e901dcf5ebaf46bce29d18f67194c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146667
+  packageName: Pose Editor
+  packageVersion: 2.2
+  assetPath: Assets/SatorImaging/PoseEditor/Samples/Files from Standard Assets/Characters/ThirdPersonCharacter/Materials/EthanGrey.mat
+  uploadId: 390364

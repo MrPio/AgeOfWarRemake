@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 1fce2f5d145eac6449ed9c3e4acbb512
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146667
+  packageName: Pose Editor
+  packageVersion: 2.2
+  assetPath: Assets/SatorImaging/PoseEditor/Samples/Files from Standard Assets/Characters/ThirdPersonCharacter/ThirdPersonCharacterGuidelines.txt
+  uploadId: 390364

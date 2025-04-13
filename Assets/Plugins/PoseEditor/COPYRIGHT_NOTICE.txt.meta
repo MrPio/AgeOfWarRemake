@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8cb03ce5a8dbe9f4bae799c8514f13a6
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146667
+  packageName: Pose Editor
+  packageVersion: 2.2
+  assetPath: Assets/SatorImaging/PoseEditor/COPYRIGHT_NOTICE.txt
+  uploadId: 390364

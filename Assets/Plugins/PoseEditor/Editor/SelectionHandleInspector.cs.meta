@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f5c271b272192d84886fb71754aa7a40
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146667
+  packageName: Pose Editor
+  packageVersion: 2.2
+  assetPath: Assets/SatorImaging/PoseEditor/Editor/SelectionHandleInspector.cs
+  uploadId: 390364

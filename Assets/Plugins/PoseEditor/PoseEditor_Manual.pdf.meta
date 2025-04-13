@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0355aae267e8d1841ac5cdb5d39441f7
+timeCreated: 1558273861
+licenseType: Store
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146667
+  packageName: Pose Editor
+  packageVersion: 2.2
+  assetPath: Assets/SatorImaging/PoseEditor/PoseEditor_Manual.pdf
+  uploadId: 390364

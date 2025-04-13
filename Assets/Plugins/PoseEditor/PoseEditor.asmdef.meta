@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 672cac43d4a094d4d9b621facf658eb0
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 146667
+  packageName: Pose Editor
+  packageVersion: 2.2
+  assetPath: Assets/SatorImaging/PoseEditor/PoseEditor.asmdef
+  uploadId: 390364
