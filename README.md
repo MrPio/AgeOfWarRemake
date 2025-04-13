@@ -4,6 +4,9 @@
 
 And one day I thought, why not add *multiplayer* to Age of War? Imagine what great fights you could experience instead of the same static AI!
 
+> [!NOTE]
+> This project is on hold. I really don't have enough time between exams. If you are interested, please contact me!
+
 These are some of the models I've already made in Blender:
 
 <p align="center">
