@@ -47,13 +47,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Model\State\Unit\DyingState.cs" />
+    <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Model\Partials\RotateSkybox.cs" />
     <Compile Include="Assets\Scripts\Model\Partials\CameraPan.cs" />
+    <Compile Include="Assets\Base.cs" />
     <Compile Include="Assets\Scripts\Model\Unit.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Model\State\Unit\IdleState.cs" />
     <Compile Include="Assets\Scripts\Model\State\Unit\WalkingState.cs" />
     <Compile Include="Assets\Scripts\Model\State\Unit\IUnitState.cs" />
     <Compile Include="Assets\Scripts\Model\State\Unit\AttackingState.cs" />
+    <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
     <Compile Include="Assets\Scripts\Model\State\IState.cs" />
     <Reference Include="UnityEngine">
       <HintPath>D:\Programmi\Unity\6000.0.35f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>

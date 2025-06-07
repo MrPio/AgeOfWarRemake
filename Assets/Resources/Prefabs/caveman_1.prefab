@@ -1247,4 +1247,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28a75390baa59b345a7d3951a447ecdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: caveman_1
+  modelName: caveman_1

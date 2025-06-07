@@ -26,7 +26,7 @@ namespace Prefabs
         public Model.Unit Model;
         [NonSerialized] public Animator animator;
         [NonSerialized] public bool IsEnemy = false; // TODO replace with ownership
-        [SerializeField] private string name;
+        [SerializeField] private string modelName;
         private IState _state;
 
         private void Awake()
@@ -36,7 +36,7 @@ namespace Prefabs
 
         public void Start()
         {
-            Model = global::Model.Unit.FromName(name);
+            Model = global::Model.Unit.FromName(modelName);
 
             SetState(new IdleState());
             StartCoroutine(DelayedWalk());
