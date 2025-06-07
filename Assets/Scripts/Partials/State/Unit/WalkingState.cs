@@ -6,13 +6,13 @@ namespace Model.State.Unit
     {
         public void Enter(Prefabs.Unit unit)
         {
-            unit.animator.ResetTrigger(Prefabs.Unit.WalkTrigger);
-            unit.animator.SetTrigger(Prefabs.Unit.WalkTrigger);
+            unit.Animator.ResetTrigger(Prefabs.Unit.WalkTrigger);
+            unit.Animator.SetTrigger(Prefabs.Unit.WalkTrigger);
         }
 
         public void Update(Prefabs.Unit unit)
         {
-            var dx = unit.Model.MoveSpeed * Time.deltaTime;
+            var dx = unit.Model.moveSpeed * Time.deltaTime;
             var dir = unit.IsEnemy ? Vector3.left : Vector3.right;
             unit.transform.Translate(dir * dx);
         }

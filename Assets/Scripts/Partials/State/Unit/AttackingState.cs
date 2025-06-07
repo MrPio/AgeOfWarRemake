@@ -7,19 +7,19 @@ namespace Model.State.Unit
         private float _lastAttack;
         public void Enter(Prefabs.Unit unit)
         {
-            unit.animator.ResetTrigger(Prefabs.Unit.IdleTrigger);
-            unit.animator.SetTrigger(Prefabs.Unit.IdleTrigger);
+            unit.Animator.ResetTrigger(Prefabs.Unit.IdleTrigger);
+            unit.Animator.SetTrigger(Prefabs.Unit.IdleTrigger);
         }
 
         public void Update(Prefabs.Unit unit)
         {
             var model = unit.Model;
-            if (Time.time - _lastAttack > model.AttackRate)
+            if (Time.time - _lastAttack > model.attackRate)
             {
                 _lastAttack = Time.time;
                 // TODO: the animation trigger the damage event.
-                unit.animator.ResetTrigger(Prefabs.Unit.AttackTrigger);
-                unit.animator.SetTrigger(Prefabs.Unit.AttackTrigger);
+                unit.Animator.ResetTrigger(Prefabs.Unit.AttackTrigger);
+                unit.Animator.SetTrigger(Prefabs.Unit.AttackTrigger);
             }
         }
 

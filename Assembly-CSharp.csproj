@@ -47,19 +47,26 @@
     <Analyzer Include="D:\Programmi\Unity\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Model\State\Unit\DyingState.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\IUnitState.cs" />
+    <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Model\Partials\RotateSkybox.cs" />
-    <Compile Include="Assets\Scripts\Model\Partials\CameraPan.cs" />
-    <Compile Include="Assets\Scripts\Base.cs" />
-    <Compile Include="Assets\Scripts\Model\Unit.cs" />
+    <Compile Include="Assets\Scripts\Partials\RotateSkybox.cs" />
+    <Compile Include="Assets\Scripts\Model\Units\Caveman3.cs" />
+    <Compile Include="Assets\Scripts\Model\Units\Caveman1.cs" />
+    <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
+    <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\AttackingState.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\DyingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
-    <Compile Include="Assets\Scripts\Model\State\Unit\IdleState.cs" />
-    <Compile Include="Assets\Scripts\Model\State\Unit\WalkingState.cs" />
-    <Compile Include="Assets\Scripts\Model\State\Unit\IUnitState.cs" />
-    <Compile Include="Assets\Scripts\Model\State\Unit\AttackingState.cs" />
+    <Compile Include="Assets\Scripts\Model\Units\Caveman2.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\WalkingState.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
-    <Compile Include="Assets\Scripts\Model\State\IState.cs" />
+    <Compile Include="Assets\Scripts\Model\Bases\Cave.cs" />
+    <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\IState.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\IdleState.cs" />
+    <Compile Include="Assets\Scripts\Prefabs\Base.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\IDamageable.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />

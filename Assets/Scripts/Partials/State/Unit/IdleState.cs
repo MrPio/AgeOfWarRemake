@@ -4,8 +4,8 @@
     {
         public void Enter(Prefabs.Unit unit)
         {
-            unit.animator.ResetTrigger(Prefabs.Unit.IdleTrigger);
-            unit.animator.SetTrigger(Prefabs.Unit.IdleTrigger);
+            unit.Animator.ResetTrigger(Prefabs.Unit.IdleTrigger);
+            unit.Animator.SetTrigger(Prefabs.Unit.IdleTrigger);
         }
 
         public void Update(Prefabs.Unit unit)

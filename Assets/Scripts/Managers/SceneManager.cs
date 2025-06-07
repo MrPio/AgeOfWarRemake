@@ -1,9 +1,13 @@
+using Prefabs;
 using UnityEngine;
 
 namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
-        [SerializeField] private Base baseAlly, baseEnemy;
+        public Base baseAlly, baseEnemy;
+        public GameObject hpBarHorizontal, hpBarVertical;
+        public Camera cam;
+        public Canvas canvas;
     }
 }
