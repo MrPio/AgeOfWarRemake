@@ -66,11 +66,17 @@ namespace Prefabs
 
         private void OnTriggerEnter(Collider other)
         {
-            if (_collider is null && other.gameObject.CompareTag("Unit") && other.gameObject != gameObject &&
+            if (_collider is not null || other.gameObject == gameObject) return;
+            if (other.gameObject.CompareTag("Unit") &&
                 other.gameObject.TryGetComponent<Unit>(out var otherUnit))
             {
                 SetState(otherUnit.IsEnemy == IsEnemy ? new IdleState() : new AttackingState());
                 _collider = otherUnit;
+            }
+            else if (other.gameObject.CompareTag("Base") &&
+                     other.gameObject.TryGetComponent<Base>(out var otherBase) && otherBase.isEnemy != IsEnemy)
+            {
+                SetState(new AttackingState());
             }
         }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Base : MonoBehaviour
 {
     [SerializeField] private GameObject basePrefab;
-    [SerializeField] private bool isEnemy;
+    public bool isEnemy;
     private Transform _spawnPoint;
 
     private void Start()
