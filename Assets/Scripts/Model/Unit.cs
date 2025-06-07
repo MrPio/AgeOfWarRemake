@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
 using JetBrains.Annotations;
+using UnityEngine;
 
 namespace Model
 {
     public class Unit
     {
+        public const string PrefabPath = "Prefabs/Units/";
+
         public static Unit[] Units =
         {
             new Unit(health: 100, maxHealth: 100, damage: 1, cost: 10, spawnTime: 1, epoch: 1, level: 1,
@@ -31,7 +34,7 @@ namespace Model
         public float? MaxDistance; // Whether it can attack from distance
 
         public Unit(float health, float maxHealth, float damage, int cost, float spawnTime, int epoch, int level,
-            string name, float? maxDistance = null, float moveSpeed = 0.75f, float attackRate = 1f, float armor = 0f,
+            string name, float? maxDistance = null, float moveSpeed = 0.75f*4, float attackRate = 1f, float armor = 0f,
             float maxArmor = 0f)
         {
             this.Health = health;
@@ -51,5 +54,7 @@ namespace Model
 
         public static Unit FromName(string name) =>
             Units.First(it => string.Equals(it.Name, name, StringComparison.CurrentCultureIgnoreCase));
+        
+        public GameObject Prefab => Resources.Load<GameObject>(PrefabPath + Name);
     }
 }

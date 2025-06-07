@@ -16,7 +16,7 @@ namespace Prefabs
 
     public class Unit : MonoBehaviour
     {
-        private const float SpawnWalkDelay = 0.5f;
+        private const float SpawnWalkDelay = 0.25f;
 
         public static readonly int IdleTrigger = Animator.StringToHash("idle");
         public static readonly int WalkTrigger = Animator.StringToHash("walk");
@@ -28,6 +28,7 @@ namespace Prefabs
         [NonSerialized] public bool IsEnemy = false; // TODO replace with ownership
         [SerializeField] private string modelName;
         private IState _state;
+        private Unit _collider;
 
         private void Awake()
         {
@@ -37,6 +38,8 @@ namespace Prefabs
         public void Start()
         {
             Model = global::Model.Unit.FromName(modelName);
+            if (IsEnemy)
+                transform.localScale = new Vector3(-1, 1, 1);
 
             SetState(new IdleState());
             StartCoroutine(DelayedWalk());
@@ -63,19 +66,21 @@ namespace Prefabs
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Unit" && other.gameObject != gameObject &&
-                other.gameObject.TryGetComponent<Unit>(out var enemy) && enemy.IsEnemy)
+            if (_collider is null && other.gameObject.CompareTag("Unit") && other.gameObject != gameObject &&
+                other.gameObject.TryGetComponent<Unit>(out var otherUnit))
             {
-                SetState(new AttackingState());
+                SetState(otherUnit.IsEnemy == IsEnemy ? new IdleState() : new AttackingState());
+                _collider = otherUnit;
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.gameObject.tag == "Unit" && other.gameObject != gameObject &&
-                other.gameObject.TryGetComponent<Unit>(out var enemy) && enemy.IsEnemy)
+            if (_collider is not null && other.gameObject.CompareTag("Unit") && other.gameObject != gameObject &&
+                other.gameObject.TryGetComponent<Unit>(out var otherUnit))
             {
                 SetState(new WalkingState());
+                _collider = null;
             }
         }
     }
