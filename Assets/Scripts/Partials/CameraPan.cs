@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Model.Partials
@@ -11,8 +12,13 @@ namespace Model.Partials
         [SerializeField] private Camera cam;
         private float _currentSpeed;
 
+        private void Start()
+        {
+        }
+
         private void Update()
         {
+            var actualXBound = xBounds / (((float)Screen.width / Screen.height) / (16f / 9f));
             var speed = 0f;
             var mouseX = Input.mousePosition.x;
             var mouseY = Input.mousePosition.y;
@@ -32,7 +38,7 @@ namespace Model.Partials
                 speed = moveSpeed * Mathf.Pow(t, 3);
             }
 
-            var x = Mathf.Clamp(camPos.x + speed * Time.deltaTime, xBounds.x, xBounds.y);
+            var x = Mathf.Clamp(camPos.x + speed * Time.deltaTime, actualXBound.x, actualXBound.y);
             cam.transform.position = new Vector3(x, camPos.y, camPos.z);
         }
     }
