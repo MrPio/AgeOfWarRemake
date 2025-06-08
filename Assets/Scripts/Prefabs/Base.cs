@@ -9,6 +9,7 @@ using UI;
 using UnityEditor;
 using LogType = UI.LogType;
 using EasyButtons;
+using Unity.VisualScripting;
 
 namespace Prefabs
 {
@@ -21,6 +22,7 @@ namespace Prefabs
         private SceneManager _sm;
         private HpBar _hpBar;
         private GameObject _baseGo;
+        private bool _isDestroyed;
         [NonSerialized] public Transform UnitSpawnPoint;
 
         #region NetworkVariables
@@ -29,6 +31,8 @@ namespace Prefabs
             writePerm: NetworkVariableWritePermission.Owner);
 
         #endregion
+
+        public bool IsActive => !_isDestroyed;
 
         #region Events
 
@@ -62,6 +66,13 @@ namespace Prefabs
 
                 _hpBar.SetValue(newValue.Hp, newValue.MaxHp, alsoText: true);
             }
+
+            if (newValue.Hp <= 0)
+            {
+                if (IsServer)
+                    gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
+                _sm.EndGame();
+            }
         }
 
         #endregion
@@ -91,6 +102,7 @@ namespace Prefabs
         public override void OnNetworkDespawn()
         {
             Model.OnValueChanged -= OnModelChanged;
+            _isDestroyed = true;
         }
 
         private void Update()

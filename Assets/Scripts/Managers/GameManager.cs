@@ -19,6 +19,7 @@ namespace Managers
         private bool _isHost;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public List<Unit> UnitsAlly = new(), UnitsEnemy = new();
+        [NonSerialized] public ulong Winner;
 
         #region NetworkVariables
 

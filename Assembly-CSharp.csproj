@@ -50,10 +50,12 @@
     <Compile Include="Assets\Scripts\Partials\State\Unit\IUnitState.cs" />
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
+    <Compile Include="Assets\Scripts\UI\StatisticsMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\RotateSkybox.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
+    <Compile Include="Assets\Scripts\Partials\Notifiable.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\AttackingState.cs" />
     <Compile Include="Assets\Scripts\Model\Units\UnitFactory.cs" />
@@ -61,7 +63,6 @@
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkingState.cs" />
-    <Compile Include="Assets\Notifiable.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />

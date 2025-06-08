@@ -7,6 +7,7 @@ using Partials;
 using Partials.State.Unit;
 using UI;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using IState = Partials.State.IState;
 using LogType = UI.LogType;
@@ -39,7 +40,9 @@ namespace Prefabs
         private float _spawnTime;
         private Base _ownerBase;
         private GameObject _unitGo;
-        private bool _spawnBlocked;
+        private bool _spawnBlocked, _isDestroyed;
+
+        public bool IsActive => !_isDestroyed || State.Value == (byte)UnitState.Dying;
 
         #region NetworkVariables
 
@@ -127,7 +130,6 @@ namespace Prefabs
             DeltaX.OnValueChanged += OnDeltaXChanged;
             OnDeltaXChanged(0f, DeltaX.Value);
 
-            _sm.logger.LogError("IsOwner=" + IsOwner.ToString());
             if (IsOwner)
             {
                 _sm.GameManager.UnitsAlly.Add(this);
@@ -166,12 +168,21 @@ namespace Prefabs
                 _sm.GameManager.UnitsAlly.Remove(this);
             else
                 _sm.GameManager.UnitsEnemy.Remove(this);
+            _isDestroyed = true;
         }
 
 
         private void Update()
         {
             _state?.Update(this);
+            if (IsOwner)
+            {
+                if (State.Value == (byte)UnitState.Attacking && _target is not null && !_target.IsActive)
+                {
+                    State.Value = (byte)UnitState.Walking;
+                    _target = null;
+                }
+            }
         }
 
         // Owner only
@@ -231,7 +242,6 @@ namespace Prefabs
         }
 
         #endregion
-
 
         #region RPC
 

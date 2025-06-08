@@ -15,7 +15,7 @@ namespace Managers
         public Canvas canvas;
         public Logger logger;
         [NonSerialized] public GameManager GameManager;
-        [SerializeField] private GameObject gameManagerPrefab, basePrefab, waitForClientScreen;
+        [SerializeField] private GameObject gameManagerPrefab, basePrefab, waitForClientScreen, statisticsScreen;
 
         private void Start()
         {
@@ -26,7 +26,7 @@ namespace Managers
         public void StartGame()
         {
             waitForClientScreen.SetActive(false);
-            
+
             // Host only
             if (NetworkManager.Singleton.IsServer)
             {
@@ -34,6 +34,22 @@ namespace Managers
                 Instantiate(basePrefab).GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
                 Instantiate(basePrefab).GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.ClientId);
             }
+        }
+
+        public void EndGame()
+        {
+            GameManager.Winner = BaseAlly.Model.Value.Hp <= 0.01 ? BaseEnemy.OwnerClientId : BaseAlly.OwnerClientId;
+            logger.Log(
+                $"Winner is {GameManager.Winner}! {BaseEnemy.OwnerClientId}-{BaseAlly.OwnerClientId} {BaseAlly.Model.Value.Hp} {BaseEnemy.Model.Value.Hp}");
+            statisticsScreen.SetActive(true);
+        }
+
+        public async Task QuitLobby()
+        {
+            NetworkManager.Singleton.Shutdown();
+            // await lobbyManager.LeaveLobby();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager
+                .GetActiveScene().buildIndex);
         }
     }
 }
