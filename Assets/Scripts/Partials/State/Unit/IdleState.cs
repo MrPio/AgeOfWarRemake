@@ -1,4 +1,4 @@
-﻿namespace Model.State.Unit
+﻿namespace Partials.State.Unit
 {
     public class IdleState:IState
     {

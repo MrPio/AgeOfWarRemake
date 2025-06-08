@@ -1,4 +1,4 @@
-﻿namespace Model.State
+﻿namespace Partials.State
 {
     public interface IState
     {

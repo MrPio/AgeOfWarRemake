@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2774648758488026438}
   - component: {fileID: 4353812979473092064}
   m_Layer: 0
-  m_Name: base_1
+  m_Name: Cave
   m_TagString: Base
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 4431951225277639827}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -4.06, y: 1.55, z: 0.42}
+  m_LocalPosition: {x: 0, y: 1.55, z: 0.42}
   m_LocalScale: {x: 100.00006, y: 100.000046, z: 100.000046}
   m_ConstrainProportionsScale: 0
   m_Children:

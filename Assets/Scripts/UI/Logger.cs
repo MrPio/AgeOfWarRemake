@@ -5,11 +5,22 @@ using UnityEngine;
 
 namespace UI
 {
+    public enum LogType
+    {
+        Misc,
+        Error,
+        WaitingFor,
+        NetworkSpawn,
+        HostClientConnection,
+        ReadingStatus
+    }
+
     public class Logger : MonoBehaviour
     {
         [SerializeField] private GameObject logTextPrefab;
         [SerializeField] private ushort logLineLength = 30;
         private CanvasGroup _canvasGroup;
+        private Color[] _typesColors = { Color.white, Color.red, Color.blue, Color.green, Color.yellow, Color.gray };
 
         private void Start()
         {
@@ -18,8 +29,9 @@ namespace UI
         }
 
         // Print the log message to the screen and save it to the log file
-        public void Log(string message, Color? color = null, bool alsoConsole = true)
+        public void Log(string message, LogType type = LogType.Misc, bool alsoConsole = true)
         {
+            var color = _typesColors[(int)type];
             message = $@"({DateTime.Now:hh\:mm\:ss}) - {message}";
             for (var i = 0; i < message.Length / logLineLength + 1; i++)
             {
@@ -27,7 +39,7 @@ namespace UI
                 text.text =
                     message.Substring(i * logLineLength,
                         math.min(message.Length - i * logLineLength, logLineLength));
-                text.color = color ?? Color.white;
+                text.color = color;
             }
 
             if (alsoConsole) Debug.Log(message);
@@ -35,7 +47,7 @@ namespace UI
 
         public void LogError(string message)
         {
-            Log(message, Color.red, alsoConsole: false);
+            Log(message, LogType.Error, alsoConsole: false);
             Debug.LogError(message);
         }
 

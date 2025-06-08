@@ -4,36 +4,40 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HpBar : MonoBehaviour
+namespace UI
 {
-    [SerializeField] private Slider slider;
-    [SerializeField] private TextMeshProUGUI text;
-    private SceneManager _sm;
-    [NonSerialized] public Transform Target;
-
-    private void Awake()
+    public class HpBar : MonoBehaviour
     {
-        _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-    }
+        [SerializeField] private Slider slider;
+        [SerializeField] private TextMeshProUGUI text;
+        private SceneManager _sm;
+        [NonSerialized] public Transform Target;
 
-    public void SetValue(float value, bool alsoText)
-    {
-        if (value <= 0)
+        private void Awake()
         {
-            Destroy(gameObject);
-            value = 0;
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
         }
 
-        slider.value = value;
-        text.gameObject.SetActive(alsoText && value < 1);
-        if (alsoText)
+        public void SetValue(float hp, float maxHp, bool alsoText)
         {
-            text.text = value.ToString("N0") + " HP";
-        }
-    }
+            var value = hp / maxHp;
+            if (value <= 0)
+            {
+                Destroy(gameObject);
+                value = 0;
+            }
 
-    private void Update()
-    {
-        transform.position = _sm.cam.WorldToScreenPoint(Target.position);
+            slider.value = value;
+            text.gameObject.SetActive(alsoText && value < 1);
+            if (alsoText)
+            {
+                text.text = hp.ToString("N0") + " HP";
+            }
+        }
+
+        private void Update()
+        {
+            transform.position = _sm.cam.WorldToScreenPoint(Target.position);
+        }
     }
 }

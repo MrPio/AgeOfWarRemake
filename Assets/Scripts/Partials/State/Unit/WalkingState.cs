@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Model.State.Unit
+namespace Partials.State.Unit
 {
     public class WalkingState : IState
     {
@@ -12,14 +12,17 @@ namespace Model.State.Unit
 
         public void Update(Prefabs.Unit unit)
         {
-            var dx = unit.Model.moveSpeed * Time.deltaTime;
-            var dir = unit.IsEnemy ? Vector3.left : Vector3.right;
-            unit.transform.Translate(dir * dx);
+            if (!unit.IsOwner) return;
+
+            // Owner only
+            var model = unit.Model.Value;
+            if (!model.HasValue) return;
+            var dx = model.MoveSpeed * Time.deltaTime;
+            unit.DeltaX.Value += dx;
         }
 
         public void Exit(Prefabs.Unit unit)
         {
         }
-
     }
 }

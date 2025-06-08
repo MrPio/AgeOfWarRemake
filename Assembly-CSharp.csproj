@@ -51,26 +51,28 @@
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Partials\RotateSkybox.cs" />
-    <Compile Include="Assets\Scripts\Model\Units\Caveman3.cs" />
-    <Compile Include="Assets\Scripts\Model\Units\Caveman1.cs" />
+    <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
+    <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\AttackingState.cs" />
+    <Compile Include="Assets\Scripts\Model\Units\UnitFactory.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\DyingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
-    <Compile Include="Assets\Scripts\Model\Units\Caveman2.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkingState.cs" />
+    <Compile Include="Assets\Notifiable.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
-    <Compile Include="Assets\Scripts\Model\Bases\Cave.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />
     <Compile Include="Assets\Scripts\Partials\State\IState.cs" />
+    <Compile Include="Assets\Scripts\Partials\Triggerable.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\IdleState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Base.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDamageable.cs" />
+    <Compile Include="Assets\Scripts\Partials\Destroyable.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />
@@ -839,6 +841,9 @@
     <Reference Include="Unity.AI.Navigation">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.AI.Navigation.dll</HintPath>
     </Reference>
+    <Reference Include="EasyButtons">
+      <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\EasyButtons.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Networking.Editor">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.Networking.Editor.dll</HintPath>
     </Reference>
@@ -881,11 +886,14 @@
     <Reference Include="PPv2URPConverters">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\PPv2URPConverters.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Multiplayer.Playmode">
-      <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.Multiplayer.Playmode.dll</HintPath>
+    <Reference Include="EasyButtons.Editor">
+      <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\EasyButtons.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.Core">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.VisualScripting.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Multiplayer.Playmode">
+      <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.Multiplayer.Playmode.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Authentication.Editor.Shared">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.Services.Authentication.Editor.Shared.dll</HintPath>

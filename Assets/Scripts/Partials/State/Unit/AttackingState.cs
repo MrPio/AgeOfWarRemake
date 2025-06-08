@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
-namespace Model.State.Unit
+namespace Partials.State.Unit
 {
-    public class AttackingState:IState
+    public class AttackingState : IState
     {
         private float _lastAttack;
+
         public void Enter(Prefabs.Unit unit)
         {
             unit.Animator.ResetTrigger(Prefabs.Unit.IdleTrigger);
@@ -13,11 +14,14 @@ namespace Model.State.Unit
 
         public void Update(Prefabs.Unit unit)
         {
-            var model = unit.Model;
-            if (Time.time - _lastAttack > model.attackRate)
+            // FIXME: This should be made in a networkvariable change
+            var model = unit.Model.Value;
+            if (!model.HasValue) return;
+
+            if (Time.time - _lastAttack > model.AttackRate)
             {
                 _lastAttack = Time.time;
-                // TODO: the animation trigger the damage event.
+                // TODO: the animation trigger the damage event. Only if isOwner
                 unit.Animator.ResetTrigger(Prefabs.Unit.AttackTrigger);
                 unit.Animator.SetTrigger(Prefabs.Unit.AttackTrigger);
             }
