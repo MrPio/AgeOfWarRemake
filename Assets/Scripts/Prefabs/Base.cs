@@ -27,7 +27,6 @@ namespace Prefabs
         private void Start()
         {
             _spawnPoint = basePrefab.transform.Find("spawnPoint");
-            InvokeRepeating(nameof(Spawn), 0, 0.5f);
             Model = new Cave();
             Damage(1);
         }

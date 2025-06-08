@@ -15,6 +15,10 @@ namespace Model.Partials
         {
             var speed = 0f;
             var mouseX = Input.mousePosition.x;
+            var mouseY = Input.mousePosition.y;
+            if (mouseX > Screen.width || mouseX < 0) return;
+            if (mouseY > Screen.height || mouseY < 0) return;
+
             var camPos = cam.transform.position;
 
             if (mouseX < edgeThreshold)
