@@ -14,7 +14,7 @@ namespace Partials.State.Unit
 
         public void Update(Prefabs.Unit unit)
         {
-            // FIXME: This should be made in a networkvariable change
+            // FIXME: This should be made in a network variable change
             var model = unit.Model.Value;
             if (!model.HasValue) return;
 

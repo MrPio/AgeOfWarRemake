@@ -20,6 +20,7 @@ namespace UI
 
         public void SetValue(float hp, float maxHp, bool alsoText)
         {
+            hp = Mathf.Clamp(hp, 0, maxHp);
             var value = hp / maxHp;
             if (value <= 0)
             {
@@ -30,9 +31,7 @@ namespace UI
             slider.value = value;
             text.gameObject.SetActive(alsoText && value < 1);
             if (alsoText)
-            {
                 text.text = hp.ToString("N0") + " HP";
-            }
         }
 
         private void Update()

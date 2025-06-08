@@ -1,4 +1,6 @@
-﻿namespace Partials.State.Unit
+﻿using Unity.Netcode;
+
+namespace Partials.State.Unit
 {
     public class DyingState : IState
     {

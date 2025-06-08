@@ -67,12 +67,9 @@ namespace Prefabs
                 _hpBar.SetValue(newValue.Hp, newValue.MaxHp, alsoText: true);
             }
 
-            if (newValue.Hp <= 0)
-            {
-                if (IsServer)
-                    gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
-                _sm.EndGame();
-            }
+            // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
+            if (newValue.Hp <= 0 && IsServer)
+                gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
         }
 
         #endregion
@@ -103,6 +100,7 @@ namespace Prefabs
         {
             Model.OnValueChanged -= OnModelChanged;
             _isDestroyed = true;
+            _sm.EndGame();
         }
 
         private void Update()
