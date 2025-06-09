@@ -47,12 +47,14 @@
     <Analyzer Include="D:\Programmi\Unity\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Partials\Observable.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\IUnitState.cs" />
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\StatisticsMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\RotateSkybox.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
+    <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />

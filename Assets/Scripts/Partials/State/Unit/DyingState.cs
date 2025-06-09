@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using Managers;
+using Unity.Netcode;
 
 namespace Partials.State.Unit
 {
@@ -6,8 +7,17 @@ namespace Partials.State.Unit
     {
         public void Enter(Prefabs.Unit unit)
         {
-            unit.Animator.ResetTrigger(Prefabs.Unit.DieTrigger);
+            // Free waiting units before running animation
+            unit.Observable.Notify("death");
+
+            if (!unit.IsOwner) return;
+
+            // unit.Animator.ResetTrigger(Prefabs.Unit.DieTrigger);
+            // SceneManager.Instance.logger.Log($"{(unit.IsOwner ? "Ally" : "Enemy")}=DIE");
             unit.Animator.SetTrigger(Prefabs.Unit.DieTrigger);
+            unit.PlayingAnimation.Value = Prefabs.Unit.DieTrigger;
+
+            // unit.Animator.CrossFade(Prefabs.Unit.DieTrigger, 0.1f);
         }
 
         public void Update(Prefabs.Unit unit)

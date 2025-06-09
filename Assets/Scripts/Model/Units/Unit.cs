@@ -25,7 +25,7 @@ namespace Model.Units
         public Unit(
             NetString displayName, NetString prefabName, float maxHp, float damage, int cost, float spawnTime,
             int level,
-            float maxDistance = 0, float moveSpeed = 0.75f * 4, float attackRate = 1f, float armor = 0f,
+            float maxDistance = 0, float moveSpeed = 0.75f * 1.25f, float attackRate = 1f, float armor = 0f,
             float maxArmor = 0f)
         {
             DisplayName = displayName;

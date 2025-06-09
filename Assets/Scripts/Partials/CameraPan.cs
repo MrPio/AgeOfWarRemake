@@ -1,3 +1,5 @@
+using System;
+using Managers;
 using UnityEngine;
 
 namespace Partials
@@ -7,17 +9,27 @@ namespace Partials
         [Header("Movement Settings")] [SerializeField]
         private float edgeThreshold = 200f, moveSpeed = 5f;
 
-        [SerializeField] private Vector2 xBounds = new(-10f, 10f);
+        [SerializeField] private readonly float marginFromBase = 3.4f;
         [SerializeField] private Camera cam;
         private float _currentSpeed;
+        private Vector2 _boundX;
+        private static SceneManager _sm;
+        private void Awake()
+        {
+            _sm=GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
 
         private void Start()
         {
+            _boundX = new Vector2(-_sm.fieldLenght / 2 + marginFromBase, _sm.fieldLenght / 2 - marginFromBase);
+            var actualXBound = _boundX / (((float)Screen.width / Screen.height) / (16f / 9f));
+            cam.transform.position = new Vector3(actualXBound.x, cam.transform.position.y, cam.transform.position.z);
         }
 
         private void Update()
         {
-            var actualXBound = xBounds / (((float)Screen.width / Screen.height) / (16f / 9f));
+            var actualXBound =
+                _boundX / (((float)Screen.width / Screen.height) / (16f / 9f)); // Window may resize runtime
             var speed = 0f;
             var mouseX = Input.mousePosition.x;
             var mouseY = Input.mousePosition.y;

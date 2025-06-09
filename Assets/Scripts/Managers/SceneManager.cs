@@ -9,13 +9,17 @@ namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
-        [NonSerialized] public Base BaseAlly, BaseEnemy;
-        public GameObject hpBarHorizontal, hpBarVertical;
+        [Header("Settings")] [SerializeField] public float fieldLenght = 22f;
+
+        [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical;
+        [SerializeField] private GameObject gameManagerPrefab, basePrefab;
+
+        [Header("References")] [NonSerialized] public Base BaseAlly, BaseEnemy;
         public Camera cam;
         public Canvas canvas;
         public Logger logger;
         [NonSerialized] public GameManager GameManager;
-        [SerializeField] private GameObject gameManagerPrefab, basePrefab, waitForClientScreen, statisticsScreen;
+        [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
 
         private void Start()
         {

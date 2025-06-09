@@ -9,21 +9,26 @@ using UI;
 using UnityEditor;
 using LogType = UI.LogType;
 using EasyButtons;
+using Partials;
 using Unity.VisualScripting;
 
 namespace Prefabs
 {
+    [RequireComponent(typeof(Observable))]
     public class Base : NetworkBehaviour, IDamageable
     {
         [SerializeField] private GameObject unitPrefab;
         [SerializeField] private Transform hpBarPoint;
-        [SerializeField] private float posX = 11;
 
         private SceneManager _sm;
         private HpBar _hpBar;
         private GameObject _baseGo;
         private bool _isDestroyed;
+        private Observable _observable;
         [NonSerialized] public Transform UnitSpawnPoint;
+
+        public Observable Observable { get; private set; }
+
 
         #region NetworkVariables
 
@@ -32,13 +37,14 @@ namespace Prefabs
 
         #endregion
 
-        public bool IsActive => !_isDestroyed;
+        public bool IsDamageable => !_isDestroyed;
 
         #region Events
 
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            Observable = GetComponent<Observable>();
         }
 
 
@@ -68,8 +74,12 @@ namespace Prefabs
             }
 
             // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
-            if (newValue.Hp <= 0 && IsServer)
-                gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
+            if (newValue.Hp <= 0)
+            {
+                _observable.Notify("death");
+                if (IsServer)
+                    gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
+            }
         }
 
         #endregion
@@ -86,12 +96,12 @@ namespace Prefabs
             // Initialize the base position based on ownership.
             if (IsOwner)
             {
-                transform.position = new Vector3(-posX, transform.position.y, transform.position.z);
+                transform.position = new Vector3(-_sm.fieldLenght / 2, transform.position.y, transform.position.z);
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                transform.position = new Vector3(posX, transform.position.y, transform.position.z);
+                transform.position = new Vector3(_sm.fieldLenght / 2, transform.position.y, transform.position.z);
                 transform.localScale = new Vector3(-1, 1, 1);
             }
         }
@@ -116,7 +126,7 @@ namespace Prefabs
 
         #endregion
 
-        #region RPC
+        #region RPCs
 
         [ServerRpc]
         public void SpawnUnitServerRpc(ServerRpcParams rpcParams = default)

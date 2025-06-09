@@ -32,7 +32,7 @@ namespace UI
         public void Log(string message, LogType type = LogType.Misc, bool alsoConsole = true)
         {
             var color = _typesColors[(int)type];
-            message = $@"({DateTime.Now:hh\:mm\:ss}) - {message}";
+            message = $@"({DateTime.Now:hh\:mm\:ss\.fff}) - {message}";
             for (var i = 0; i < message.Length / logLineLength + 1; i++)
             {
                 var text = Instantiate(logTextPrefab, transform).GetComponent<TextMeshProUGUI>();

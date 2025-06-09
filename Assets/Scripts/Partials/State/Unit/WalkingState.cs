@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
 
 namespace Partials.State.Unit
 {
@@ -6,8 +7,14 @@ namespace Partials.State.Unit
     {
         public void Enter(Prefabs.Unit unit)
         {
-            unit.Animator.ResetTrigger(Prefabs.Unit.WalkTrigger);
+            if (!unit.IsOwner) return;
+
+            // unit.Animator.ResetTrigger(Prefabs.Unit.WalkTrigger);
+            // SceneManager.Instance.logger.Log($"{(unit.IsOwner ? "Ally" : "Enemy")}=WALK");
             unit.Animator.SetTrigger(Prefabs.Unit.WalkTrigger);
+            unit.PlayingAnimation.Value = Prefabs.Unit.WalkTrigger;
+
+            // unit.Animator.CrossFade(Prefabs.Unit.WalkTrigger, 0.2f);
         }
 
         public void Update(Prefabs.Unit unit)
