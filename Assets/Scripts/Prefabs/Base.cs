@@ -1,20 +1,15 @@
 using System;
-using System.Collections;
 using Interfaces;
 using Managers;
-using Unity.Netcode;
-using UnityEngine;
 using Model.Bases;
 using UI;
-using UnityEditor;
+using Unity.Netcode;
+using UnityEngine;
 using LogType = UI.LogType;
-using EasyButtons;
-using Partials;
-using Unity.VisualScripting;
 
 namespace Prefabs
 {
-    [RequireComponent(typeof(Observable))]
+    // [RequireComponent(typeof(Observable))]
     public class Base : NetworkBehaviour, IDamageable
     {
         [SerializeField] private GameObject unitPrefab;
@@ -24,10 +19,10 @@ namespace Prefabs
         private HpBar _hpBar;
         private GameObject _baseGo;
         private bool _isDestroyed;
-        private Observable _observable;
+        // private Observable _observable;
         [NonSerialized] public Transform UnitSpawnPoint;
 
-        public Observable Observable { get; private set; }
+        // public Observable Observable { get; private set; }
 
 
         #region NetworkVariables
@@ -44,7 +39,7 @@ namespace Prefabs
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            Observable = GetComponent<Observable>();
+            // Observable = GetComponent<Observable>();
         }
 
 
@@ -76,7 +71,7 @@ namespace Prefabs
             // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
             if (newValue.Hp <= 0)
             {
-                _observable.Notify("death");
+                // _observable.Notify("death");
                 if (IsServer)
                     gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
             }

@@ -22,7 +22,7 @@ namespace Prefabs
         Dying,
     }
 
-    [RequireComponent(typeof(Observable))]
+    // [RequireComponent(typeof(Observable))]
     public class Unit : NetworkBehaviour, IDamageable
     {
         private const float SpawnWalkDelay = 0.25f;
@@ -33,9 +33,9 @@ namespace Prefabs
         public static readonly int AttackTrigger = Animator.StringToHash("attack");
         public static readonly int DieTrigger = Animator.StringToHash("die");
 
+        [NonSerialized] public SceneManager Sm;
         [NonSerialized] public Animator Animator;
         private Transform _hpBarPoint;
-        private SceneManager _sm;
         private IState _state;
         private IDamageable _target;
         private UnitAnimationEvents _animationNotify;
@@ -46,7 +46,7 @@ namespace Prefabs
         private bool _spawnBlocked, _isDestroyed;
 
         public bool IsDamageable => !_isDestroyed && State.Value != (byte)UnitState.Dying;
-        public Observable Observable { get; private set; }
+        // public Observable Observable { get; private set; }
 
         #region NetworkVariables
 
@@ -68,8 +68,8 @@ namespace Prefabs
 
         private void Awake()
         {
-            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            Observable = GetComponent<Observable>();
+            Sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            // Observable = GetComponent<Observable>();
         }
 
         #region NetworkVariablesChanges
@@ -89,7 +89,7 @@ namespace Prefabs
                 // If it's the first time, spawn the Hp bar.
                 if (_hpBar is null)
                 {
-                    var go = Instantiate(_sm.hpBarHorizontal, _sm.canvas.transform);
+                    var go = Instantiate(Sm.hpBarHorizontal, Sm.canvas.transform);
                     _hpBar = go.GetComponent<HpBar>();
                     _hpBar.Target = _hpBarPoint;
                 }
@@ -132,7 +132,7 @@ namespace Prefabs
         {
             // Owner directly plays animation when setting the variable.
             if (IsOwner || newValue == -1) return;
-            _sm.logger.Log($"{(IsOwner ? "Ally" : "Enemy")}={newValue}");
+            Sm.logger.Log($"{(IsOwner ? "Ally" : "Enemy")}={newValue}");
             Animator.SetTrigger(newValue);
         }
 
@@ -142,7 +142,7 @@ namespace Prefabs
         {
             // _sm.logger.Log("Spawning a Unit, isOwner=" + IsOwner, LogType.NetworkSpawn);
             _spawnTime = Time.time;
-            _ownerBase = IsOwner ? _sm.BaseAlly : _sm.BaseEnemy;
+            _ownerBase = IsOwner ? Sm.BaseAlly : Sm.BaseEnemy;
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
@@ -158,28 +158,29 @@ namespace Prefabs
 
             if (IsOwner)
             {
-                _sm.GameManager.UnitsAlly.Add(this);
+                Sm.GameManager.UnitsAlly.Add(this);
 
                 // Instantiate unit
                 var model = UnitFactory.Caveman1();
                 Model.Value = model;
 
                 // Initializing state
-                State.Value = (byte)UnitState.Idling;
-                StartCoroutine(DelayedWalk());
 
-                IEnumerator DelayedWalk()
-                {
-                    yield return new WaitForSeconds(SpawnWalkDelay);
-                    if (!_spawnBlocked && State.Value != (byte)UnitState.Dying)
-                        State.Value = (byte)UnitState.Walking;
-                }
+                State.Value = (byte)UnitState.Idling;
+                // StartCoroutine(DelayedWalk());
+                //
+                // IEnumerator DelayedWalk()
+                // {
+                //     yield return new WaitForSeconds(SpawnWalkDelay);
+                //     if (/*!_spawnBlocked*/ && State.Value != (byte)UnitState.Dying)
+                //         State.Value = (byte)UnitState.Walking;
+                // }
 
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                _sm.GameManager.UnitsEnemy.Add(this);
+                Sm.GameManager.UnitsEnemy.Add(this);
                 transform.localScale = new Vector3(-1, 1, 1);
             }
         }
@@ -192,9 +193,9 @@ namespace Prefabs
             PlayingAnimation.OnValueChanged -= OnPlayingAnimationChanged;
 
             if (IsOwner)
-                _sm.GameManager.UnitsAlly.Remove(this);
+                Sm.GameManager.UnitsAlly.Remove(this);
             else
-                _sm.GameManager.UnitsEnemy.Remove(this);
+                Sm.GameManager.UnitsEnemy.Remove(this);
             _isDestroyed = true;
         }
 
@@ -213,79 +214,111 @@ namespace Prefabs
             // }
         }
 
-        // Owner only
-        private void OnChildTriggerStay(Collider other)
+        private void FixedUpdate()
         {
-            if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
-
-            // Only consider just spawned units
-            if (Time.time - _spawnTime > SpawnWalkDelay) return;
-
-            // Only if colliding with another unit
-            if (!other.CompareTag("Unit")) return;
-
-            // Only if that other unit is mine but not this unit...
-            var otherUnit = other.transform.parent.GetComponent<Unit>();
-            if (!otherUnit.IsOwner || otherUnit == this) return;
-
-            // ...is in front of this unit...
-            if (otherUnit.transform.position.x <= transform.position.x) return;
-
-            // ...and is not dying.
-            if (otherUnit.State.Value is (byte)UnitState.Dying) return; // TODO: Should I remove this? 
-
-            // If so, block the unit from starting to walk
-            _spawnBlocked = true;
-
-            // until the one in front gets out of the way.
-            _target = otherUnit;
-            _target.Observable.Subscribe("death", OnTargetDeath);
+            if (Time.time - _spawnTime > SpawnWalkDelay)
+                CheckCollision();
         }
 
-        // Owner only
-        private void OnChildTriggerEnter(Collider other)
+        private void CheckCollision()
         {
             if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
 
-            // Exit if already waiting/attacking someone or if colliding with self
-            if (_target is not null || other.gameObject == _unitGo) return;
+            // [unit_0, unit_1 (this), unit_2]
+            var allies = Sm.GameManager.UnitsAlly;
+            var enemies = Sm.GameManager.UnitsEnemy;
 
-            // If colliding with an ally or enemy unit, wait or attack respectively
-            if (other.gameObject.CompareTag("Unit"))
+            // Get the ally and enemy in front of this unit
+            var thisIndex = Sm.GameManager.UnitsAlly.IndexOf(this);
+            var inFrontAlly = thisIndex > 0 ? allies[thisIndex - 1] : null;
+            var inFrontEnemy = enemies.Count > 0 ? enemies[0] : null;
+
+            // The ally has precedence over the enemy
+            if (inFrontAlly is not null && inFrontAlly.transform.position.x - transform.position.x < MinUnitsDistance)
+                State.Value = (byte)UnitState.Idling;
+            else if (inFrontEnemy is not null &&
+                     inFrontEnemy.transform.position.x - transform.position.x < MinUnitsDistance)
             {
-                var otherUnit = other.transform.parent.GetComponent<Unit>();
-
-                // The other unit must be in front of this unit
-                if (otherUnit.transform.position.x <= transform.position.x) return;
-
-                State.Value = (byte)(otherUnit.IsOwner ? UnitState.Idling : UnitState.Attacking);
-                _target = otherUnit;
-                _target.Observable.Subscribe("death", OnTargetDeath);
-            }
-            // If colliding with the enemy base, attack it
-            else if (other.gameObject.CompareTag("Base"))
-            {
-                var otherBase = other.transform.parent.GetComponent<Base>();
-                if (otherBase.IsOwner) return;
                 State.Value = (byte)UnitState.Attacking;
-                _target = otherBase;
-                _target.Observable.Subscribe("death", OnTargetDeath);
+                _target = inFrontEnemy;
             }
+            else
+                State.Value = (byte)UnitState.Walking;
         }
 
         // Owner only
-        private void OnChildTriggerExit(Collider other)
-        {
-            if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
-
-            // If exiting from a unit collision, restart walking. A Base cannot call this event.
-            if (_target is not null && other.gameObject.CompareTag("Unit") && other.gameObject != _unitGo)
-            {
-                State.Value = (byte)UnitState.Walking;
-                _target.Observable.Unsubscribe("death", OnTargetDeath);
-                _target = null;
-            }
-        }
+        // private void OnChildTriggerStay(Collider other)
+        // {
+        //     if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
+        //
+        //     // Only consider just spawned units
+        //     if (Time.time - _spawnTime > SpawnWalkDelay) return;
+        //
+        //     // Only if colliding with another unit
+        //     if (!other.CompareTag("Unit")) return;
+        //
+        //     // Only if that other unit is mine but not this unit...
+        //     var otherUnit = other.transform.parent.GetComponent<Unit>();
+        //     if (!otherUnit.IsOwner || otherUnit == this) return;
+        //
+        //     // ...is in front of this unit...
+        //     if (otherUnit.transform.position.x <= transform.position.x) return;
+        //
+        //     // ...and is not dying.
+        //     if (otherUnit.State.Value is (byte)UnitState.Dying) return; // TODO: Should I remove this? 
+        //
+        //     // If so, block the unit from starting to walk
+        //     _spawnBlocked = true;
+        //
+        //     // until the one in front gets out of the way.
+        //     _target = otherUnit;
+        //     _target.Observable.Subscribe("death", OnTargetDeath);
+        // }
+        //
+        // // Owner only
+        // private void OnChildTriggerEnter(Collider other)
+        // {
+        //     if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
+        //
+        //     // Exit if already waiting/attacking someone or if colliding with self
+        //     if (_target is not null || other.gameObject == _unitGo) return;
+        //
+        //     // If colliding with an ally or enemy unit, wait or attack respectively
+        //     if (other.gameObject.CompareTag("Unit"))
+        //     {
+        //         var otherUnit = other.transform.parent.GetComponent<Unit>();
+        //
+        //         // The other unit must be in front of this unit
+        //         if (otherUnit.transform.position.x <= transform.position.x) return;
+        //
+        //         State.Value = (byte)(otherUnit.IsOwner ? UnitState.Idling : UnitState.Attacking);
+        //         _target = otherUnit;
+        //         _target.Observable.Subscribe("death", OnTargetDeath);
+        //     }
+        //     // If colliding with the enemy base, attack it
+        //     else if (other.gameObject.CompareTag("Base"))
+        //     {
+        //         var otherBase = other.transform.parent.GetComponent<Base>();
+        //         if (otherBase.IsOwner) return;
+        //         State.Value = (byte)UnitState.Attacking;
+        //         _target = otherBase;
+        //         _target.Observable.Subscribe("death", OnTargetDeath);
+        //     }
+        // }
+        //
+        // // Owner only
+        // private void OnChildTriggerExit(Collider other)
+        // {
+        //     if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
+        //
+        //     // If exiting from a unit collision, restart walking. A Base cannot call this event.
+        //     if (_target is not null && other.gameObject.CompareTag("Unit") && other.gameObject != _unitGo)
+        //     {
+        //         State.Value = (byte)UnitState.Walking;
+        //         _target.Observable.Unsubscribe("death", OnTargetDeath);
+        //         _target = null;
+        //     }
+        // }
 
         #endregion
 
@@ -312,25 +345,21 @@ namespace Prefabs
             _hpBarPoint = _unitGo.transform.Find("HpBarPoint");
 
             // Relay trigger events
-            var triggerable = _unitGo.GetComponent<Triggerable>();
-            triggerable.OnChildTriggerEnter = OnChildTriggerEnter;
-            triggerable.OnChildTriggerExit = OnChildTriggerExit;
-            triggerable.OnChildTriggerStay = OnChildTriggerStay;
+            // var triggerable = _unitGo.GetComponent<Triggerable>();
+            // triggerable.OnChildTriggerEnter = OnChildTriggerEnter;
+            // triggerable.OnChildTriggerExit = OnChildTriggerExit;
+            // triggerable.OnChildTriggerStay = OnChildTriggerStay;
 
             _animationNotify = _unitGo.GetComponent<UnitAnimationEvents>();
 
             // Animations events =============================
-            // Relay attack event
             _animationNotify.OnAttack = () =>
             {
-                if (!IsOwner || _target == null || !_target.IsDamageable) return;
+                if (!IsOwner || _target is not { IsDamageable: true }) return;
                 _target.DamageRpc(Model.Value.Damage);
             };
-
-            // Relay die event
             _animationNotify.OnDie = () =>
             {
-                (IsOwner ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy).Remove(this);
                 if (IsServer)
                     gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
             };
@@ -350,12 +379,12 @@ namespace Prefabs
             }
         }*/
 
-        private void OnTargetDeath()
-        {
-            if (_target is null) return;
-            _target = null;
-            // The Unsubscribe is implicit by the destruction of the unit's game object
-            State.Value = (byte)UnitState.Walking;
-        }
+        // private void OnTargetDeath()
+        // {
+        //     if (_target is null) return;
+        //     _target = null;
+        //     // The Unsubscribe is implicit by the destruction of the unit's game object
+        //     State.Value = (byte)UnitState.Walking;
+        // }
     }
 }

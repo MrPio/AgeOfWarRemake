@@ -8,7 +8,9 @@ namespace Partials.State.Unit
         public void Enter(Prefabs.Unit unit)
         {
             // Free waiting units before running animation
-            unit.Observable.Notify("death");
+            // unit.Observable.Notify("death");
+            (unit.IsOwner ? unit.Sm.GameManager.UnitsAlly : unit.Sm.GameManager.UnitsEnemy).Remove(unit);
+
 
             if (!unit.IsOwner) return;
 
