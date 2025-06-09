@@ -26,7 +26,7 @@ namespace Prefabs
     public class Unit : NetworkBehaviour, IDamageable
     {
         private const float SpawnWalkDelay = 0.25f;
-        private const float MinUnitsDistance = 0.5f; // TODO rewrite Triggers logic using GM lists
+        private const float MinUnitsDistance = 0.75f;
 
         public static readonly int IdleTrigger = Animator.StringToHash("idle");
         public static readonly int WalkTrigger = Animator.StringToHash("walk");
@@ -125,6 +125,7 @@ namespace Prefabs
         {
             if (!_ownerBase.IsDamageable) return;
             var dir = IsOwner ? Vector3.right : Vector3.left;
+            // TODO interpolate this
             transform.position = _ownerBase.UnitSpawnPoint.position + dir * newValue;
         }
 
@@ -142,7 +143,7 @@ namespace Prefabs
         {
             // _sm.logger.Log("Spawning a Unit, isOwner=" + IsOwner, LogType.NetworkSpawn);
             _spawnTime = Time.time;
-            _ownerBase = IsOwner ? Sm.BaseAlly : Sm.BaseEnemy;
+            _ownerBase = IsOwner ? Sm.GameManager.BaseAlly : Sm.GameManager.BaseEnemy;
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
@@ -220,6 +221,7 @@ namespace Prefabs
                 CheckCollision();
         }
 
+        // Owner only
         private void CheckCollision()
         {
             if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
@@ -232,8 +234,9 @@ namespace Prefabs
             var thisIndex = Sm.GameManager.UnitsAlly.IndexOf(this);
             var inFrontAlly = thisIndex > 0 ? allies[thisIndex - 1] : null;
             var inFrontEnemy = enemies.Count > 0 ? enemies[0] : null;
+            var enemyBase = Sm.GameManager.BaseEnemy;
 
-            // The ally has precedence over the enemy
+            // The ally has precedence over the enemy which has in turn precedence over base
             if (inFrontAlly is not null && inFrontAlly.transform.position.x - transform.position.x < MinUnitsDistance)
                 State.Value = (byte)UnitState.Idling;
             else if (inFrontEnemy is not null &&
@@ -241,6 +244,12 @@ namespace Prefabs
             {
                 State.Value = (byte)UnitState.Attacking;
                 _target = inFrontEnemy;
+            }
+            else if (enemyBase is not null &&
+                     enemyBase.UnitSpawnPoint.position.x - transform.position.x < MinUnitsDistance / 2)
+            {
+                State.Value = (byte)UnitState.Attacking;
+                _target = enemyBase;
             }
             else
                 State.Value = (byte)UnitState.Walking;

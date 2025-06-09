@@ -82,8 +82,8 @@ namespace Prefabs
         public override void OnNetworkSpawn()
         {
             _sm.logger.Log("Spawning a Base, isOwner=" + IsOwner, LogType.NetworkSpawn);
-            if (IsOwner) _sm.BaseAlly = this;
-            else _sm.BaseEnemy = this;
+            if (IsOwner) _sm.GameManager.BaseAlly = this;
+            else _sm.GameManager.BaseEnemy = this;
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);

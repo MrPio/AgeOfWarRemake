@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Prefabs;
 using Unity.Netcode;
 using UnityEngine;
 using Logger = UI.Logger;
@@ -14,8 +13,7 @@ namespace Managers
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical;
         [SerializeField] private GameObject gameManagerPrefab, basePrefab;
 
-        [Header("References")] [NonSerialized] public Base BaseAlly, BaseEnemy;
-        public Camera cam;
+        [Header("References")] public Camera cam;
         public Canvas canvas;
         public Logger logger;
         [NonSerialized] public GameManager GameManager;
@@ -42,9 +40,11 @@ namespace Managers
 
         public void EndGame()
         {
-            GameManager.Winner = BaseAlly.Model.Value.Hp <= 0.01 ? BaseEnemy.OwnerClientId : BaseAlly.OwnerClientId;
+            GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
+                ? GameManager.BaseEnemy.OwnerClientId
+                : GameManager.BaseAlly.OwnerClientId;
             logger.Log(
-                $"Winner is {GameManager.Winner}! {BaseEnemy.OwnerClientId}-{BaseAlly.OwnerClientId} {BaseAlly.Model.Value.Hp} {BaseEnemy.Model.Value.Hp}");
+                $"Winner is {GameManager.Winner}! {GameManager.BaseEnemy.OwnerClientId}-{GameManager.BaseAlly.OwnerClientId} {GameManager.BaseAlly.Model.Value.Hp} {GameManager.BaseEnemy.Model.Value.Hp}");
             statisticsScreen.SetActive(true);
         }
 

@@ -18,7 +18,8 @@ namespace Managers
         [SerializeField] private bool isMultiplayer;
         private bool _isHost;
         [NonSerialized] public ulong HostId, ClientId;
-        [NonSerialized] public List<Unit> UnitsAlly = new(), UnitsEnemy = new();
+        [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
+        [NonSerialized] public Base BaseAlly, BaseEnemy;
         [NonSerialized] public ulong Winner;
 
         #region NetworkVariables
