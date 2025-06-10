@@ -11,14 +11,16 @@ namespace Model.Bases
         public int ExpRequired;
         public NetString Name;
         public NetString Prefab;
+        public Turret[] Turrets;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Base(NetString name, float maxHp, int expRequired)
+        public Base(NetString name, float maxHp, int expRequired, Turret[] turrets)
         {
             Hp = maxHp;
-            this.MaxHp = maxHp;
-            this.ExpRequired = expRequired;
-            this.Name = name;
+            MaxHp = maxHp;
+            ExpRequired = expRequired;
+            Name = name;
+            Turrets = turrets;
             Prefab = PrefabPath + name;
         }
 
@@ -29,6 +31,7 @@ namespace Model.Bases
             serializer.SerializeValue(ref ExpRequired);
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Prefab);
+            serializer.SerializeValue(ref Turrets);
         }
 
         public override string ToString() =>

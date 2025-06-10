@@ -26,7 +26,7 @@ namespace Prefabs
     public class Unit : NetworkBehaviour, IDamageable
     {
         private const float SpawnWalkDelay = 0.25f;
-        private const float MinUnitsDistance = 0.75f;
+        private float _minUnitsDistance = 0.75f;
 
         public static readonly int IdleTrigger = Animator.StringToHash("idle");
         public static readonly int WalkTrigger = Animator.StringToHash("walk");
@@ -127,7 +127,8 @@ namespace Prefabs
             if (!_ownerBase.IsDamageable) return;
             var dir = IsOwner ? 1 : -1;
             // TODO interpolate this
-            transform.position = new Vector3(x: _ownerBase.UnitSpawnPointX.position.x + dir * newValue, y: 0, z: zPos);
+            transform.position = new Vector3(x: _ownerBase.BasePrefab.unitSpawnPointX.position.x + dir * newValue, y: 0,
+                z: zPos);
         }
 
         private void OnPlayingAnimationChanged(int _, int newValue)
@@ -238,16 +239,16 @@ namespace Prefabs
             var enemyBase = Sm.GameManager.BaseEnemy;
 
             // The ally has precedence over the enemy which has in turn precedence over base
-            if (inFrontAlly is not null && inFrontAlly.transform.position.x - transform.position.x < MinUnitsDistance)
+            if (inFrontAlly is not null && inFrontAlly.transform.position.x - transform.position.x < _minUnitsDistance)
                 State.Value = (byte)UnitState.Idling;
             else if (inFrontEnemy is not null &&
-                     inFrontEnemy.transform.position.x - transform.position.x < MinUnitsDistance)
+                     inFrontEnemy.transform.position.x - transform.position.x < _minUnitsDistance)
             {
                 State.Value = (byte)UnitState.Attacking;
                 _target = inFrontEnemy;
             }
             else if (enemyBase is not null &&
-                     enemyBase.UnitSpawnPointX.position.x - transform.position.x < MinUnitsDistance / 2)
+                     enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x < _minUnitsDistance / 2)
             {
                 State.Value = (byte)UnitState.Attacking;
                 _target = enemyBase;
@@ -353,6 +354,7 @@ namespace Prefabs
             _unitGo = Instantiate(Resources.Load<GameObject>(prefab), transform);
             Animator = _unitGo.GetComponent<Animator>();
             _hpBarPoint = _unitGo.transform.Find("HpBarPoint");
+            _minUnitsDistance = _unitGo.GetComponent<BoxCollider>().size.x;
 
             // Relay trigger events
             // var triggerable = _unitGo.GetComponent<Triggerable>();

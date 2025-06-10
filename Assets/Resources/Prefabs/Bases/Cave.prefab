@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08e882abc7cc42e4ebd02db095cf06d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitSpawnPointX: {fileID: 2315032628113449972}
   expansions:
   - {fileID: 3274167801134164353}
   - {fileID: 8495849031511886348}
@@ -161,7 +162,7 @@ MonoBehaviour:
   - {fileID: 5332994685283321605}
   turretsPrefabs:
   - {fileID: 6733542682915192886, guid: d7777cc5acd2a224796c706f4bfc3db5, type: 3}
-  - {fileID: 6675317939016837821, guid: ab2213597716b3f4980dba2e78e57dab, type: 3}
+  - {fileID: 8277597925566930640, guid: ab2213597716b3f4980dba2e78e57dab, type: 3}
   - {fileID: 8443143749634231286, guid: af623541a793fb142880cf29d1637c62, type: 3}
 --- !u!1 &4507516347767068169
 GameObject:

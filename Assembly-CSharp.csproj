@@ -53,9 +53,9 @@
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\StatisticsMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\RotateSkybox.cs" />
-    <Compile Include="Assets\Turret.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
+    <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Partials\State\Unit\DyingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
+    <Compile Include="Assets\Scripts\Model\Bases\Turret.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\BasePrefab.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />

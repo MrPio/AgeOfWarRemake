@@ -15,14 +15,13 @@ namespace Prefabs
         [SerializeField] private GameObject unitPrefab;
         [SerializeField] private Transform hpBarPoint;
 
+        [NonSerialized] public BasePrefab BasePrefab;
         private SceneManager _sm;
         private HpBar _hpBar;
-        private BasePrefab _basePrefab;
 
         private bool _isDestroyed;
 
         // private Observable _observable;
-        [NonSerialized] public Transform UnitSpawnPointX;
 
         // public Observable Observable { get; private set; }
 
@@ -53,7 +52,7 @@ namespace Prefabs
             _sm.logger.Log($"Obtaining {(IsOwner ? "Ally" : "Enemy")} base state");
 
             // Reload the unit prefab if the unit type has changed
-            if (_basePrefab is null || !value.HasValue || value.Prefab != newValue.Prefab)
+            if (BasePrefab is null || !value.HasValue || value.Prefab != newValue.Prefab)
                 LoadPrefab(newValue.Prefab);
 
             // Update the unit's HP bar if the unit's HP has changed
@@ -155,10 +154,9 @@ namespace Prefabs
         // Reload the Base prefab
         private void LoadPrefab(string prefab)
         {
-            if (_basePrefab is not null)
-                Destroy(_basePrefab);
-            _basePrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<BasePrefab>();
-            UnitSpawnPointX = _basePrefab.transform.Find("SpawnPointX");
+            if (BasePrefab is not null)
+                Destroy(BasePrefab);
+            BasePrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<BasePrefab>();
         }
     }
 }
