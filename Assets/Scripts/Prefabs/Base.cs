@@ -17,10 +17,12 @@ namespace Prefabs
 
         private SceneManager _sm;
         private HpBar _hpBar;
-        private GameObject _baseGo;
+        private BasePrefab _basePrefab;
+
         private bool _isDestroyed;
+
         // private Observable _observable;
-        [NonSerialized] public Transform UnitSpawnPoint;
+        [NonSerialized] public Transform UnitSpawnPointX;
 
         // public Observable Observable { get; private set; }
 
@@ -51,7 +53,7 @@ namespace Prefabs
             _sm.logger.Log($"Obtaining {(IsOwner ? "Ally" : "Enemy")} base state");
 
             // Reload the unit prefab if the unit type has changed
-            if (_baseGo is null || !value.HasValue || value.Prefab != newValue.Prefab)
+            if (_basePrefab is null || !value.HasValue || value.Prefab != newValue.Prefab)
                 LoadPrefab(newValue.Prefab);
 
             // Update the unit's HP bar if the unit's HP has changed
@@ -127,7 +129,7 @@ namespace Prefabs
         public void SpawnUnitServerRpc(ServerRpcParams rpcParams = default)
         {
             ulong senderClientId = rpcParams.Receive.SenderClientId;
-            var unit = Instantiate(unitPrefab);
+            var unit = Instantiate(unitPrefab, Vector3.up * 999f, Quaternion.identity); // Spawn out of map
             var unitNo = unit.GetComponent<NetworkObject>();
             unitNo.SpawnWithOwnership(senderClientId);
         }
@@ -153,10 +155,10 @@ namespace Prefabs
         // Reload the Base prefab
         private void LoadPrefab(string prefab)
         {
-            if (_baseGo is not null)
-                Destroy(_baseGo);
-            _baseGo = Instantiate(Resources.Load<GameObject>(prefab), transform);
-            UnitSpawnPoint = _baseGo.transform.Find("spawnPoint");
+            if (_basePrefab is not null)
+                Destroy(_basePrefab);
+            _basePrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<BasePrefab>();
+            UnitSpawnPointX = _basePrefab.transform.Find("SpawnPointX");
         }
     }
 }

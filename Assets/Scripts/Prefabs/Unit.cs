@@ -33,6 +33,7 @@ namespace Prefabs
         public static readonly int AttackTrigger = Animator.StringToHash("attack");
         public static readonly int DieTrigger = Animator.StringToHash("die");
 
+        [SerializeField] private float zPos = -0.14f;
         [NonSerialized] public SceneManager Sm;
         [NonSerialized] public Animator Animator;
         private Transform _hpBarPoint;
@@ -124,9 +125,9 @@ namespace Prefabs
         private void OnDeltaXChanged(float value, float newValue)
         {
             if (!_ownerBase.IsDamageable) return;
-            var dir = IsOwner ? Vector3.right : Vector3.left;
+            var dir = IsOwner ? 1 : -1;
             // TODO interpolate this
-            transform.position = _ownerBase.UnitSpawnPoint.position + dir * newValue;
+            transform.position = new Vector3(x: _ownerBase.UnitSpawnPointX.position.x + dir * newValue, y: 0, z: zPos);
         }
 
         private void OnPlayingAnimationChanged(int _, int newValue)
@@ -246,7 +247,7 @@ namespace Prefabs
                 _target = inFrontEnemy;
             }
             else if (enemyBase is not null &&
-                     enemyBase.UnitSpawnPoint.position.x - transform.position.x < MinUnitsDistance / 2)
+                     enemyBase.UnitSpawnPointX.position.x - transform.position.x < MinUnitsDistance / 2)
             {
                 State.Value = (byte)UnitState.Attacking;
                 _target = enemyBase;
