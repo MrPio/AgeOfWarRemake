@@ -1299,6 +1299,7 @@ GameObject:
   - component: {fileID: 7809724534645364666}
   - component: {fileID: 6174654848334149277}
   - component: {fileID: 5485803532277886534}
+  - component: {fileID: 4768307126311134956}
   - component: {fileID: 2925499693851382915}
   - component: {fileID: -7109415327093291062}
   m_Layer: 0
@@ -1329,6 +1330,7 @@ Transform:
   - {fileID: 5284288691857393380}
   - {fileID: 1779605843424199914}
   - {fileID: 13146275362271214}
+  - {fileID: 3445966574217386053}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7809724534645364666
@@ -1401,6 +1403,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &4768307126311134956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3504879563226018073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 756293856f6b4ae8beb2acef308feb6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBarPoint: {fileID: 13146275362271214}
+  bloodSpawnPoint: {fileID: 3445966574217386053}
+  bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}
 --- !u!114 &2925499693851382915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1819,6 +1836,37 @@ MonoBehaviour:
   selected: 0
   label: 
   handleScale: 1
+--- !u!1 &4466400200819100115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3445966574217386053}
+  m_Layer: 0
+  m_Name: BloodSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3445966574217386053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466400200819100115}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.213, y: 0.843, z: -0.187}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5185738201427821263}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4556050344680819202
 GameObject:
   m_ObjectHideFlags: 0

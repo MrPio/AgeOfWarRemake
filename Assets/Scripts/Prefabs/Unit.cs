@@ -40,7 +40,7 @@ namespace Prefabs
         private HpBar _hpBar;
         private float _spawnTime;
         private Base _ownerBase;
-        private GameObject _unitGo;
+        private UnitPrefab _unitPrefab;
         private bool _spawnBlocked, _isDestroyed;
 
         public bool IsDamageable => !_isDestroyed && State.Value != (byte)UnitState.Dying;
@@ -93,6 +93,9 @@ namespace Prefabs
                 }
 
                 _hpBar.SetValue(newValue.Hp, newValue.MaxHp, alsoText: false);
+
+                // Show blood
+                _unitPrefab.SpawnBlood();
             }
 
             if (IsOwner && newValue.Hp <= 0)
@@ -253,14 +256,13 @@ namespace Prefabs
         // Reload the Unit prefab
         private void LoadPrefab(string prefab)
         {
-            if (_unitGo is not null)
-                Destroy(_unitGo);
-            _unitGo = Instantiate(Resources.Load<GameObject>(prefab), transform);
-            Animator = _unitGo.GetComponent<Animator>();
-            _hpBarPoint = _unitGo.transform.Find("HpBarPoint");
-            _minUnitsDistance = _unitGo.GetComponent<BoxCollider>().size.x;
-
-            _animationNotify = _unitGo.GetComponent<UnitAnimationEvents>();
+            if (_unitPrefab is not null)
+                Destroy(_unitPrefab);
+            _unitPrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<UnitPrefab>();
+            Animator = _unitPrefab.GetComponent<Animator>();
+            _hpBarPoint = _unitPrefab.hpBarPoint;
+            _minUnitsDistance = _unitPrefab.GetComponent<BoxCollider>().size.x;
+            _animationNotify = _unitPrefab.GetComponent<UnitAnimationEvents>();
 
             // Animations events =============================
             _animationNotify.OnAttack = () =>

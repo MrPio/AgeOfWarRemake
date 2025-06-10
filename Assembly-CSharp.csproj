@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\IdleState.cs" />
+    <Compile Include="Assets\Scripts\Prefabs\UnitPrefab.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Base.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDamageable.cs" />
     <Compile Include="Assets\Scripts\Partials\Destroyable.cs" />
