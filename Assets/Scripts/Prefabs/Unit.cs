@@ -51,27 +51,6 @@ namespace Prefabs
         [NonSerialized]
         public readonly NetworkVariable<Model.Units.Unit> Model = new(writePerm: NetworkVariableWritePermission.Owner);
 
-        [NonSerialized] public readonly NetworkVariable<byte> State =
-            new(byte.MaxValue, writePerm: NetworkVariableWritePermission.Owner);
-
-        [NonSerialized]
-        public readonly NetworkVariable<float> DeltaX = new(0f, writePerm: NetworkVariableWritePermission.Owner);
-
-        [NonSerialized] public readonly NetworkVariable<int>
-            PlayingAnimation = new(-1, writePerm: NetworkVariableWritePermission.Owner);
-
-        #endregion
-
-        #region Events
-
-        private void Awake()
-        {
-            Sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            // Observable = GetComponent<Observable>();
-        }
-
-        #region NetworkVariablesChanges
-
         private void OnModelChanged(Model.Units.Unit value, Model.Units.Unit newValue)
         {
             if (!newValue.HasValue) return;
@@ -102,6 +81,9 @@ namespace Prefabs
                 State.Value = (byte)UnitState.Dying;
         }
 
+        [NonSerialized] public readonly NetworkVariable<byte> State =
+            new(byte.MaxValue, writePerm: NetworkVariableWritePermission.Owner);
+
         private void OnStateChanged(byte value, byte newValue)
         {
             if (newValue == byte.MaxValue) return;
@@ -122,6 +104,9 @@ namespace Prefabs
             _state?.Enter(this);
         }
 
+        [NonSerialized]
+        public readonly NetworkVariable<float> DeltaX = new(0f, writePerm: NetworkVariableWritePermission.Owner);
+
         private void OnDeltaXChanged(float value, float newValue)
         {
             if (!_ownerBase.IsDamageable) return;
@@ -130,6 +115,9 @@ namespace Prefabs
             transform.position = new Vector3(x: _ownerBase.BasePrefab.unitSpawnPointX.position.x + dir * newValue, y: 0,
                 z: zPos);
         }
+
+        [NonSerialized] public readonly NetworkVariable<int>
+            PlayingAnimation = new(-1, writePerm: NetworkVariableWritePermission.Owner);
 
         private void OnPlayingAnimationChanged(int _, int newValue)
         {
@@ -140,6 +128,14 @@ namespace Prefabs
         }
 
         #endregion
+
+        #region Events
+
+        private void Awake()
+        {
+            Sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            // Observable = GetComponent<Observable>();
+        }
 
         public override void OnNetworkSpawn()
         {

@@ -25,20 +25,6 @@ namespace Prefabs
         [NonSerialized] public readonly NetworkVariable<Model.Bases.Base> Model = new(BaseFactory.Cave(),
             writePerm: NetworkVariableWritePermission.Owner);
 
-        #endregion
-
-        public bool IsDamageable => !_isDestroyed;
-
-        #region Events
-
-        private void Awake()
-        {
-            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-        }
-
-
-        #region NetworkVariablesChanges
-
         private void OnModelChanged(Model.Bases.Base value, Model.Bases.Base newValue)
         {
             if (!newValue.HasValue) return;
@@ -47,7 +33,7 @@ namespace Prefabs
             // Reload the unit prefab if the unit type has changed
             if (BasePrefab is null || !value.HasValue || value.Prefab != newValue.Prefab)
                 LoadPrefab(newValue.Prefab);
-
+            
             // Update the unit's HP bar if the unit's HP has changed
             if (newValue.Hp < newValue.MaxHp)
             {
@@ -65,13 +51,25 @@ namespace Prefabs
             // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
             if (newValue.Hp <= 0)
             {
-                // _observable.Notify("death");
                 if (IsServer)
                     gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
             }
+            
+            // Update the turret configuration (lazy)
+            if (IsOwner)
+                BasePrefab?.UpdateState(newValue.UnlockedExpansions, newValue.Turrets);
         }
 
         #endregion
+
+        public bool IsDamageable => !_isDestroyed;
+
+        #region Events
+
+        private void Awake()
+        {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -125,7 +123,6 @@ namespace Prefabs
             var unitNo = unit.GetComponent<NetworkObject>();
             unitNo.SpawnWithOwnership(senderClientId);
         }
-
 
         [Rpc(SendTo.Owner)]
         public void DamageRpc(float damage)

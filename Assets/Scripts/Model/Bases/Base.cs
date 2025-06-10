@@ -1,4 +1,5 @@
-﻿using Model.Utils;
+﻿using System;
+using Model.Utils;
 using Unity.Netcode;
 
 namespace Model.Bases
@@ -8,19 +9,21 @@ namespace Model.Bases
         private const string PrefabPath = "Prefabs/Bases/";
 
         public float Hp, MaxHp;
-        public int ExpRequired;
+        public int ExpRequired, UnlockedExpansions;
         public NetString Name;
         public NetString Prefab;
-        public Turret[] Turrets;
+        public Turrets.Turret[] Turrets;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Base(NetString name, float maxHp, int expRequired, Turret[] turrets)
+        public Base(NetString name, float maxHp, int expRequired, Turrets.Turret[] turrets = null,
+            int unlockedExpansions = 0)
         {
             Hp = maxHp;
             MaxHp = maxHp;
             ExpRequired = expRequired;
             Name = name;
-            Turrets = turrets;
+            Turrets = turrets ?? new Turrets.Turret[] { default, default, default, default };
+            UnlockedExpansions = unlockedExpansions;
             Prefab = PrefabPath + name;
         }
 
@@ -32,6 +35,7 @@ namespace Model.Bases
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref Turrets);
+            serializer.SerializeValue(ref UnlockedExpansions);
         }
 
         public override string ToString() =>

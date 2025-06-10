@@ -55,6 +55,7 @@
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
+    <Compile Include="Assets\Scripts\Model\Turrets\TurretFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
@@ -63,7 +64,6 @@
     <Compile Include="Assets\Scripts\Partials\State\Unit\DyingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
-    <Compile Include="Assets\Scripts\Model\Bases\Turret.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\BasePrefab.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\Partials\Triggerable.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />
+    <Compile Include="Assets\Scripts\Model\Turrets\Turret.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\IdleState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\UnitPrefab.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Base.cs" />
