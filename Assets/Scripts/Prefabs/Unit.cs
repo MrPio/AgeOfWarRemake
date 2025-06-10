@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using Interfaces;
 using Managers;
 using Model.Units;
@@ -7,10 +6,8 @@ using Partials;
 using Partials.State.Unit;
 using UI;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using IState = Partials.State.IState;
-using LogType = UI.LogType;
 
 namespace Prefabs
 {
@@ -168,17 +165,7 @@ namespace Prefabs
                 Model.Value = model;
 
                 // Initializing state
-
                 State.Value = (byte)UnitState.Idling;
-                // StartCoroutine(DelayedWalk());
-                //
-                // IEnumerator DelayedWalk()
-                // {
-                //     yield return new WaitForSeconds(SpawnWalkDelay);
-                //     if (/*!_spawnBlocked*/ && State.Value != (byte)UnitState.Dying)
-                //         State.Value = (byte)UnitState.Walking;
-                // }
-
                 transform.localScale = new Vector3(1, 1, 1);
             }
             else
@@ -206,15 +193,6 @@ namespace Prefabs
         private void Update()
         {
             _state?.Update(this);
-            // if (IsOwner)
-            // {
-            //     if (State.Value is (byte)UnitState.Attacking or (byte)UnitState.Idling && _target is not null &&
-            //         !_target.IsDamageable)
-            //     {
-            //         State.Value = (byte)UnitState.Walking;
-            //         _target = null;
-            //     }
-            // }
         }
 
         private void FixedUpdate()
@@ -257,80 +235,6 @@ namespace Prefabs
                 State.Value = (byte)UnitState.Walking;
         }
 
-        // Owner only
-        // private void OnChildTriggerStay(Collider other)
-        // {
-        //     if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
-        //
-        //     // Only consider just spawned units
-        //     if (Time.time - _spawnTime > SpawnWalkDelay) return;
-        //
-        //     // Only if colliding with another unit
-        //     if (!other.CompareTag("Unit")) return;
-        //
-        //     // Only if that other unit is mine but not this unit...
-        //     var otherUnit = other.transform.parent.GetComponent<Unit>();
-        //     if (!otherUnit.IsOwner || otherUnit == this) return;
-        //
-        //     // ...is in front of this unit...
-        //     if (otherUnit.transform.position.x <= transform.position.x) return;
-        //
-        //     // ...and is not dying.
-        //     if (otherUnit.State.Value is (byte)UnitState.Dying) return; // TODO: Should I remove this? 
-        //
-        //     // If so, block the unit from starting to walk
-        //     _spawnBlocked = true;
-        //
-        //     // until the one in front gets out of the way.
-        //     _target = otherUnit;
-        //     _target.Observable.Subscribe("death", OnTargetDeath);
-        // }
-        //
-        // // Owner only
-        // private void OnChildTriggerEnter(Collider other)
-        // {
-        //     if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
-        //
-        //     // Exit if already waiting/attacking someone or if colliding with self
-        //     if (_target is not null || other.gameObject == _unitGo) return;
-        //
-        //     // If colliding with an ally or enemy unit, wait or attack respectively
-        //     if (other.gameObject.CompareTag("Unit"))
-        //     {
-        //         var otherUnit = other.transform.parent.GetComponent<Unit>();
-        //
-        //         // The other unit must be in front of this unit
-        //         if (otherUnit.transform.position.x <= transform.position.x) return;
-        //
-        //         State.Value = (byte)(otherUnit.IsOwner ? UnitState.Idling : UnitState.Attacking);
-        //         _target = otherUnit;
-        //         _target.Observable.Subscribe("death", OnTargetDeath);
-        //     }
-        //     // If colliding with the enemy base, attack it
-        //     else if (other.gameObject.CompareTag("Base"))
-        //     {
-        //         var otherBase = other.transform.parent.GetComponent<Base>();
-        //         if (otherBase.IsOwner) return;
-        //         State.Value = (byte)UnitState.Attacking;
-        //         _target = otherBase;
-        //         _target.Observable.Subscribe("death", OnTargetDeath);
-        //     }
-        // }
-        //
-        // // Owner only
-        // private void OnChildTriggerExit(Collider other)
-        // {
-        //     if (!IsOwner || State.Value == (byte)UnitState.Dying) return;
-        //
-        //     // If exiting from a unit collision, restart walking. A Base cannot call this event.
-        //     if (_target is not null && other.gameObject.CompareTag("Unit") && other.gameObject != _unitGo)
-        //     {
-        //         State.Value = (byte)UnitState.Walking;
-        //         _target.Observable.Unsubscribe("death", OnTargetDeath);
-        //         _target = null;
-        //     }
-        // }
-
         #endregion
 
         #region RPCs
@@ -356,12 +260,6 @@ namespace Prefabs
             _hpBarPoint = _unitGo.transform.Find("HpBarPoint");
             _minUnitsDistance = _unitGo.GetComponent<BoxCollider>().size.x;
 
-            // Relay trigger events
-            // var triggerable = _unitGo.GetComponent<Triggerable>();
-            // triggerable.OnChildTriggerEnter = OnChildTriggerEnter;
-            // triggerable.OnChildTriggerExit = OnChildTriggerExit;
-            // triggerable.OnChildTriggerStay = OnChildTriggerStay;
-
             _animationNotify = _unitGo.GetComponent<UnitAnimationEvents>();
 
             // Animations events =============================
@@ -376,27 +274,5 @@ namespace Prefabs
                     gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
             };
         }
-
-        /*public void ChangeAnimation(int anim, float fade, float delay = 0f)
-        {
-            if (delay > 0f) StartCoroutine(EndTransition());
-            else Animator.CrossFade(anim, fade);
-            return;
-
-            IEnumerator EndTransition()
-            {
-                if (delay - fade > 0)
-                    yield return new WaitForSeconds(delay - fade);
-                Animator.CrossFade(anim, fade);
-            }
-        }*/
-
-        // private void OnTargetDeath()
-        // {
-        //     if (_target is null) return;
-        //     _target = null;
-        //     // The Unsubscribe is implicit by the destruction of the unit's game object
-        //     State.Value = (byte)UnitState.Walking;
-        // }
     }
 }

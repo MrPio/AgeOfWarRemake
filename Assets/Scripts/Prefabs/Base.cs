@@ -18,13 +18,7 @@ namespace Prefabs
         [NonSerialized] public BasePrefab BasePrefab;
         private SceneManager _sm;
         private HpBar _hpBar;
-
         private bool _isDestroyed;
-
-        // private Observable _observable;
-
-        // public Observable Observable { get; private set; }
-
 
         #region NetworkVariables
 
@@ -40,7 +34,6 @@ namespace Prefabs
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            // Observable = GetComponent<Observable>();
         }
 
 
