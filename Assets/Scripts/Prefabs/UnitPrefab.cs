@@ -11,7 +11,7 @@ namespace Prefabs
     public class UnitPrefab : MonoBehaviour
     {
         private static readonly Vector2 BloodSpawnBounds = new(0.15f, 0.25f);
-        private static readonly float minBloodDelay = 1;
+        private const float MinBloodDelay = 0.025f;
         [SerializeField] public Transform hpBarPoint;
         [SerializeField] private Transform bloodSpawnPoint;
         [SerializeField] private GameObject bloodPrefab;
@@ -25,13 +25,12 @@ namespace Prefabs
 
         public void SpawnBlood()
         {
-            if (Time.time - _lastBlood < minBloodDelay) return;
+            if (Time.time - _lastBlood < MinBloodDelay) return;
             _lastBlood = Time.time;
             var spawnPoint = bloodSpawnPoint.position +
                              Vector3.right * Random.Range(-BloodSpawnBounds.x, BloodSpawnBounds.x) +
                              Vector3.up * Random.Range(-BloodSpawnBounds.y, BloodSpawnBounds.y);
-            var go = Instantiate(bloodPrefab, transform);
-            go.transform.position = spawnPoint;
+            Instantiate(bloodPrefab, spawnPoint, Quaternion.identity);
         }
     }
 }

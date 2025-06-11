@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Interfaces;
 using Managers;
 using Model.Bases;
 using UI;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using LogType = UI.LogType;
@@ -16,6 +19,7 @@ namespace Prefabs
         [SerializeField] private Transform hpBarPoint;
 
         [NonSerialized] public BasePrefab BasePrefab;
+        [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private SceneManager _sm;
         private HpBar _hpBar;
         private bool _isDestroyed;
@@ -33,7 +37,7 @@ namespace Prefabs
             // Reload the unit prefab if the unit type has changed
             if (BasePrefab is null || !value.HasValue || value.Prefab != newValue.Prefab)
                 LoadPrefab(newValue.Prefab);
-            
+
             // Update the unit's HP bar if the unit's HP has changed
             if (newValue.Hp < newValue.MaxHp)
             {
@@ -54,15 +58,14 @@ namespace Prefabs
                 if (IsServer)
                     gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
             }
-            
+
             // Update the turret configuration (lazy)
-            if (IsOwner)
-                BasePrefab?.UpdateState(newValue.UnlockedExpansions, newValue.Turrets);
+            BasePrefab?.UpdateState(newValue.UnlockedExpansions, newValue.Turrets);
         }
 
         #endregion
 
-        public bool IsDamageable => !_isDestroyed;
+        public bool IsDamageable => !_isDestroyed && !IsOwner;
 
         #region Events
 
@@ -106,8 +109,37 @@ namespace Prefabs
 
             // Owner only ================================
             if (Input.GetKeyDown(KeyCode.Space))
-            {
                 SpawnUnitServerRpc();
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                var model = Model.Value;
+                model.UnlockedExpansions = math.max(model.UnlockedExpansions, 1);
+                model.Turrets[0] = BaseFactory.BaseTurrets[BaseFactory.Cave][0]();
+                Model.Value = model;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                var model = Model.Value;
+                model.UnlockedExpansions = math.max(model.UnlockedExpansions, 2);
+                model.Turrets[1] = BaseFactory.BaseTurrets[BaseFactory.Cave][1]();
+                Model.Value = model;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                var model = Model.Value;
+                model.UnlockedExpansions = math.max(model.UnlockedExpansions, 3);
+                model.Turrets[2] = BaseFactory.BaseTurrets[BaseFactory.Cave][2]();
+                Model.Value = model;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                var model = Model.Value;
+                model.UnlockedExpansions = 0;
+                model.Turrets = new Model.Turrets.Turret[] { default, default, default, default };
+                Model.Value = model;
             }
         }
 

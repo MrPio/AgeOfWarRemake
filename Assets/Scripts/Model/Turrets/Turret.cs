@@ -34,7 +34,8 @@ namespace Model.Turrets
             serializer.SerializeValue(ref BulletSpeed);
             serializer.SerializeValue(ref Cost);
             serializer.SerializeValue(ref SellPrice);
-            serializer.SerializeValue(ref Name);
+            serializer.SerializeValue(ref Name);    
+            serializer.SerializeValue(ref Prefab);
         }
 
         // Equality ================================================

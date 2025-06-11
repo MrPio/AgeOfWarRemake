@@ -33,6 +33,7 @@ namespace Prefabs
         [SerializeField] private float zPos = -0.14f;
         [NonSerialized] public SceneManager Sm;
         [NonSerialized] public Animator Animator;
+        [NonSerialized] public float LastTargetTime;
         private Transform _hpBarPoint;
         private IState _state;
         private IDamageable _target;
@@ -43,7 +44,7 @@ namespace Prefabs
         private UnitPrefab _unitPrefab;
         private bool _spawnBlocked, _isDestroyed;
 
-        public bool IsDamageable => !_isDestroyed && State.Value != (byte)UnitState.Dying;
+        public bool IsDamageable => !_isDestroyed && State.Value != (byte)UnitState.Dying && !IsOwner;
         // public Observable Observable { get; private set; }
 
         #region NetworkVariables
@@ -221,6 +222,9 @@ namespace Prefabs
             else if (inFrontEnemy is not null &&
                      inFrontEnemy.transform.position.x - transform.position.x < _minUnitsDistance)
             {
+                // Don't change target to a unit if attacking the base
+                if (_target is Base) return;
+
                 State.Value = (byte)UnitState.Attacking;
                 _target = inFrontEnemy;
             }
