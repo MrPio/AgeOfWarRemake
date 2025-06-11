@@ -115,6 +115,7 @@ namespace Prefabs
                 var model = Model.Value;
                 model.UnlockedExpansions = math.max(model.UnlockedExpansions, 1);
                 model.Turrets[0] = BaseFactory.BaseTurrets[BaseFactory.Cave][0]();
+                model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone();
                 Model.Value = model;
             }
 
@@ -123,6 +124,7 @@ namespace Prefabs
                 var model = Model.Value;
                 model.UnlockedExpansions = math.max(model.UnlockedExpansions, 2);
                 model.Turrets[1] = BaseFactory.BaseTurrets[BaseFactory.Cave][1]();
+                model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone();
                 Model.Value = model;
             }
 
@@ -131,6 +133,7 @@ namespace Prefabs
                 var model = Model.Value;
                 model.UnlockedExpansions = math.max(model.UnlockedExpansions, 3);
                 model.Turrets[2] = BaseFactory.BaseTurrets[BaseFactory.Cave][2]();
+                model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone();
                 Model.Value = model;
             }
 

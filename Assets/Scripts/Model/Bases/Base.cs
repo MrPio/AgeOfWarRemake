@@ -1,4 +1,5 @@
 ﻿using System;
+using Model.Turrets;
 using Model.Utils;
 using Unity.Netcode;
 
@@ -34,8 +35,14 @@ namespace Model.Bases
             serializer.SerializeValue(ref ExpRequired);
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Prefab);
-            serializer.SerializeValue(ref Turrets);
             serializer.SerializeValue(ref UnlockedExpansions);
+            serializer.SerializeValue(ref Turrets);
+
+            // To avoid deep copy each time
+            // if (serializer.IsReader)
+            //     Turrets = new Turret[4];
+            // for (var i = 0; i < 4; i++)
+            //     serializer.SerializeValue(ref Turrets[i]);
         }
 
         public override string ToString() =>
