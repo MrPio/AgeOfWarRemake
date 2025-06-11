@@ -39,6 +39,7 @@ namespace Prefabs
 
         public Transform Transform => _unitPrefab.transform;
         public bool IsDamageable => !_isDestroyed && State.Value.State is not DieState && !IsOwner;
+        public string Name => Model.Value.DisplayName;
 
         #region NetworkVariables
 
@@ -82,7 +83,7 @@ namespace Prefabs
         {
             if (!newValue.HasValue) return;
             var newState = newValue.State;
-            
+
             // Remove shooting lag between 2 shooting states
             var wasShooting = value is { HasValue: true, IsShooting: true };
             var isShooting = newValue is { HasValue: true, IsShooting: true };
@@ -91,6 +92,10 @@ namespace Prefabs
                     walkState.LastShoot = 0;
                 else if (newState is IdleState idleState)
                     idleState.LastShoot = 0;
+
+            // Remove attack wait if the attacking unit is different from this
+            if (newState is AttackState attackState && _target.Name != Name)
+                attackState.LastAttack = 0;
 
             // State Design Pattern
             _state?.Exit(this);

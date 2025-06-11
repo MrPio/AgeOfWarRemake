@@ -7,6 +7,7 @@ namespace Interfaces
     {
         public Transform Transform { get; }
         public bool IsDamageable { get; }
+        public string Name { get; }
         public void DamageRpc(float damage);
     }
 }

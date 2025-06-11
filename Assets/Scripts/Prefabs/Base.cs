@@ -68,6 +68,7 @@ namespace Prefabs
 
         public Transform Transform => BasePrefab.transform;
         public bool IsDamageable => !_isDestroyed && !IsOwner;
+        public string Name => Model.Value.Name;
 
         #region Events
 

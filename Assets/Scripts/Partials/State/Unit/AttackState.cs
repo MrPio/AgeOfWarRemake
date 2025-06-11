@@ -5,7 +5,7 @@ namespace Partials.State.Unit
 {
     public class AttackState : IState
     {
-        private float _lastAttack = Time.time - (float)new System.Random().NextDouble() * 0.5f;
+        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 0.5f;
 
         public void Enter(Prefabs.Unit unit)
         {
@@ -20,9 +20,9 @@ namespace Partials.State.Unit
             var model = unit.Model.Value;
             if (!model.HasValue) return;
 
-            if (Time.time - _lastAttack > model.AttackRate)
+            if (Time.time - LastAttack > model.AttackRate)
             {
-                _lastAttack = Time.time;
+                LastAttack = Time.time;
                 unit.Animator.SetTrigger(Prefabs.Unit.AttackTrigger);
                 unit.PlayingAnimation.Value = Prefabs.Unit.IdleTrigger;
                 unit.PlayingAnimation.Value = Prefabs.Unit.AttackTrigger;
