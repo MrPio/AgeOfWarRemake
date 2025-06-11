@@ -4,6 +4,7 @@ using System.Linq;
 using Interfaces;
 using Managers;
 using Model.Bases;
+using Model.Units;
 using UI;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -65,6 +66,7 @@ namespace Prefabs
 
         #endregion
 
+        public Transform Transform => BasePrefab.transform;
         public bool IsDamageable => !_isDestroyed && !IsOwner;
 
         #region Events
@@ -109,7 +111,9 @@ namespace Prefabs
 
             // Owner only ================================
             if (Input.GetKeyDown(KeyCode.Space))
-                SpawnUnitServerRpc();
+                SpawnUnitServerRpc(0);
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+                SpawnUnitServerRpc(1);
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 var model = Model.Value;
@@ -151,12 +155,14 @@ namespace Prefabs
         #region RPCs
 
         [ServerRpc]
-        public void SpawnUnitServerRpc(ServerRpcParams rpcParams = default)
+        public void SpawnUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
         {
-            ulong senderClientId = rpcParams.Receive.SenderClientId;
-            var unit = Instantiate(unitPrefab, Vector3.up * 999f, Quaternion.identity); // Spawn out of map
-            var unitNo = unit.GetComponent<NetworkObject>();
-            unitNo.SpawnWithOwnership(senderClientId);
+            var senderClientId = rpcParams.Receive.SenderClientId;
+            var model = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
+            var unit = Instantiate(unitPrefab, Vector3.up * 999f, Quaternion.identity)
+                .GetComponent<Unit>(); // Spawn out of map
+            unit.Model.Value = model;
+            unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
         }
 
         [Rpc(SendTo.Owner)]

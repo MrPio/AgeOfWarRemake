@@ -112,11 +112,14 @@ namespace Prefabs
             if (_target is null) return;
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             var rb = bullet.GetComponent<Rigidbody>();
-            rb.linearVelocity = ((_target.transform.position + Vector3.up * 0.75f) - bulletSpawnPoint.position) *
+            rb.linearVelocity = ((_target.transform.position + Vector3.up * 0.75f) - bulletSpawnPoint.position)
+                                .normalized *
                                 Model.Value.BulletSpeed;
+            var destroyable = bullet.GetComponent<Destroyable>();
+            destroyable.TargetOnlyDamageable = true;
 
             if (IsOwner)
-                bullet.GetComponent<Destroyable>().OnDestroyCallback = target =>
+                destroyable.OnDestroyCallback = target =>
                 {
                     if (target is not { IsDamageable: true }) return;
                     target.DamageRpc(Model.Value.Damage);

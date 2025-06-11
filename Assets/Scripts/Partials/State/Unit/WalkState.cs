@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Partials.State.Unit
 {
-    public class IdleState : IState
+    public class WalkState : IState
     {
         public bool Shooting;
         public float LastShoot = Time.time + 0.25f;
 
-        public IdleState(bool shooting)
+        public WalkState(bool shooting)
         {
             Shooting = shooting;
         }
@@ -16,19 +16,24 @@ namespace Partials.State.Unit
         public void Enter(Prefabs.Unit unit)
         {
             if (!unit.IsOwner) return;
-            unit.Animator.SetTrigger(Prefabs.Unit.IdleTrigger);
-            unit.PlayingAnimation.Value = Prefabs.Unit.IdleTrigger;
+            unit.Animator.SetTrigger(Prefabs.Unit.WalkTrigger);
+            unit.PlayingAnimation.Value = Prefabs.Unit.WalkTrigger;
         }
 
         public void Update(Prefabs.Unit unit)
         {
             if (!unit.IsOwner) return;
+
+            // Walking
+            var model = unit.Model.Value;
+            if (!model.HasValue) return;
+            var dx = model.MoveSpeed * Time.deltaTime;
+            unit.DeltaX.Value += dx;
+
+            // Shooting
             if (Shooting)
             {
-                var model = unit.Model.Value;
-                if (!model.HasValue) return;
-
-                if (Time.time - LastShoot > 1 / model.ShootRate)
+                if (Time.time - LastShoot > 1/ model.ShootRate)
                 {
                     LastShoot = Time.time;
                     unit.Animator.SetTrigger(Prefabs.Unit.ShootTrigger);

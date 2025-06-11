@@ -8,6 +8,7 @@ public class UnitDebug : MonoBehaviour
     private static readonly int WalkTrigger = Animator.StringToHash("walk");
     private static readonly int AttackTrigger = Animator.StringToHash("attack");
     private static readonly int DieTrigger = Animator.StringToHash("die");
+    private static readonly int Shoot = Animator.StringToHash("shoot");
 
     [SerializeField] private Animator animator;
     [SerializeField] private bool destroyOnSpace;
@@ -25,6 +26,9 @@ public class UnitDebug : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
             animator.SetTrigger(DieTrigger);
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+            animator.SetTrigger(Shoot);
+
         // if (Input.GetKeyDown(KeyCode.Alpha1))
         //     animator.CrossFade(IdleTrigger,0.2f);
         // if (Input.GetKeyDown(KeyCode.Alpha2))

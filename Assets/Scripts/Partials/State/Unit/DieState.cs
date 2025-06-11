@@ -3,7 +3,7 @@ using Unity.Netcode;
 
 namespace Partials.State.Unit
 {
-    public class DyingState : IState
+    public class DieState : IState
     {
         public void Enter(Prefabs.Unit unit)
         {

@@ -1,30 +1,32 @@
 ﻿using System;
+using Interfaces;
 using Model.Turrets;
 using Model.Utils;
 using Unity.Netcode;
 
 namespace Model.Bases
 {
-    public struct Base : INetworkSerializable
+    public struct Base : INetworkSerializable, INullable
     {
         private const string PrefabPath = "Prefabs/Bases/";
 
         public float Hp, MaxHp;
-        public int ExpRequired, UnlockedExpansions;
+        public int ExpRequired, UnlockedExpansions,Level;
         public NetString Name;
         public NetString Prefab;
         public Turrets.Turret[] Turrets;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Base(NetString name, float maxHp, int expRequired, Turrets.Turret[] turrets = null,
+        public Base(NetString name, float maxHp, int expRequired, int level , Turrets.Turret[] turrets = null,
             int unlockedExpansions = 0)
         {
             Hp = maxHp;
             MaxHp = maxHp;
             ExpRequired = expRequired;
             Name = name;
-            Turrets = turrets ?? new Turrets.Turret[] { default, default, default, default };
+            Turrets = turrets ?? new Turret[] { default, default, default, default };
             UnlockedExpansions = unlockedExpansions;
+            Level = level;
             Prefab = PrefabPath + name;
         }
 
@@ -37,12 +39,7 @@ namespace Model.Bases
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref UnlockedExpansions);
             serializer.SerializeValue(ref Turrets);
-
-            // To avoid deep copy each time
-            // if (serializer.IsReader)
-            //     Turrets = new Turret[4];
-            // for (var i = 0; i < 4; i++)
-            //     serializer.SerializeValue(ref Turrets[i]);
+            serializer.SerializeValue(ref Level);
         }
 
         public override string ToString() =>

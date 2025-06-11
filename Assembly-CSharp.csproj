@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Partials\Observable.cs" />
+    <Compile Include="Assets\Scripts\Model\UnitState.cs" />
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\StatisticsMenu.cs" />
@@ -55,16 +56,16 @@
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\WalkState.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\TurretFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
+    <Compile Include="Assets\Scripts\Interfaces\INullable.cs" />
     <Compile Include="Assets\Scripts\Partials\CameraPan.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
-    <Compile Include="Assets\Scripts\Partials\State\Unit\AttackingState.cs" />
     <Compile Include="Assets\Scripts\Model\Units\UnitFactory.cs" />
-    <Compile Include="Assets\Scripts\Partials\State\Unit\DyingState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
-    <Compile Include="Assets\Scripts\Partials\State\Unit\WalkingState.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\DieState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\BasePrefab.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\UnitAnimationEvents.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\Scripts\Prefabs\Base.cs" />
     <Compile Include="Assets\Scripts\Interfaces\IDamageable.cs" />
     <Compile Include="Assets\Scripts\Partials\Destroyable.cs" />
+    <Compile Include="Assets\Scripts\Partials\State\Unit\AttackState.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />

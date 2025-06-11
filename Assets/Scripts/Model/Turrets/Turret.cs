@@ -1,10 +1,11 @@
 ﻿using System;
+using Interfaces;
 using Model.Utils;
 using Unity.Netcode;
 
 namespace Model.Turrets
 {
-    public struct Turret : INetworkSerializable, IEquatable<Turret>
+    public struct Turret : INetworkSerializable, IEquatable<Turret>, INullable
     {
         private const string PrefabPath = "Prefabs/Turrets/";
 

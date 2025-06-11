@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using Partials;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,9 +12,13 @@ namespace Prefabs
     {
         private static readonly Vector2 BloodSpawnBounds = new(0.15f, 0.25f);
         private const float MinBloodDelay = 0.025f;
+
+        [SerializeField] public float bulletSpeed = 3.5f;
         [SerializeField] public Transform hpBarPoint;
         [SerializeField] private Transform bloodSpawnPoint;
         [SerializeField] private GameObject bloodPrefab;
+        [SerializeField] private Transform bulletSpawnPoint;
+        [SerializeField] private GameObject bulletPrefab;
         [NonSerialized] public Unit Unit;
         private float _lastBlood;
 
@@ -31,6 +35,27 @@ namespace Prefabs
                              Vector3.right * Random.Range(-BloodSpawnBounds.x, BloodSpawnBounds.x) +
                              Vector3.up * Random.Range(-BloodSpawnBounds.y, BloodSpawnBounds.y);
             Instantiate(bloodPrefab, spawnPoint, Quaternion.identity);
+        }
+
+
+        // Host & Client
+        public void SpawnBullet(Transform target)
+        {
+            // if (target is null) return; Checked by caller
+
+            var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+            var rb = bullet.GetComponent<Rigidbody>();
+            var dir = Unit.IsOwner ? Vector3.right : Vector3.left;
+            rb.linearVelocity = dir * bulletSpeed;
+            var destroyable = bullet.GetComponent<Destroyable>();
+            destroyable.Target = target.gameObject;
+
+            if (Unit.IsOwner)
+                destroyable.OnDestroyCallback = damageable =>
+                {
+                    if (damageable is not { IsDamageable: true }) return;
+                    damageable.DamageRpc(Unit.Model.Value.ShootDamage);
+                };
         }
     }
 }

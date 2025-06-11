@@ -9,6 +9,7 @@ TagManager:
   - SceneManager
   - LogContainer
   - Turret
+  - Bullet
   layers:
   - Default
   - TransparentFX

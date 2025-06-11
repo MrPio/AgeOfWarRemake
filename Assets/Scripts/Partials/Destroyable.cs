@@ -11,6 +11,8 @@ namespace Partials
         [SerializeField] private GameObject spawnOnDestroy;
         [SerializeField] private float lifespan = 30;
         [NonSerialized] public Action<IDamageable> OnDestroyCallback;
+        [NonSerialized] public GameObject Target;
+        [NonSerialized] public bool TargetOnlyDamageable;
         private float _spawnTime;
         private bool _destroyed;
 
@@ -23,23 +25,29 @@ namespace Partials
 
         private void FixedUpdate()
         {
-            if (lifespan > 0 && Time.time - _spawnTime > lifespan)
+            if (!_destroyed && lifespan > 0 && Time.time - _spawnTime > lifespan)
                 Destroy();
         }
 
-        private void OnTriggerEnter(Collider other)
+
+        private void OnTriggerStay(Collider other)
         {
-            if (onTrigger)
+            if (_destroyed || !onTrigger || (Target is not null && other.gameObject != Target)) return;
+            if (other.CompareTag("Bullet")) return;
+
+            if (other.transform.parent && other.transform.parent.TryGetComponent<IDamageable>(out var damageable))
             {
-                Destroy(delay: 0.065f);
-                if (other.transform.parent && other.transform.parent.TryGetComponent<IDamageable>(out var damageable))
-                    OnDestroyCallback?.Invoke(damageable);
+                if (TargetOnlyDamageable && !damageable.IsDamageable) return; // Includes !IsOwner check
+                OnDestroyCallback?.Invoke(damageable);
             }
+
+            Destroy(delay: 0.1f);
         }
 
         private void Destroy(float delay = 0f)
         {
             if (_destroyed) return;
+            _destroyed = true;
             if (delay > 0)
                 StartCoroutine(DelayedDestroy());
             else
@@ -59,11 +67,6 @@ namespace Partials
                     Instantiate(spawnOnDestroy, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
-        }
-
-        private void OnDestroy()
-        {
-            _destroyed = true;
         }
     }
 }

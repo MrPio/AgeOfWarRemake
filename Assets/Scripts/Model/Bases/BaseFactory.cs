@@ -7,10 +7,13 @@ namespace Model.Bases
     {
         public static readonly Dictionary<Func<Base>, List<Func<Turrets.Turret>>> BaseTurrets = new()
         {
-            { Cave, new List<Func<Turrets.Turret>> { TurretFactory.Rock, TurretFactory.Chicken, TurretFactory.Catapult } }
+            {
+                Cave,
+                new List<Func<Turrets.Turret>> { TurretFactory.Rock, TurretFactory.Chicken, TurretFactory.Catapult }
+            }
         };
 
-        public static Base Cave() => new(name: "Cave", maxHp: 500, expRequired: 0);
+        public static Base Cave() => new(name: "Cave", maxHp: 500, expRequired: 0, level: 1);
 
         public static List<Func<Base>> Bases = new() { Cave };
     }

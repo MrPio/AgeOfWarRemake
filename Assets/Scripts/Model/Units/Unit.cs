@@ -1,32 +1,34 @@
-﻿using Model.Utils;
+﻿using Interfaces;
+using Model.Utils;
 using Unity.Netcode;
 
 namespace Model.Units
 {
-    public struct Unit : INetworkSerializable
+    public struct Unit : INetworkSerializable, INullable
     {
         private const string PrefabPath = "Prefabs/Units/";
 
         public float Hp;
         public float MaxHp;
         public float Damage;
+        public float ShootDamage;
         public float Armor;
         public float MaxArmor;
         public float MoveSpeed;
         public float AttackRate;
+        public float ShootRate;
         public int Cost;
         public float SpawnTime;
         public int Level;
         public NetString Prefab;
         public NetString DisplayName;
-        public float MaxDistance;
+        public float MaxShootingDistance;
         public bool HasValue => !DisplayName.Message.IsEmpty;
 
         public Unit(
             NetString displayName, NetString prefabName, float maxHp, float damage, int cost, float spawnTime,
-            int level,
-            float maxDistance = 0, float moveSpeed = 0.75f * 1.25f, float attackRate = 1f, float armor = 0f,
-            float maxArmor = 0f)
+            int level, float maxShootingDistance = 0, float moveSpeed = 0.75f * 1.25f, float attackRate = 1f,
+            float armor = 0f, float maxArmor = 0f, float shootDamage = 0f, float shootRate = 1f)
         {
             DisplayName = displayName;
             Prefab = PrefabPath + prefabName;
@@ -40,7 +42,9 @@ namespace Model.Units
             Cost = cost;
             SpawnTime = spawnTime;
             Level = level;
-            MaxDistance = maxDistance;
+            MaxShootingDistance = maxShootingDistance;
+            ShootDamage = shootDamage;
+            ShootRate = shootRate;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -48,14 +52,16 @@ namespace Model.Units
             serializer.SerializeValue(ref Hp);
             serializer.SerializeValue(ref MaxHp);
             serializer.SerializeValue(ref Damage);
+            serializer.SerializeValue(ref ShootDamage);
             serializer.SerializeValue(ref Armor);
             serializer.SerializeValue(ref MaxArmor);
             serializer.SerializeValue(ref MoveSpeed);
             serializer.SerializeValue(ref AttackRate);
+            serializer.SerializeValue(ref ShootRate);
             serializer.SerializeValue(ref Cost);
             serializer.SerializeValue(ref SpawnTime);
             serializer.SerializeValue(ref Level);
-            serializer.SerializeValue(ref MaxDistance);
+            serializer.SerializeValue(ref MaxShootingDistance);
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref DisplayName);
         }

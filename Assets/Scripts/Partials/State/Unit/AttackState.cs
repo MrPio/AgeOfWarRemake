@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Partials.State.Unit
 {
-    public class AttackingState : IState
+    public class AttackState : IState
     {
         private float _lastAttack = Time.time - (float)new System.Random().NextDouble() * 0.5f;
 

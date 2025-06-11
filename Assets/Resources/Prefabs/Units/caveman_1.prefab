@@ -1418,6 +1418,8 @@ MonoBehaviour:
   hpBarPoint: {fileID: 13146275362271214}
   bloodSpawnPoint: {fileID: 3445966574217386053}
   bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}
+  bulletSpawnPoint: {fileID: 0}
+  bulletPrefab: {fileID: 0}
 --- !u!114 &2925499693851382915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1519,7 +1521,7 @@ Transform:
   m_GameObject: {fileID: 3664834499152277015}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -0.105041265, y: 0.97097206, z: 0.0114222765}
+  m_LocalPosition: {x: 0, y: 0.97097206, z: 0.0114222765}
   m_LocalScale: {x: 109.22805, y: 109.22805, z: 109.22805}
   m_ConstrainProportionsScale: 0
   m_Children:
