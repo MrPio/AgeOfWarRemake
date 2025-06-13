@@ -1,34 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using LogType = UI.LogType;
 
 namespace Partials.Unit
 {
     public class UnitMovement : NetworkBehaviour
     {
         /// <summary>
-        /// The greater, the buffer size, the more robust to lag the movement, and the greater the delay.
+        /// How far behind real time we render (in seconds). 
         /// </summary>
-        /// <example> If the tick rate is 20 Hz,
-        /// a buffer size of 5 indicates a delay of 0.2 seconds in the client units movement.
-        /// That's affordable, right? </example>
-        [Tooltip("The greater the buffer size, the more robust to lag the movement is, but the greater the delay.")]
-        [SerializeField, Range(2, 20)]
-        private int bufferSize = 5;
+        [SerializeField] private float interpolationBackTime = 0.2f;
 
         /// <summary>
         /// The Z position of the units. The movement is restricted to the X axis.
         /// </summary>
         [SerializeField] public float zPos = 0.085f;
 
+        private struct Snapshot
+        {
+            public float Time; // The client-time
+            public float X;
+        }
+
         /// <summary>
         /// A list of tuples containing the normalized x-axis progression and the client-time of that update.
         /// Note that the timestamp is not important per se,
         /// but the delta time between two later values is what's important.
         /// </summary>
-        private readonly List<Tuple<float, float>> _buffer = new();
+        private readonly List<Snapshot> _buffer = new();
 
         private Prefabs.Unit _unit;
         private float _xEnd, _xStart;
@@ -40,11 +39,12 @@ namespace Partials.Unit
         /// </summary>
         public readonly NetworkVariable<float> X = new();
 
-        private void OnXChanged(float _, float newValue)
-        {
-            _buffer.Add(new Tuple<float, float>(newValue, Time.time));
-            _unit.Sm.logger.Log($"{newValue}-{Time.time}", LogType.ReadingStatus);
-        }
+        private void OnXChanged(float _, float newValue) =>
+            _buffer.Add(new Snapshot
+            {
+                Time = Time.realtimeSinceStartup,
+                X = newValue
+            });
 
         # endregion
 
@@ -80,27 +80,35 @@ namespace Partials.Unit
         private void Update()
         {
             if (IsServer) return; // The server handles the movement directly
-            if (_buffer.Count < bufferSize) return; // Not enough data
+            if (_buffer.Count == 0) return; // Not enough data
 
-            // Replay the server movements using linear interpolation
-            var duration = _buffer[1].Item2 - _buffer[0].Item2;
-            var t = (Time.time - _buffer[0].Item2) / duration;
+            var renderTime = Time.realtimeSinceStartup - interpolationBackTime;
 
-            // Get the real new X value.
-            // You could use Lerp to avoid extrapolation,
-            // but that would make the movement jittery.
-            var xPosNorm =
-                _unit.IsWalking.Value
-                    ? Mathf.LerpUnclamped(_buffer[0].Item1, _buffer[1].Item1, t)
-                    : Mathf.Lerp(_buffer[0].Item1, _buffer[1].Item1, t);
-            var xPos = Mathf.Lerp(_xStart, _xEnd, xPosNorm);
-
-            transform.position = new Vector3(x: xPos, y: 0, z: zPos);
-
-            // Remove the oldest value if there's a newer value in the buffer.
-            // If that's not the case, predict the future position (Using LerpUnclamped)
-            if (t >= 1 && _buffer.Count > bufferSize)
+            // Drop any states that are too old
+            while (_buffer.Count >= 2 && _buffer[1].Time <= renderTime)
                 _buffer.RemoveAt(0);
+
+            if (_buffer.Count >= 2)
+            {
+                // We have at least two states surrounding renderTime → interpolate
+                var t = Mathf.InverseLerp(_buffer[0].Time, _buffer[1].Time, renderTime);
+                var xPosNorm = Mathf.Lerp(_buffer[0].X, _buffer[1].X, t);
+                var xPos = Mathf.Lerp(_xStart, _xEnd, xPosNorm);
+                transform.position = new Vector3(x: xPos, y: 0, z: zPos);
+
+                // Currently no extrapolation is used.
+                // If you want to add it, do like follows:
+                // var xPosNorm =
+                //     _unit.IsWalking.Value
+                //         ? Mathf.LerpUnclamped(_buffer[0].Item1, _buffer[1].Item1, t)
+                //         : Mathf.Lerp(_buffer[0].Item1, _buffer[1].Item1, t);
+            }
+            else
+            {
+                // Only one state available: just snap to it
+                var xPos = Mathf.Lerp(_xStart, _xEnd, _buffer[0].X);
+                transform.position = new Vector3(x: xPos, y: 0, z: zPos);
+            }
         }
 
         #endregion
