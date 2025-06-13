@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
@@ -45,7 +46,14 @@ namespace Managers
                 : GameManager.BaseAlly.OwnerClientId;
             logger.Log(
                 $"Winner is {GameManager.Winner}! {GameManager.BaseEnemy.OwnerClientId}-{GameManager.BaseAlly.OwnerClientId} {GameManager.BaseAlly.Model.Value.Hp} {GameManager.BaseEnemy.Model.Value.Hp}");
-            statisticsScreen.SetActive(true);
+            StartCoroutine(ShowStatisticsScreen());
+            return;
+
+            IEnumerator ShowStatisticsScreen()
+            {
+                yield return new WaitForSeconds(1.5f);
+                statisticsScreen.SetActive(true);
+            }
         }
 
         public async Task QuitLobby()

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Partials
+namespace Partials.Unit
 {
     public class UnitAnimationEvents : MonoBehaviour
     {

@@ -1,14 +1,15 @@
 using Managers;
 using UnityEngine;
 
-namespace Partials
+namespace Partials.Camera
 {
     public class CameraEdgePan : MonoBehaviour
     {
         [SerializeField] private float edgeThreshold = 225f, edgeScrollSensitivity = 5f;
         [SerializeField] private float marginFromBase = 2.8f;
         [SerializeField] private float dragSensitivity = 0.01f;
-        [SerializeField] private Camera cam;
+        [SerializeField] private UnityEngine.Camera cam;
+        [SerializeField] private Texture2D cursorArrow, cursorHand;
         private float _currentSpeed;
         private Vector2 _boundX;
         private static SceneManager _sm;
@@ -25,6 +26,7 @@ namespace Partials
             _boundX = new Vector2(-_sm.fieldLenght / 2 + marginFromBase, _sm.fieldLenght / 2 - marginFromBase);
             var actualXBound = _boundX / (((float)Screen.width / Screen.height) / (16f / 9f));
             cam.transform.position = new Vector3(actualXBound.x, cam.transform.position.y, cam.transform.position.z);
+            Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
         }
 
         private void Update()
@@ -33,9 +35,13 @@ namespace Partials
             {
                 isDragging = true;
                 lastMouseX = Input.mousePosition.x;
+                Cursor.SetCursor(cursorHand, Vector2.zero, CursorMode.Auto);
             }
             else if (Input.GetMouseButtonUp(0))
+            {
                 isDragging = false;
+                Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
+            }
 
             var actualXBound =
                 _boundX / ((float)Screen.width / Screen.height / (16f / 9f)); // Window may resize runtime

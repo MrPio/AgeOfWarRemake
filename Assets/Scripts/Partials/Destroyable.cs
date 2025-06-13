@@ -12,7 +12,7 @@ namespace Partials
         [SerializeField] private float lifespan = 30;
         [NonSerialized] public Action<IDamageable> OnDestroyCallback;
         [NonSerialized] public GameObject Target;
-        [NonSerialized] public bool TargetOnlyDamageable;
+        [NonSerialized] public ulong? TargetOwner; // Used when there is not a precise Target
         private float _spawnTime;
         private bool _destroyed;
 
@@ -29,7 +29,6 @@ namespace Partials
                 Destroy();
         }
 
-
         private void OnTriggerStay(Collider other)
         {
             if (_destroyed || !onTrigger || (Target is not null && other.gameObject != Target)) return;
@@ -37,7 +36,7 @@ namespace Partials
 
             if (other.transform.parent && other.transform.parent.TryGetComponent<IDamageable>(out var damageable))
             {
-                if (TargetOnlyDamageable && !damageable.IsDamageable) return; // Includes !IsOwner check
+                if (TargetOwner is not null && damageable.Owner != TargetOwner) return; // Includes !IsOwner check
                 OnDestroyCallback?.Invoke(damageable);
             }
 

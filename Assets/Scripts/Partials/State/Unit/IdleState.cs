@@ -1,11 +1,12 @@
-﻿using Managers;
+﻿using System;
+using Managers;
 using UnityEngine;
 
 namespace Partials.State.Unit
 {
     public class IdleState : IState
     {
-        public bool Shooting;
+        public readonly bool Shooting;
         public float LastShoot = Time.time + 0.25f;
 
         public IdleState(bool shooting)
@@ -13,28 +14,22 @@ namespace Partials.State.Unit
             Shooting = shooting;
         }
 
-        public void Enter(Prefabs.Unit unit)
-        {
-            if (!unit.IsOwner) return;
-            unit.Animator.SetTrigger(Prefabs.Unit.IdleTrigger);
-            unit.PlayingAnimation.Value = Prefabs.Unit.IdleTrigger;
-        }
+        public override bool Equals(object obj) => obj is IdleState state && Shooting == state.Shooting;
+        public override int GetHashCode() => Shooting.GetHashCode();
+
+        public void Enter(Prefabs.Unit unit) =>
+            unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
 
         public void Update(Prefabs.Unit unit)
         {
-            if (!unit.IsOwner) return;
-            if (Shooting)
-            {
-                var model = unit.Model.Value;
-                if (!model.HasValue) return;
+            if (!Shooting) return;
+            var model = unit.Model.Value;
+            if (!model.HasValue) return;
 
-                if (Time.time - LastShoot > 1 / model.ShootRate)
-                {
-                    LastShoot = Time.time;
-                    unit.Animator.SetTrigger(Prefabs.Unit.ShootTrigger);
-                    unit.PlayingAnimation.Value = Prefabs.Unit.IdleTrigger;
-                    unit.PlayingAnimation.Value = Prefabs.Unit.ShootTrigger;
-                }
+            if (Time.time - LastShoot > 1 / model.ShootRate)
+            {
+                LastShoot = Time.time;
+                unit.PlayAnimation(Prefabs.Unit.ShootTrigger);
             }
         }
 

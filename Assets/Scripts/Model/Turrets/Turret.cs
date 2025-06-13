@@ -17,7 +17,7 @@ namespace Model.Turrets
         public bool HasValue => !Name.Message.IsEmpty;
 
         public Turret(float damage, float range, float bulletSpeed, int cost, int sellPrice, NetString name,
-            NetString prefabName)
+                      NetString prefabName)
         {
             Damage = damage;
             Range = range;
@@ -35,7 +35,7 @@ namespace Model.Turrets
             serializer.SerializeValue(ref BulletSpeed);
             serializer.SerializeValue(ref Cost);
             serializer.SerializeValue(ref SellPrice);
-            serializer.SerializeValue(ref Name);    
+            serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Prefab);
         }
 

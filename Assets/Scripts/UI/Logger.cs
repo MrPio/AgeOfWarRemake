@@ -42,13 +42,13 @@ namespace UI
                 text.color = color;
             }
 
-            if (alsoConsole) Debug.Log(message);
+            if (alsoConsole) UnityEngine.Debug.Log(message);
         }
 
         public void LogError(string message)
         {
             Log(message, LogType.Error, alsoConsole: false);
-            Debug.LogError(message);
+            UnityEngine.Debug.LogError(message);
         }
 
         private void Update()

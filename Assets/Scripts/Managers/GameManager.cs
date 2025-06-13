@@ -20,10 +20,11 @@ namespace Managers
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly, BaseEnemy;
-        [NonSerialized] public ulong Winner;
+        [NonSerialized] public ulong? Winner;
         [NonSerialized] public int Moneys = 175;
+        public bool IsGameOver => Winner is not null;
 
-        #region NetworkVariables
+        #region NetVars
 
         public readonly NetworkVariable<bool> GameStarted = new();
 

@@ -3513,6 +3513,8 @@ MonoBehaviour:
   marginFromBase: 2.75
   dragSensitivity: 0.005
   cam: {fileID: 330585545}
+  cursorArrow: {fileID: 2800000, guid: 90688b1541cf44f48a186c4162935ff4, type: 3}
+  cursorHand: {fileID: 2800000, guid: 502eb6e085305e84b9a31d4172da0d6f, type: 3}
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5218,7 +5220,7 @@ MonoBehaviour:
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 25e1faeaf6e1d664098e22948ec5952e, type: 2}
-    TickRate: 60
+    TickRate: 10
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
     ConnectionData: 

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using EasyButtons;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -19,11 +17,12 @@ namespace Prefabs
         private void Awake()
         {
             _base = transform.parent.GetComponent<Base>();
-            UpdateState(0, new Model.Turrets.Turret[] { default, default, default, default });
+            UpdateTurretConfiguration(0, new Model.Turrets.Turret[] { default, default, default, default });
         }
 
+        // Host & Client
         // Update the state of the base. If the state is unchanged, nothing is done (lazy).
-        public void UpdateState(int numExpansions, Model.Turrets.Turret[] newTurrets)
+        public void UpdateTurretConfiguration(int numExpansions, Model.Turrets.Turret[] newTurrets)
         {
             // Checking one expansion slot at a time
             for (var i = 0; i < 4; i++)
@@ -31,40 +30,28 @@ namespace Prefabs
                 // Show/Hide expansions
                 expansions[i].SetActive(i < numExpansions);
 
-                // Remove invalid turrets
+                // Remove invalid turrets (Server-only)
                 if (_base.IsServer)
                 {
                     var newTurret = newTurrets[i];
                     if (!_base.Turrets[i] || _base.Turrets[i]!.Model.Value != newTurret)
                     {
-                        print($"Destroying {(!_base.Turrets[i] ? "null" : _base.Turrets[i].Index.Value)}");
-                        print(string.Join(",", _base.Turrets.ToList()));
                         _base.Turrets[i]?.GetComponent<NetworkObject>().Despawn(destroy: true);
 
                         // Instantiate new turrets
                         if (newTurret.HasValue)
                         {
-                            print($"Instantiating {newTurret.Prefab}");
-                            var prefab = Resources.Load<GameObject>(newTurret.Prefab);
-                            _base.Turrets[i] = Instantiate(prefab).GetComponent<Turret>();
+                            var turretPrefab = Resources.Load<GameObject>(newTurret.Prefab);
+                            _base.Turrets[i] = Instantiate(turretPrefab).GetComponent<Turret>();
 
-                            // Assigning before spawning... it works, but is it safe?
-                            _base.Turrets[i].Index.Value = (byte)i; // To ensure having the value in onNetworkSpawn()
+                            // Assigning before spawning to ensure having the value in onNetworkSpawn()
+                            // ...it works, but is it safe?
+                            _base.Turrets[i].Index.Value = (byte)i;
                             _base.Turrets[i].Model.Value = newTurret;
                             _base.Turrets[i].GetComponent<NetworkObject>().SpawnWithOwnership(_base.OwnerClientId);
                         }
                     }
                 }
-            }
-        }
-
-        [Button]
-        private void Debug()
-        {
-            foreach (var turret in GameObject.FindGameObjectsWithTag("Turret"))
-            {
-                print(turret);
-                print(turret == null);
             }
         }
     }

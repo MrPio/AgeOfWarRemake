@@ -1,5 +1,4 @@
-﻿using System;
-using Interfaces;
+﻿using Interfaces;
 using Model.Turrets;
 using Model.Utils;
 using Unity.Netcode;
@@ -11,14 +10,14 @@ namespace Model.Bases
         private const string PrefabPath = "Prefabs/Bases/";
 
         public float Hp, MaxHp;
-        public int ExpRequired, UnlockedExpansions,Level;
+        public int ExpRequired, UnlockedExpansions, Level;
         public NetString Name;
         public NetString Prefab;
-        public Turrets.Turret[] Turrets;
+        public Turret[] Turrets;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Base(NetString name, float maxHp, int expRequired, int level , Turrets.Turret[] turrets = null,
-            int unlockedExpansions = 0)
+        public Base(NetString name, float maxHp, int expRequired, int level, Turret[] turrets = null,
+                    int unlockedExpansions = 1)
         {
             Hp = maxHp;
             MaxHp = maxHp;

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Partials
+namespace Partials.Camera
 {
     public class RotateSkybox : MonoBehaviour
     {
