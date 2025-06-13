@@ -41,17 +41,19 @@ namespace Managers
 
         public void EndGame()
         {
-            GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
-                ? GameManager.BaseEnemy.OwnerClientId
-                : GameManager.BaseAlly.OwnerClientId;
-            logger.Log(
-                $"Winner is {GameManager.Winner}! {GameManager.BaseEnemy.OwnerClientId}-{GameManager.BaseAlly.OwnerClientId} {GameManager.BaseAlly.Model.Value.Hp} {GameManager.BaseEnemy.Model.Value.Hp}");
+            GameManager.IsGameOver = true;
             StartCoroutine(ShowStatisticsScreen());
             return;
 
             IEnumerator ShowStatisticsScreen()
             {
-                yield return new WaitForSeconds(1.5f);
+                yield return new WaitForSeconds(1f);
+                
+            GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
+                ? GameManager.BaseEnemy.OwnerClientId
+                : GameManager.BaseAlly.OwnerClientId;
+            logger.Log(
+                $"Winner is {GameManager.Winner}! {GameManager.BaseEnemy.OwnerClientId}-{GameManager.BaseAlly.OwnerClientId} {GameManager.BaseAlly.Model.Value.Hp} {GameManager.BaseEnemy.Model.Value.Hp}");
                 statisticsScreen.SetActive(true);
             }
         }

@@ -22,7 +22,7 @@ namespace Managers
         [NonSerialized] public Base BaseAlly, BaseEnemy;
         [NonSerialized] public ulong? Winner;
         [NonSerialized] public int Moneys = 175;
-        public bool IsGameOver => Winner is not null;
+        public bool IsGameOver;
 
         #region NetVars
 

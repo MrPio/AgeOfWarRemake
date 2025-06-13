@@ -18,14 +18,14 @@ namespace Prefabs
     {
         #region IDamageable implementation
 
-        public Transform PrefabTransform => BasePrefab.transform;
+        public Transform PrefabTransform => _isDestroyed ? null : BasePrefab?.transform;
         public string Name => Model.Value.Name;
         public ulong Owner => OwnerClientId;
 
         // Server-only
         public void Damage(float damage)
         {
-            if (!IsServer || damage <= 0 || !Model.Value.HasValue || _isDestroyed) return;
+            if (!IsServer || damage <= 0 || !Model.Value.HasValue || _isDestroyed || _sm.GameManager.IsGameOver) return;
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
             Model.Value = newModel;
@@ -80,12 +80,20 @@ namespace Prefabs
             }
 
             // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
-            if (IsServer && newValue.Hp <= 0)
+            if (newValue.Hp <= 0)
             {
-                // Destroy turrets
-                foreach (var turret in Turrets.ToList())
-                    turret?.GetComponent<NetworkObject>().Despawn(destroy: true);
-                gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
+                _isDestroyed = true;
+
+                // Hide base and hpBar
+                gameObject.SetActive(false);
+                _hpBar.gameObject.SetActive(false);
+
+                // Hide turrets
+                foreach (var turret in Turrets)
+                    turret?.gameObject.SetActive(false);
+
+                // TODO: spawn explosion
+                _sm.EndGame();
             }
 
             // Update the turret configuration (lazy)
@@ -126,12 +134,7 @@ namespace Prefabs
 
         public override void OnNetworkDespawn()
         {
-            // TODO: spawn explosion
             Model.OnValueChanged -= OnModelChanged;
-
-            Destroy(_hpBar.gameObject);
-            _isDestroyed = true;
-            _sm.EndGame();
         }
 
         private void Update()
@@ -184,7 +187,6 @@ namespace Prefabs
             // ...it works, but is it safe?
             unit.Model.Value = model;
             unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
-            print(senderClientId);
         }
 
         [ServerRpc]

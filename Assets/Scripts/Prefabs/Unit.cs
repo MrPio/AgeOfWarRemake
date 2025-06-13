@@ -24,7 +24,8 @@ namespace Prefabs
         // Sever-only
         public void Damage(float damage)
         {
-            if (!IsServer || damage <= 0 || !Model.Value.HasValue || _state is DieState || _isDestroyed) return;
+            if (!IsServer || damage <= 0 || !Model.Value.HasValue || _state is DieState || _isDestroyed ||
+                Sm.GameManager.IsGameOver) return;
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
             Model.Value = newModel;
@@ -74,8 +75,9 @@ namespace Prefabs
 
         #region NetVars
 
-        public readonly NetworkVariable<Model.Units.Unit> Model = new();
+        // Used to activate extrapolation in client-side unit movement
         public readonly NetworkVariable<bool> IsWalking = new();
+        public readonly NetworkVariable<Model.Units.Unit> Model = new();
         private readonly NetworkVariable<int> _playingAnimation = new(-1);
         private readonly NetworkVariable<NetworkObjectReference> _targetRef = new();
 
@@ -203,7 +205,6 @@ namespace Prefabs
 
             // Prevent re-assigning the same state
             if (_state?.Equals(newState) == true) return;
-            Sm.logger.Log($"Set state of Unit {NetworkObjectId} to {newState.GetType().Name}", LogType.ReadingStatus);
 
             // Remove shooting lag between 2 shooting states
             var wasShooting = _state is IdleState { Shooting: true } or WalkState { Shooting: true };
@@ -335,7 +336,11 @@ namespace Prefabs
             // This is just a rendering concern.
             // The client can spawn the bullet on its own, what matters is the collision,
             // which is taken care of by the server.
-            _animationNotify.OnShoot = () => _unitPrefab.SpawnBullet(_target.PrefabTransform);
+            _animationNotify.OnShoot = () =>
+            {
+                if (_target?.PrefabTransform is not null)
+                    _unitPrefab.SpawnBullet(_target.PrefabTransform);
+            };
 
             #endregion
         }
