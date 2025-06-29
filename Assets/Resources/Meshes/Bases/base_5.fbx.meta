@@ -3,7 +3,17 @@ guid: 9066867306f59a84ca6ae39c704c84ff
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Turret_5_1
+    second: {fileID: 2800000, guid: ec514e74504578a45b1cd33f389b858e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: texture_pbr_v128
+    second: {fileID: 2800000, guid: 78962e4254c7b8748ac525471e0190d0, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
