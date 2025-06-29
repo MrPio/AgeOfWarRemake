@@ -8,6 +8,7 @@ namespace Model.Turrets
     public struct Turret : INetworkSerializable, IEquatable<Turret>, INullable
     {
         private const string PrefabPath = "Prefabs/Turrets/";
+        private const float DefaultSellRatio = 0.5f;
 
         // The ROF is given by the animation speed
         public float Damage, Range, BulletSpeed;
@@ -16,14 +17,14 @@ namespace Model.Turrets
         public NetString Prefab;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Turret(float damage, float range, float bulletSpeed, int cost, int sellPrice, NetString name,
-                      NetString prefabName)
+        public Turret(float damage, float range, int cost, NetString name,
+                      NetString prefabName, float bulletSpeed = 0f)
         {
             Damage = damage;
             Range = range;
             BulletSpeed = bulletSpeed;
             Cost = cost;
-            SellPrice = sellPrice;
+            SellPrice = (int)(cost * DefaultSellRatio);
             Name = name;
             Prefab = PrefabPath + prefabName;
         }
