@@ -275,7 +275,7 @@ namespace Prefabs
                      ColliderWidth / 2 + inFrontEnemy.ColliderWidth / 2)
             {
                 // Don't change the target to a unit if attacking the base
-                if (_target is Base) return;
+                // if (_target is Base) return;
 
                 newState = new AttackState();
                 _target = inFrontEnemy;
