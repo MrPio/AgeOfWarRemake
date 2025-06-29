@@ -13,4 +13,4 @@ namespace Model.Bases
 
         public static List<Func<Base>> Bases = new() { Cave, Castle, Church, Camp, Ship };
     }
-}○
+}
