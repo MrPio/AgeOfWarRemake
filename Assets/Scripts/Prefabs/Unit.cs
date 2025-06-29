@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Interfaces;
 using Managers;
 using Partials.State.Unit;
@@ -37,7 +38,8 @@ namespace Prefabs
 
         // Unit constants (Server-only)
         private const float SpawnWalkDelay = 0.25f;
-        private float _colliderWidth;
+        private const float DeadDelay = 3.0f;
+        [NonSerialized] public float ColliderWidth;
 
         // Animation trigger hashes
         public static readonly int IdleTrigger = Animator.StringToHash("idle");
@@ -244,21 +246,23 @@ namespace Prefabs
             var thisIndex = allies.IndexOf(this);
             var inFrontAlly = thisIndex > 0 ? allies[thisIndex - 1] : null;
             var inFrontEnemy = enemies.Count > 0 ? enemies[0] : null;
-            IDamageable shootTarget =
-                (inFrontEnemy is not null && math.abs(inFrontEnemy.transform.position.x - transform.position.x) <
+            IDamageable shootTarget = Model.Value.MaxShootingDistance > 0.1
+                ? (inFrontEnemy is not null && math.abs(inFrontEnemy.transform.position.x - transform.position.x) <
                     Model.Value.MaxShootingDistance)
                     ? inFrontEnemy
                     : (enemyBase is not null && math.abs(enemyBase.transform.position.x - transform.position.x) <
                         Model.Value.MaxShootingDistance)
                         ? enemyBase
-                        : null;
+                        : null
+                : null;
 
             // The ally has precedence over the enemy, which has in turn precedence over base
             IState newState;
 
             // Waiting for ally
             if (inFrontAlly is not null &&
-                math.abs(inFrontAlly.transform.position.x - transform.position.x) < _colliderWidth)
+                math.abs(inFrontAlly.transform.position.x - transform.position.x) <
+                ColliderWidth / 2 + inFrontAlly.ColliderWidth / 2)
             {
                 newState = new IdleState(shooting: shootTarget is not null);
                 if (shootTarget is not null)
@@ -267,7 +271,8 @@ namespace Prefabs
 
             // Attacking the enemy
             else if (inFrontEnemy is not null &&
-                     math.abs(inFrontEnemy.transform.position.x - transform.position.x) < _colliderWidth)
+                     math.abs(inFrontEnemy.transform.position.x - transform.position.x) <
+                     ColliderWidth / 2 + inFrontEnemy.ColliderWidth / 2)
             {
                 // Don't change the target to a unit if attacking the base
                 if (_target is Base) return;
@@ -278,7 +283,7 @@ namespace Prefabs
 
             // Attacking the base
             else if (enemyBase is not null &&
-                     math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) < _colliderWidth)
+                     math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) < ColliderWidth)
             {
                 newState = new AttackState();
                 _target = enemyBase;
@@ -322,7 +327,7 @@ namespace Prefabs
             // Store the unit prefab component references
             _animator = _unitPrefab.GetComponent<Animator>();
             _hpBarPoint = _unitPrefab.hpBarPoint;
-            _colliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x;
+            ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x;
             _animationNotify = _unitPrefab.GetComponent<UnitAnimationEvents>();
 
             #region Animation events listeners
@@ -330,7 +335,6 @@ namespace Prefabs
             if (IsServer)
             {
                 _animationNotify.OnAttack = () => _target.Damage(Model.Value.Damage);
-                _animationNotify.OnDie = () => gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
             }
 
             // This is just a rendering concern.
@@ -343,6 +347,20 @@ namespace Prefabs
             };
 
             #endregion
+        }
+
+        // Server-only
+        public void Die()
+        {
+            if (!IsServer) return;
+            StartCoroutine(DelayedDead());
+            return;
+
+            IEnumerator DelayedDead()
+            {
+                yield return new WaitForSeconds(DeadDelay);
+                gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
+            }
         }
 
         #endregion

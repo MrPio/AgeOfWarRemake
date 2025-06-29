@@ -85,5 +85,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  bufferSize: 3
-  zPos: 0.085
+  interpolationBackTime: 0.2
+  zPos: 0

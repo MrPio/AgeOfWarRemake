@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Partials.Unit
 {
+    /// <summary>
+    /// Client-only utility to smoothly move the unit.
+    /// </summary>
     public class UnitMovement : NetworkBehaviour
     {
         /// <summary>

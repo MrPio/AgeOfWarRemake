@@ -12,7 +12,6 @@ namespace Partials.State.Unit
         public void Enter(Prefabs.Unit unit) =>
             unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
 
-
         public void Update(Prefabs.Unit unit)
         {
             var model = unit.Model.Value;

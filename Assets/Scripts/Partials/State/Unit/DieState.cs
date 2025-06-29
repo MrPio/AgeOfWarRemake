@@ -13,6 +13,7 @@ namespace Partials.State.Unit
             // Free waiting units before running animation
             (unit.IsOwner ? unit.Sm.GameManager.UnitsAlly : unit.Sm.GameManager.UnitsEnemy).Remove(unit);
             unit.PlayAnimation(Prefabs.Unit.DieTrigger);
+            unit.Die();
         }
 
         public void Update(Prefabs.Unit unit)

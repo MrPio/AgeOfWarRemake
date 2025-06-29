@@ -148,6 +148,8 @@ namespace Prefabs
                     BuyUnitServerRpc(0);
                 if (Input.GetKeyDown(KeyCode.LeftShift))
                     BuyUnitServerRpc(1);
+                if (Input.GetKeyDown(KeyCode.Tab))
+                    BuyUnitServerRpc(2);
 
                 // Turrets
                 if (Input.GetKeyDown(KeyCode.Alpha1))

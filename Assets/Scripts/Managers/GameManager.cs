@@ -22,11 +22,11 @@ namespace Managers
         [NonSerialized] public Base BaseAlly, BaseEnemy;
         [NonSerialized] public ulong? Winner;
         [NonSerialized] public int Moneys = 175;
-        public bool IsGameOver;
+        [NonSerialized] public bool IsGameOver;
 
         #region NetVars
 
-        public readonly NetworkVariable<bool> GameStarted = new();
+        private readonly NetworkVariable<bool> _gameStarted = new();
 
         #endregion
 
@@ -81,7 +81,7 @@ namespace Managers
                 NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
             }
 
-            GameStarted.OnValueChanged += OnGameStartedChanged;
+            _gameStarted.OnValueChanged += OnGameStartedChanged;
         }
 
         public override void OnDestroy()
@@ -96,8 +96,8 @@ namespace Managers
                 }
             }
 
-            if (GameStarted != null)
-                GameStarted.OnValueChanged -= OnGameStartedChanged;
+            if (_gameStarted != null)
+                _gameStarted.OnValueChanged -= OnGameStartedChanged;
         }
 
         #endregion
@@ -113,7 +113,7 @@ namespace Managers
         private void OnClientDisconnected(ulong clientId)
         {
             _sm.logger.Log($"Player {clientId} disconnected.", LogType.HostClientConnection);
-            if (GameStarted.Value)
+            if (_gameStarted.Value)
                 EndGame();
         }
 
@@ -123,7 +123,7 @@ namespace Managers
             if (NetworkManager.Singleton.ConnectedClients.Count == 2) // This includes the host
             {
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
-                GameStarted.Value = true;
+                _gameStarted.Value = true;
             }
             else
             {
@@ -135,7 +135,7 @@ namespace Managers
         private void EndGame()
         {
             _sm.logger.Log("Ending game...", LogType.HostClientConnection);
-            GameStarted.Value = false;
+            _gameStarted.Value = false;
 
             // You could also trigger a UI message, return to menu, etc.
         }
