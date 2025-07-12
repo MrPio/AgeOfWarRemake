@@ -20,7 +20,7 @@ namespace Prefabs
 
         public Transform PrefabTransform => _isDestroyed ? null : BasePrefab?.transform;
         public string Name => Model.Value.Name;
-        public ulong Owner => OwnerClientId;
+        public ulong Owner => IsBot.Value ? 2 : OwnerClientId;
 
         // Server-only
         public void Damage(float damage)
@@ -47,12 +47,14 @@ namespace Prefabs
 
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
+        private bool _isLeft;
 
         #endregion
 
         #region NetVars
 
         public readonly NetworkVariable<Model.Bases.Base> Model = new(BaseFactory.Cave());
+        public readonly NetworkVariable<bool> IsBot = new(); // Readonly
 
         #region Listeners
 
@@ -72,6 +74,7 @@ namespace Prefabs
                 if (_hpBar is null)
                 {
                     var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
+                    go.transform.position = Vector3.down * 100;
                     _hpBar = go.GetComponent<HpBar>();
                     _hpBar.Target = hpBarPoint;
                 }
@@ -84,16 +87,16 @@ namespace Prefabs
             {
                 _isDestroyed = true;
 
-                // Hide base and hpBar
-                gameObject.SetActive(false);
-                _hpBar.gameObject.SetActive(false);
-
                 // Hide turrets
                 foreach (var turret in Turrets)
                     turret?.gameObject.SetActive(false);
 
                 // TODO: spawn explosion
                 _sm.EndGame();
+
+                // Hide base and hpBar
+                _hpBar.gameObject.SetActive(false);
+                gameObject.SetActive(false);
             }
 
             // Update the turret configuration (lazy)
@@ -113,14 +116,17 @@ namespace Prefabs
 
         public override void OnNetworkSpawn()
         {
-            if (IsOwner) _sm.GameManager.BaseAlly = this;
+            _isLeft = IsOwner && !IsBot.Value;
+            if (IsBot.Value) gameObject.AddComponent<BotAI>();
+
+            if (_isLeft) _sm.GameManager.BaseAlly = this;
             else _sm.GameManager.BaseEnemy = this;
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
 
             // Initialize the base position based on ownership.
-            if (IsOwner)
+            if (_isLeft)
             {
                 transform.position = new Vector3(-_sm.fieldLenght / 2, transform.position.y, transform.position.z);
                 transform.localScale = new Vector3(1, 1, 1);
@@ -141,7 +147,7 @@ namespace Prefabs
         {
             // Player Input is always owner-only
             // This is for debug purpose only.
-            if (IsOwner)
+            if (_isLeft)
             {
                 // Units
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -150,6 +156,9 @@ namespace Prefabs
                     BuyUnitServerRpc(1);
                 if (Input.GetKeyDown(KeyCode.Tab))
                     BuyUnitServerRpc(2);
+
+                if (Input.GetKeyDown(KeyCode.RightAlt))
+                    EvolveServerRpc();
 
                 // Turrets
                 if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -175,7 +184,7 @@ namespace Prefabs
         #region RPCs
 
         [ServerRpc]
-        private void BuyUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
+        public void BuyUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
         {
             var senderClientId = rpcParams.Receive.SenderClientId;
             var model = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
@@ -188,11 +197,12 @@ namespace Prefabs
             // Assigning before spawning to ensure having the value in onNetworkSpawn()
             // ...it works, but is it safe?
             unit.Model.Value = model;
+            unit.IsBot.Value = IsBot.Value;
             unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
         }
 
         [ServerRpc]
-        private void BuyTurretServerRpc(byte expansionIndex, byte turretIndex)
+        public void BuyTurretServerRpc(byte expansionIndex, byte turretIndex)
         {
             var model = Model.Value;
             var turretModel = TurretFactory.Turrets[Model.Value.Level - 1][turretIndex]();
@@ -227,7 +237,15 @@ namespace Prefabs
         [ServerRpc]
         public void EvolveServerRpc()
         {
-            //TODO evolve base
+            //TODO check exp
+
+            // No more ages
+            if (BaseFactory.Bases.Count <= Model.Value.Level) return;
+
+            var newModel = BaseFactory.Bases[Model.Value.Level]();
+            newModel.Hp = Model.Value.Hp;
+            newModel.UnlockedExpansions = newModel.UnlockedExpansions;
+            Model.Value = newModel;
         }
 
         #endregion

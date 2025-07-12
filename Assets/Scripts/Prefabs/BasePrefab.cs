@@ -48,6 +48,7 @@ namespace Prefabs
                             // ...it works, but is it safe?
                             _base.Turrets[i].Index.Value = (byte)i;
                             _base.Turrets[i].Model.Value = newTurret;
+                            _base.Turrets[i].IsBot.Value = _base.IsBot.Value;
                             _base.Turrets[i].GetComponent<NetworkObject>().SpawnWithOwnership(_base.OwnerClientId);
                         }
                     }

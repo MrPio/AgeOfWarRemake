@@ -20,7 +20,7 @@ namespace Prefabs
 
         public Transform PrefabTransform => _isDestroyed ? null : _unitPrefab?.transform;
         public string Name => Model.Value.DisplayName;
-        public ulong Owner => OwnerClientId;
+        public ulong Owner => IsBot.Value?2:OwnerClientId;
 
         // Sever-only
         public void Damage(float damage)
@@ -65,6 +65,7 @@ namespace Prefabs
         [NonSerialized] public UnitMovement Movement;
         private UnitPrefab _unitPrefab;
         private UnitAnimationEvents _animationNotify;
+        [NonSerialized] public bool IsLeft;
 
         #endregion
 
@@ -82,6 +83,7 @@ namespace Prefabs
         public readonly NetworkVariable<Model.Units.Unit> Model = new();
         private readonly NetworkVariable<int> _playingAnimation = new(-1);
         private readonly NetworkVariable<NetworkObjectReference> _targetRef = new();
+        public readonly NetworkVariable<bool> IsBot = new(); // Readonly
 
         #region Listeners
 
@@ -144,11 +146,12 @@ namespace Prefabs
 
         public override void OnNetworkSpawn()
         {
+            IsLeft = IsOwner && !IsBot.Value;
             _spawnTime = Time.time;
-            AllyBase = IsOwner ? Sm.GameManager.BaseAlly : Sm.GameManager.BaseEnemy;
-            EnemyBase = IsOwner ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
-            (IsOwner ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Add(this);
-            transform.localScale = new Vector3(IsOwner ? 1 : -1, 1, 1); // Rendering concern
+            AllyBase = IsLeft ? Sm.GameManager.BaseAlly : Sm.GameManager.BaseEnemy;
+            EnemyBase = IsLeft ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
+            (IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Add(this);
+            transform.localScale = new Vector3(IsLeft ? 1 : -1, 1, 1); // Rendering concern
 
             # region NetVars listening
 
@@ -236,9 +239,9 @@ namespace Prefabs
             if (!IsServer || _unitPrefab is null || _state is DieState) return;
 
             // The units are stored like a FIFO list in GameManager: [unit_0, unit_1 (this), unit_2]
-            var allies = IsOwner ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
-            var enemies = IsOwner ? Sm.GameManager.UnitsEnemy : Sm.GameManager.UnitsAlly;
-            var enemyBase = IsOwner ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
+            var allies = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
+            var enemies = IsLeft ? Sm.GameManager.UnitsEnemy : Sm.GameManager.UnitsAlly;
+            var enemyBase = IsLeft ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
 
 
             // Get the ally and enemy in front of this unit

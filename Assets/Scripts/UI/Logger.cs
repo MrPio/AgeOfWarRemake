@@ -53,6 +53,7 @@ namespace UI
 
         private void Update()
         {
+            if (!Application.isEditor) return;
             if (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.KeypadMinus))
                 _canvasGroup.alpha = 1 - _canvasGroup.alpha;
         }

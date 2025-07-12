@@ -31,7 +31,8 @@ namespace Prefabs
 
         #region Data
 
-        [NonSerialized] private IDamageable _target;
+        private IDamageable _target;
+        private bool _isLeft;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace Prefabs
         public readonly NetworkVariable<Model.Turrets.Turret> Model = new(); // Readonly
         private readonly NetworkVariable<int> _playingAnimation = new(-1);
         private readonly NetworkVariable<NetworkObjectReference> _targetRef = new();
+        public readonly NetworkVariable<bool> IsBot = new(); // Readonly
 
         #region Listeners
 
@@ -72,11 +74,12 @@ namespace Prefabs
 
         public override void OnNetworkSpawn()
         {
-            _base = IsOwner ? _sm.GameManager.BaseAlly : _sm.GameManager.BaseEnemy;
+            _isLeft = IsOwner && !IsBot.Value;
+            _base = _isLeft ? _sm.GameManager.BaseAlly : _sm.GameManager.BaseEnemy;
             var i = Index.Value;
             _base.Turrets[i] = this;
             transform.position = _base.BasePrefab.turretsPos[i].transform.position;
-            transform.localScale = new Vector3(IsOwner ? 1 : -1, 1, 1);
+            transform.localScale = new Vector3(_isLeft ? 1 : -1, 1, 1);
 
             # region NetVar listening
 
@@ -113,7 +116,7 @@ namespace Prefabs
             if (_target?.PrefabTransform is not null)
             {
                 var dir = ((_target.PrefabTransform.position + Vector3.up * 0.75f) - transform.position) *
-                          (IsOwner ? 1 : -1);
+                          (_isLeft ? 1 : -1);
                 angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             }
 
@@ -130,7 +133,7 @@ namespace Prefabs
         {
             // Get the nearest enemy within reach
             var oldTarget = _target;
-            var enemies = IsOwner ? _sm.GameManager.UnitsEnemy : _sm.GameManager.UnitsAlly;
+            var enemies = _isLeft ? _sm.GameManager.UnitsEnemy : _sm.GameManager.UnitsAlly;
             var inFrontEnemy = enemies.Count > 0 ? enemies[0] : null;
             if (inFrontEnemy is not null &&
                 math.abs(inFrontEnemy.transform.position.x - transform.position.x) <
@@ -174,6 +177,8 @@ namespace Prefabs
 
             var destroyable = bullet.GetComponent<Destroyable>();
             destroyable.TargetOwner = IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+            if (!_sm.isMultiplayer && !IsBot.Value)
+                destroyable.TargetOwner = 2;
 
             if (IsServer)
                 destroyable.OnDestroyCallback = target =>

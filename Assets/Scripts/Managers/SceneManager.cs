@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Prefabs;
 using Unity.Netcode;
 using UnityEngine;
 using Logger = UI.Logger;
@@ -9,6 +10,7 @@ namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
+        public bool isMultiplayer;
         [Header("Settings")] [SerializeField] public float fieldLenght = 22f;
 
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical;
@@ -33,9 +35,14 @@ namespace Managers
             // Host only
             if (NetworkManager.Singleton.IsServer)
             {
-                // Spawn the bases
+                // Spawn ally base
                 Instantiate(basePrefab).GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
-                Instantiate(basePrefab).GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.ClientId);
+
+                // Spawn enemy base
+                var enemyBase = Instantiate(basePrefab).GetComponent<NetworkObject>();
+                enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
+                enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
+                enemyBase.SpawnWithOwnership(GameManager.ClientId);
             }
         }
 
@@ -48,12 +55,17 @@ namespace Managers
             IEnumerator ShowStatisticsScreen()
             {
                 yield return new WaitForSeconds(1f);
-                
-            GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
-                ? GameManager.BaseEnemy.OwnerClientId
-                : GameManager.BaseAlly.OwnerClientId;
-            logger.Log(
-                $"Winner is {GameManager.Winner}! {GameManager.BaseEnemy.OwnerClientId}-{GameManager.BaseAlly.OwnerClientId} {GameManager.BaseAlly.Model.Value.Hp} {GameManager.BaseEnemy.Model.Value.Hp}");
+
+                if (isMultiplayer)
+                    GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
+                        ? GameManager.BaseEnemy.OwnerClientId
+                        : GameManager.BaseAlly.OwnerClientId;
+                else
+                    GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
+                        ? 2
+                        : GameManager.BaseAlly.OwnerClientId;
+                logger.Log(
+                    $"Winner is {GameManager.Winner}! {GameManager.BaseEnemy.OwnerClientId}-{GameManager.BaseAlly.OwnerClientId} {GameManager.BaseAlly.Model.Value.Hp} {GameManager.BaseEnemy.Model.Value.Hp}");
                 statisticsScreen.SetActive(true);
             }
         }

@@ -54,7 +54,7 @@ namespace Prefabs
 
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             var rb = bullet.GetComponent<Rigidbody>();
-            var dir = Unit.IsOwner ? Vector3.right : Vector3.left;
+            var dir = Unit.IsLeft ? Vector3.right : Vector3.left;
             rb.linearVelocity = dir * bulletSpeed;
             var destroyable = bullet.GetComponent<Destroyable>();
 

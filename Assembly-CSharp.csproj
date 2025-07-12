@@ -59,9 +59,11 @@
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkState.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\TurretFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
+    <Compile Include="Assets\Scripts\UI\LoadingMenu.cs" />
     <Compile Include="Assets\Scripts\Interfaces\INullable.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
     <Compile Include="Assets\Scripts\Model\Units\UnitFactory.cs" />
+    <Compile Include="Assets\Scripts\Partials\AI\BotAI.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\DieState.cs" />

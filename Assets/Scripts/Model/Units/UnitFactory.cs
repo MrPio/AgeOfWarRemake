@@ -14,7 +14,7 @@ namespace Model.Units
             level: 2, maxShootingDistance: 5f);
 
         private static Unit Caveman3() => new(displayName: "Dino", prefabName: "caveman_3", maxHp: 160f,
-            damage: 40, attackRate: 1f, cost: 100, revenue: 130, spawnTime: 3f, level: 3);
+            damage: 40, attackRate: 1.5f, cost: 100, revenue: 130, spawnTime: 3f, level: 3);
 
         // === Medieval age =================================================================
         private static Unit Knight1() => new(displayName: "Swordman", prefabName: "knight_1", maxHp: 100,
@@ -47,7 +47,7 @@ namespace Model.Units
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Soldier3() => new(displayName: "Tank", prefabName: "soldier_3", maxHp: 1_200,
-            damage: 300, attackRate: 1f, cost: 7_000, revenue: 9_100, spawnTime: 8, level: 3);
+            damage: 300, attackRate: 0.5f, cost: 7_000, revenue: 9_100, spawnTime: 8, level: 3);
 
         // === Future age =================================================================
         private static Unit Trooper1() => new(displayName: "God's Blade", prefabName: "trooper_1", maxHp: 1_000,
@@ -58,7 +58,11 @@ namespace Model.Units
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Trooper3() => new(displayName: "War Machine", prefabName: "trooper_3", maxHp: 3_000,
-            damage: 600, attackRate: 1f, cost: 20_000, revenue: 26_000, spawnTime: 8, level: 3);
+            damage: 600, attackRate: 0.5f, cost: 20_000, revenue: 26_000, spawnTime: 8, level: 3);
+
+        private static Unit Trooper4() => new(displayName: "Super Soldier", prefabName: "trooper_4", maxHp: 4_000,
+            damage: 400, shootDamage: 400f, attackRate: 1f, shootRate: 0.85f, cost: 150_000, revenue: 200_000,
+            spawnTime: 3, level: 4, maxShootingDistance: 6.5f);
 
         public static readonly List<List<Func<Unit>>> Units = new()
         {
@@ -66,7 +70,7 @@ namespace Model.Units
             new List<Func<Unit>> { Knight1, Knight2, Knight3 },
             new List<Func<Unit>> { Swordman1, Swordman2, Swordman3 },
             new List<Func<Unit>> { Soldier1, Soldier2, Soldier3 },
-            new List<Func<Unit>> { Trooper1, Trooper2, Trooper3 },
+            new List<Func<Unit>> { Trooper1, Trooper2, Trooper3, Trooper4 },
         };
     }
 }
