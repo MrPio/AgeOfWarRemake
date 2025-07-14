@@ -103,6 +103,7 @@ namespace Prefabs
                 if (_hpBar is null)
                 {
                     var go = Instantiate(Sm.hpBarHorizontal, Sm.canvas.transform);
+                    go.transform.position = Vector3.down * 999f;
                     _hpBar = go.GetComponent<HpBar>();
                     _hpBar.Target = _hpBarPoint;
                 }
@@ -339,7 +340,10 @@ namespace Prefabs
             {
                 _animationNotify.OnAttack = () =>
                 {
-                    _target.Damage(Model.Value.Damage);
+                    // If not dying
+
+                    if ((IsBot.Value ? Sm.GameManager.UnitsEnemy : Sm.GameManager.UnitsAlly).Contains(this))
+                        _target.Damage(Model.Value.Damage);
                     Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: false);
                 };
             }

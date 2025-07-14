@@ -17,7 +17,7 @@ namespace Partials.State.Unit
             var model = unit.Model.Value;
             if (!model.HasValue) return;
 
-            if (Time.time - LastAttack > model.AttackRate)
+            if (Time.time - LastAttack > model.AttackDuration)
             {
                 LastAttack = Time.time;
                 unit.PlayAnimation(Prefabs.Unit.AttackTrigger);

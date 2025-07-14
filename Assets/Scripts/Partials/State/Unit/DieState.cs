@@ -1,7 +1,4 @@
-﻿using Managers;
-using Unity.Netcode;
-
-namespace Partials.State.Unit
+﻿namespace Partials.State.Unit
 {
     public class DieState : IState
     {

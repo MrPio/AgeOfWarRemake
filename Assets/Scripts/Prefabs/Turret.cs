@@ -185,6 +185,9 @@ namespace Prefabs
                     target.Damage(Model.Value.Damage);
         }
 
+        private void PlaySound() =>
+            _sm.musicManager.PlayTurret(_base.Model.Value.Level, Model.Value.Level);
+
         #endregion
     }
 }

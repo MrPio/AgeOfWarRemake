@@ -527,7 +527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   edgeThreshold: 220
   edgeScrollSensitivity: 10
-  marginFromBase: 2.75
+  marginFromBase: 3.75
   dragSensitivity: 0.005
   cam: {fileID: 330585545}
   cursorArrow: {fileID: 2800000, guid: 90688b1541cf44f48a186c4162935ff4, type: 3}
@@ -1426,6 +1426,7 @@ GameObject:
   - component: {fileID: 1185476585}
   - component: {fileID: 1185476584}
   - component: {fileID: 1185476583}
+  - component: {fileID: 1185476586}
   m_Layer: 0
   m_Name: MusicManager
   m_TagString: Untagged
@@ -1542,7 +1543,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -2306402030022879883, guid: 77734a69356fee5479a725b10911dda2, type: 2}
   m_audioClip: {fileID: 8300000, guid: e2af6c61c4284f14b8d33fa289fb39fc, type: 3}
   m_Resource: {fileID: 8300000, guid: e2af6c61c4284f14b8d33fa289fb39fc, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -1642,6 +1643,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1185476586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185476582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0dd1080837e7ce4dacdaab9941dd80c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxDir: Audio/Sfx/
+  dieClips:
+  - die_01
+  - die_02
+  - die_03
+  - die_04
+  - die_05
+  sfxAudioSource: {fileID: 1185476583}
+  backgroundAudioSource: {fileID: 1185476584}
 --- !u!1 &1538787699
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,6 +1702,7 @@ MonoBehaviour:
   cam: {fileID: 330585545}
   canvas: {fileID: 621523086}
   logger: {fileID: 101408697}
+  musicManager: {fileID: 1185476586}
   statisticsScreen: {fileID: 7094558}
   waitForClientScreen: {fileID: 1635586299}
 --- !u!4 &1538787701
