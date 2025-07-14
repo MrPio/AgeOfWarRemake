@@ -20,6 +20,7 @@ namespace Managers
         public Canvas canvas;
         public Logger logger;
         [NonSerialized] public GameManager GameManager;
+        public MusicManager musicManager;
         [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
 
         private void Start()
@@ -31,6 +32,7 @@ namespace Managers
         public void StartGame()
         {
             waitForClientScreen.SetActive(false);
+            musicManager.StartLevel();
 
             // Host only
             if (NetworkManager.Singleton.IsServer)

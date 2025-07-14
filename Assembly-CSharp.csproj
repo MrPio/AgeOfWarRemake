@@ -47,6 +47,7 @@
     <Analyzer Include="D:\Programmi\Unity\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ExtensionFunctions\ListExtensions.cs" />
     <Compile Include="Assets\Scripts\Partials\Observable.cs" />
     <Compile Include="Assets\Scripts\Partials\Camera\RotateSkybox.cs" />
     <Compile Include="Assets\Scripts\Model\UnitState.cs" />
@@ -56,16 +57,21 @@
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\BoolExtensions.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkState.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\TurretFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\UI\LoadingMenu.cs" />
     <Compile Include="Assets\Scripts\Interfaces\INullable.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\EnumExtensions.cs" />
     <Compile Include="Assets\Scripts\Model\Units\UnitFactory.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\DictionaryExtensions.cs" />
     <Compile Include="Assets\Scripts\Partials\AI\BotAI.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\ArrayExtensions.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
+    <Compile Include="Assets\Scripts\Managers\MusicManager.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\DieState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\BasePrefab.cs" />
     <Compile Include="Assets\Scripts\Partials\Unit\UnitAnimationEvents.cs" />
@@ -75,9 +81,11 @@
     <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />
     <Compile Include="Assets\Scripts\Partials\State\IState.cs" />
     <Compile Include="Assets\Scripts\Partials\Triggerable.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\VectorExtensions.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\Turret.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\ByteExtensions.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\IdleState.cs" />
     <Compile Include="Assets\Scripts\Prefabs\UnitPrefab.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Base.cs" />

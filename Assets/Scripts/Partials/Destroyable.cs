@@ -40,7 +40,7 @@ namespace Partials
                 OnDestroyCallback?.Invoke(damageable);
             }
 
-            Destroy(delay: 0.1f);
+            Destroy(delay: 0.04f);
         }
 
         private void Destroy(float delay = 0f)

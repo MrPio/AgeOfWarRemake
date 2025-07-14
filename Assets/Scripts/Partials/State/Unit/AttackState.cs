@@ -4,7 +4,7 @@ namespace Partials.State.Unit
 {
     public class AttackState : IState
     {
-        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 0.5f;
+        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 0.85f;
 
         public override bool Equals(object obj) => obj is AttackState;
         public override int GetHashCode() => 0;

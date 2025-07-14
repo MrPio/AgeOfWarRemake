@@ -20,7 +20,7 @@ namespace Prefabs
 
         public Transform PrefabTransform => _isDestroyed ? null : _unitPrefab?.transform;
         public string Name => Model.Value.DisplayName;
-        public ulong Owner => IsBot.Value?2:OwnerClientId;
+        public ulong Owner => IsBot.Value ? 2 : OwnerClientId;
 
         // Sever-only
         public void Damage(float damage)
@@ -337,7 +337,11 @@ namespace Prefabs
 
             if (IsServer)
             {
-                _animationNotify.OnAttack = () => _target.Damage(Model.Value.Damage);
+                _animationNotify.OnAttack = () =>
+                {
+                    _target.Damage(Model.Value.Damage);
+                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: false);
+                };
             }
 
             // This is just a rendering concern.
@@ -346,7 +350,10 @@ namespace Prefabs
             _animationNotify.OnShoot = () =>
             {
                 if (_target?.PrefabTransform is not null)
+                {
                     _unitPrefab.SpawnBullet(_target.PrefabTransform);
+                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: true);
+                }
             };
 
             #endregion
