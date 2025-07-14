@@ -35,7 +35,7 @@ namespace Managers
 
         [SerializeField] private AudioSource sfxAudioSource, backgroundAudioSource;
         private readonly Dictionary<string, AudioClip> sfxClips = new();
-        private readonly Dictionary<string, float> _lastPlayed=new();
+        private readonly Dictionary<string, float> _lastPlayed = new();
 
         #endregion
 
@@ -62,6 +62,11 @@ namespace Managers
         {
             // TODO: move caller to handle client&Host
             PlaySfx((turretClips)[age - 1][turretLevel - 1]);
+        }
+
+        public void PlayUI(string type)
+        {
+            PlaySfx(type);
         }
 
         public void StartLevel()

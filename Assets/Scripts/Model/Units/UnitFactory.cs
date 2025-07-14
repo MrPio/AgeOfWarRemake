@@ -10,7 +10,7 @@ namespace Model.Units
             damage: 16, attackDuration: 1.15f, cost: 15, revenue: 20, spawnTime: 1, level: 1);
 
         private static Unit Caveman2() => new(displayName: "Slingshot man", prefabName: "caveman_2", maxHp: 42f,
-            damage: 10, shootDamage: 8, attackDuration: 1.15f, shootRate: 1.5f, cost: 25, revenue: 33, spawnTime: 1,
+            damage: 10, shootDamage: 5, attackDuration: 1.15f, shootRate: 1.5f, cost: 25, revenue: 33, spawnTime: 1,
             level: 2, maxShootingDistance: 5f);
 
         private static Unit Caveman3() => new(displayName: "Dino", prefabName: "caveman_3", maxHp: 160f,

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Threading.Tasks;
 using Prefabs;
+using UI;
 using Unity.Netcode;
 using UnityEngine;
 using Logger = UI.Logger;
@@ -22,6 +23,7 @@ namespace Managers
         [NonSerialized] public GameManager GameManager;
         public MusicManager musicManager;
         [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
+        [SerializeField] public StatsMenu statsMenu;
 
         private void Start()
         {

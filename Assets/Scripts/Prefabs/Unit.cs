@@ -27,6 +27,11 @@ namespace Prefabs
         {
             if (!IsServer || damage <= 0 || !Model.Value.HasValue || _state is DieState || _isDestroyed ||
                 Sm.GameManager.IsGameOver) return;
+            
+            // Bot resistance
+            if (!Sm.isMultiplayer && IsBot.Value)
+                damage *= 0.885f;
+            
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
             Model.Value = newModel;
@@ -237,6 +242,7 @@ namespace Prefabs
         /// </summary>
         private void CheckCollision()
         {
+            // TODO, when shooting to a base, the range unit must switch to new spawn enemy unit
             if (!IsServer || _unitPrefab is null || _state is DieState) return;
 
             // The units are stored like a FIFO list in GameManager: [unit_0, unit_1 (this), unit_2]
@@ -341,7 +347,6 @@ namespace Prefabs
                 _animationNotify.OnAttack = () =>
                 {
                     // If not dying
-
                     if ((IsBot.Value ? Sm.GameManager.UnitsEnemy : Sm.GameManager.UnitsAlly).Contains(this))
                         _target.Damage(Model.Value.Damage);
                     Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: false);

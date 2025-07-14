@@ -10,8 +10,13 @@
             // Free waiting units before running animation
             (unit.IsLeft ? unit.Sm.GameManager.UnitsAlly : unit.Sm.GameManager.UnitsEnemy).Remove(unit);
             unit.PlayAnimation(Prefabs.Unit.DieTrigger);
-            unit.Sm.musicManager.PlayDie(unit.AllyBase.Model.Value.Level,unit.Model.Value.Level);
+            unit.Sm.musicManager.PlayDie(unit.AllyBase.Model.Value.Level, unit.Model.Value.Level);
             unit.Die();
+            
+            // Add money to the enemy
+            var enemyBaseModel = unit.EnemyBase.Model.Value;
+            enemyBaseModel.Money += unit.Model.Value.Revenue;
+            unit.EnemyBase.Model.Value = enemyBaseModel;
         }
 
         public void Update(Prefabs.Unit unit)

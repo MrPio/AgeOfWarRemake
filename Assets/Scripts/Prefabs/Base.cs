@@ -26,6 +26,11 @@ namespace Prefabs
         public void Damage(float damage)
         {
             if (!IsServer || damage <= 0 || !Model.Value.HasValue || _isDestroyed || _sm.GameManager.IsGameOver) return;
+
+            // Bot resistance
+            if (!_sm.isMultiplayer && IsBot.Value)
+                damage *= 0.45f;
+
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
             Model.Value = newModel;
@@ -101,6 +106,9 @@ namespace Prefabs
 
             // Update the turret configuration (lazy)
             BasePrefab?.UpdateTurretConfiguration(newValue.UnlockedExpansions, newValue.Turrets);
+
+            if (_isLeft)
+                _sm.statsMenu.UpdateUI(Model.Value.Money, 0);
         }
 
         #endregion
@@ -150,7 +158,7 @@ namespace Prefabs
             if (_isLeft)
             {
                 // Units
-                if (Input.GetKeyDown(KeyCode.Space))
+                /*if (Input.GetKeyDown(KeyCode.Space))
                     BuyUnitServerRpc(0);
                 if (Input.GetKeyDown(KeyCode.LeftShift))
                     BuyUnitServerRpc(1);
@@ -175,7 +183,7 @@ namespace Prefabs
                     SellTurretServerRpc(1);
                     SellTurretServerRpc(2);
                     SellTurretServerRpc(3);
-                }
+                }*/
             }
         }
 
@@ -184,10 +192,18 @@ namespace Prefabs
         #region RPCs
 
         [ServerRpc]
+        // unitIndex is 0-based
         public void BuyUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
         {
             var senderClientId = rpcParams.Receive.SenderClientId;
-            var model = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
+            var model = Model.Value;
+            var unitModel = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
+
+            // Money check
+            if (model.Money < unitModel.Cost)
+                return;
+            model.Money -= unitModel.Cost;
+
             var unit = Instantiate(
                 unitPrefab,
                 new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),
@@ -196,9 +212,10 @@ namespace Prefabs
 
             // Assigning before spawning to ensure having the value in onNetworkSpawn()
             // ...it works, but is it safe?
-            unit.Model.Value = model;
+            unit.Model.Value = unitModel;
             unit.IsBot.Value = IsBot.Value;
             unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
+            Model.Value = model;
         }
 
         [ServerRpc]
@@ -207,8 +224,13 @@ namespace Prefabs
             var model = Model.Value;
             var turretModel = TurretFactory.Turrets[Model.Value.Level - 1][turretIndex]();
 
-            // The requested expansion has not been bought
-            if (model.UnlockedExpansions - 1 < expansionIndex) return;
+            // The requested expansion has not been bought or the spot is already occupied
+            if (model.UnlockedExpansions - 1 < expansionIndex || model.Turrets[expansionIndex].HasValue) return;
+
+            // Money check
+            if (model.Money < turretModel.Cost)
+                return;
+            model.Money -= turretModel.Cost;
 
             model.Turrets[expansionIndex] = turretModel;
             model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone(); // Force trigger the change
@@ -244,6 +266,7 @@ namespace Prefabs
 
             var newModel = BaseFactory.Bases[Model.Value.Level]();
             newModel.Hp = Model.Value.Hp;
+            newModel.Money = Model.Value.Money;
             newModel.UnlockedExpansions = newModel.UnlockedExpansions;
             Model.Value = newModel;
         }

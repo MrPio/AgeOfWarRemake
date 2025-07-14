@@ -20,7 +20,6 @@ namespace Managers
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly, BaseEnemy;
         [NonSerialized] public ulong? Winner;
-        [NonSerialized] public int Moneys = 175;
         [NonSerialized] public bool IsGameOver;
 
         #region NetVars

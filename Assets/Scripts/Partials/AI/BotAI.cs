@@ -48,12 +48,13 @@ public class BotAI : MonoBehaviour
         while (true)
         {
             if (_sm.GameManager.IsGameOver) yield break;
+            var ran = Random.value;
             _base.BuyUnitServerRpc((byte)(phase switch
             {
                 Phase.Melee => 0,
-                Phase.Range => Random.value < .5f ? 0 : 1,
-                Phase.Tank => Random.value < .25f ? 0
-                    : Random.value < .5f ? 1
+                Phase.Range => ran < .5f ? 0 : 1,
+                Phase.Tank => ran < .3f ? 0
+                    : ran < .7f ? 1
                     : 2,
                 _ => 0
             }));
