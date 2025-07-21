@@ -12,8 +12,8 @@ namespace Partials
                              IPointerDownHandler, IPointerUpHandler
     {
         private SceneManager _sm;
-        private Image image;
-        private Color startColor;
+        private Image _image;
+        private Color _startColor;
         [SerializeField] private Color hoverColor, downColor;
         [NonSerialized] public Action OnClick;
 
@@ -21,29 +21,29 @@ namespace Partials
         private void Start()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            image = GetComponent<Image>();
-            startColor = image.color;
+            _image = GetComponent<Image>();
+            _startColor = _image.color;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
             _sm.musicManager.PlayUI("hover");
-            image.color = hoverColor;
+            _image.color = hoverColor;
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            image.color = startColor;
+            _image.color = _startColor;
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            image.color = downColor;
+            _image.color = downColor;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            image.color = startColor;
+            _image.color = _startColor;
         }
 
         public void OnPointerClick(PointerEventData eventData)

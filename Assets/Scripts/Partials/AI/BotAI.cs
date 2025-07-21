@@ -60,10 +60,10 @@ public class BotAI : MonoBehaviour
             }));
             var delay = phase switch
             {
-                Phase.Melee => Random.Range(2f, 8f),
+                Phase.Melee => Random.Range(2f, 6f),
                 Phase.Range => Random.Range(2f, 6f),
                 Phase.Tank => Random.Range(2f, 6f),
-                _ => 5f
+                _ => Random.Range(2f, 7f)
             };
             yield return new WaitForSeconds(delay);
         }

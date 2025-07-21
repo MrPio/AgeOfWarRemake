@@ -129,6 +129,14 @@ namespace Prefabs
 
             if (_isLeft) _sm.GameManager.BaseAlly = this;
             else _sm.GameManager.BaseEnemy = this;
+            
+            // Add infinite money to bot
+            if (IsBot.Value)
+            {
+                var oldModel = Model.Value;
+                oldModel.Money = int.MaxValue;
+                Model.Value = oldModel;
+            }
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
@@ -203,19 +211,27 @@ namespace Prefabs
             if (model.Money < unitModel.Cost)
                 return;
             model.Money -= unitModel.Cost;
-
-            var unit = Instantiate(
-                unitPrefab,
-                new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),
-                Quaternion.identity
-            ).GetComponent<Unit>();
-
-            // Assigning before spawning to ensure having the value in onNetworkSpawn()
-            // ...it works, but is it safe?
-            unit.Model.Value = unitModel;
-            unit.IsBot.Value = IsBot.Value;
-            unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
             Model.Value = model;
+
+            if (_isLeft)
+                _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, SpawnUnit);
+            else SpawnUnit();
+            return;
+
+            void SpawnUnit()
+            {
+                var unit = Instantiate(
+                    unitPrefab,
+                    new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),
+                    Quaternion.identity
+                ).GetComponent<Unit>();
+
+                // Assigning before spawning to ensure having the value in onNetworkSpawn()
+                // ...it works, but is it safe?
+                unit.Model.Value = unitModel;
+                unit.IsBot.Value = IsBot.Value;
+                unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
+            }
         }
 
         [ServerRpc]

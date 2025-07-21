@@ -1,2 +1,3 @@
 ﻿# TODO
 - [ ] Units must have pivot on the bottom
+- [] I 16/9 sono un problema per le basi...

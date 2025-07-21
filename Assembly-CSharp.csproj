@@ -47,7 +47,6 @@
     <Analyzer Include="D:\Programmi\Unity\6000.0.35f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\ExtensionFunctions\ListExtensions.cs" />
     <Compile Include="Assets\Scripts\Partials\Observable.cs" />
     <Compile Include="Assets\Scripts\Partials\Camera\RotateSkybox.cs" />
     <Compile Include="Assets\Scripts\Model\UnitState.cs" />
@@ -58,6 +57,7 @@
     <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\BoolExtensions.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkState.cs" />
+    <Compile Include="Assets\Scripts\UI\UnitLoadingMenu.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\TurretFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\UI\LoadingMenu.cs" />
@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\Interfaces\IDamageable.cs" />
     <Compile Include="Assets\Scripts\Partials\Destroyable.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\AttackState.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\ListExtensions.cs" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile-2-Pass.shader" />

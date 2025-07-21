@@ -14,7 +14,7 @@ namespace Model.Units
             level: 2, maxShootingDistance: 5f);
 
         private static Unit Caveman3() => new(displayName: "Dino", prefabName: "caveman_3", maxHp: 160f,
-            damage: 40, attackDuration: 1.5f, cost: 100, revenue: 130, spawnTime: 3f, level: 3);
+            damage: 40, attackDuration: 1.65f, cost: 100, revenue: 130, spawnTime: 3f, level: 3);
 
         // === Medieval age =================================================================
         private static Unit Knight1() => new(displayName: "Swordman", prefabName: "knight_1", maxHp: 100,

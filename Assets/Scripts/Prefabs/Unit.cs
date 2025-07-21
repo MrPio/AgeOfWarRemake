@@ -27,11 +27,11 @@ namespace Prefabs
         {
             if (!IsServer || damage <= 0 || !Model.Value.HasValue || _state is DieState || _isDestroyed ||
                 Sm.GameManager.IsGameOver) return;
-            
+
             // Bot resistance
             if (!Sm.isMultiplayer && IsBot.Value)
-                damage *= 0.885f;
-            
+                damage *= 0.866f;
+
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
             Model.Value = newModel;
@@ -44,6 +44,7 @@ namespace Prefabs
         // Unit constants (Server-only)
         private const float SpawnWalkDelay = 0.25f;
         private const float DeadDelay = 3.0f;
+        private const float MinUnitsDistance = 0.25f;
         [NonSerialized] public float ColliderWidth;
 
         // Animation trigger hashes
@@ -78,6 +79,7 @@ namespace Prefabs
 
         private float _spawnTime;
         private bool _spawnBlocked, _isDestroyed;
+        private int _lastTrigger;
 
         #endregion
 
@@ -272,7 +274,7 @@ namespace Prefabs
             // Waiting for ally
             if (inFrontAlly is not null &&
                 math.abs(inFrontAlly.transform.position.x - transform.position.x) <
-                ColliderWidth / 2 + inFrontAlly.ColliderWidth / 2)
+                ColliderWidth / 2 + inFrontAlly.ColliderWidth / 2 + MinUnitsDistance)
             {
                 newState = new IdleState(shooting: shootTarget is not null);
                 if (shootTarget is not null)
@@ -318,7 +320,8 @@ namespace Prefabs
         // Server-only
         public void PlayAnimation(int triggerHash)
         {
-            if (!IsServer) return;
+            if (!IsServer || _lastTrigger == DieTrigger) return;
+            _lastTrigger = triggerHash; // Prevent any animation after death.
             _animator.SetTrigger(triggerHash);
 
             // Force network variable change

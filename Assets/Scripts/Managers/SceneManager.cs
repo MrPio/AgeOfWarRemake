@@ -24,6 +24,8 @@ namespace Managers
         public MusicManager musicManager;
         [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
         [SerializeField] public StatsMenu statsMenu;
+        [SerializeField] public UnitLoadingMenu unitLoadingMenu;
+
 
         private void Start()
         {
@@ -77,9 +79,10 @@ namespace Managers
         public async Task QuitLobby()
         {
             NetworkManager.Singleton.Shutdown();
+            Application.Quit();
             // await lobbyManager.LeaveLobby();
-            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager
-                .GetActiveScene().buildIndex);
+            // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager
+                // .GetActiveScene().buildIndex);
         }
     }
 }
