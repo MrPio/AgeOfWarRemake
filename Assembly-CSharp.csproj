@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\Clickable.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
+    <Compile Include="Assets\Scripts\Partials\CameraZoom.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />
     <Compile Include="Assets\Scripts\Partials\State\IState.cs" />
     <Compile Include="Assets\Scripts\Partials\Triggerable.cs" />
