@@ -6,7 +6,7 @@ namespace Partials.Camera
     public class CameraEdgePan : MonoBehaviour
     {
         [SerializeField] private float edgeThreshold = 225f, edgeScrollSensitivity = 5f;
-        [SerializeField] private float marginFromBase = 2.8f;
+        [SerializeField] public float marginFromBase = 2.8f;
         [SerializeField] private float dragSensitivity = 0.01f;
         [SerializeField] private UnityEngine.Camera cam;
         [SerializeField] private Texture2D cursorArrow, cursorHand;
@@ -43,6 +43,7 @@ namespace Partials.Camera
                 Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
             }
 
+            _boundX = new Vector2(-_sm.fieldLenght / 2 + marginFromBase, _sm.fieldLenght / 2 - marginFromBase);
             var actualXBound =
                 _boundX / ((float)Screen.width / Screen.height / (16f / 9f)); // Window may resize runtime
             var camPos = cam.transform.position;

@@ -120,6 +120,12 @@ namespace Prefabs
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            
+            // Spawn HP bar
+            // var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
+            // go.transform.position = Vector3.down * 100;
+            // _hpBar = go.GetComponent<HpBar>();
+            // _hpBar.Target = hpBarPoint;
         }
 
         public override void OnNetworkSpawn()
