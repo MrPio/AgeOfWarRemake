@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Partials.Camera
@@ -6,10 +7,11 @@ namespace Partials.Camera
     {
         private static readonly int Rotation = Shader.PropertyToID("_Rotation");
         [SerializeField] private float rotationSpeed = 0.4f;
+        [NonSerialized] public float RotationAcc=0f;
 
-        private void Update()
+        private void LateUpdate()
         {
-            RenderSettings.skybox.SetFloat(Rotation, Time.time * rotationSpeed);
+            RenderSettings.skybox.SetFloat(Rotation, Time.time * rotationSpeed+RotationAcc);
         }
     }
 }

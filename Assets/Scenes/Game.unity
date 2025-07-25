@@ -2616,6 +2616,7 @@ MonoBehaviour:
   edgeScrollSensitivity: 10
   marginFromBase: 7.65
   dragSensitivity: 0.005
+  skyRotationFactor: 1
   cam: {fileID: 658877796}
   cursorArrow: {fileID: 2800000, guid: 90688b1541cf44f48a186c4162935ff4, type: 3}
   cursorHand: {fileID: 2800000, guid: 502eb6e085305e84b9a31d4172da0d6f, type: 3}

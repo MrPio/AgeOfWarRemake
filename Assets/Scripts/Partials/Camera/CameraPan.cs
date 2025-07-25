@@ -7,7 +7,7 @@ namespace Partials.Camera
     {
         [SerializeField] private float edgeThreshold = 225f, edgeScrollSensitivity = 5f;
         [SerializeField] public float marginFromBase = 2.8f;
-        [SerializeField] private float dragSensitivity = 0.01f;
+        [SerializeField] private float dragSensitivity = 0.01f, skyRotationFactor = 0.25f;
         [SerializeField] private UnityEngine.Camera cam;
         [SerializeField] private Texture2D cursorArrow, cursorHand;
         private float _currentSpeed;
@@ -15,10 +15,12 @@ namespace Partials.Camera
         private static SceneManager _sm;
         private bool isDragging;
         private float lastMouseX;
+        private RotateSkybox _rotateSkybox;
 
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            _rotateSkybox = GetComponent<RotateSkybox>();
         }
 
         private void Start()
@@ -29,7 +31,7 @@ namespace Partials.Camera
             Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
         }
 
-        private void Update()
+        private void LateUpdate()
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -79,6 +81,7 @@ namespace Partials.Camera
             }
 
             var x = Mathf.Clamp(camPos.x + deltaX, actualXBound.x, actualXBound.y);
+            _rotateSkybox.RotationAcc = x * skyRotationFactor;
             cam.transform.position = new Vector3(x, camPos.y, camPos.z);
         }
     }
