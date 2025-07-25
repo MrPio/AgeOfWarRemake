@@ -12,7 +12,7 @@ namespace Managers
     public class SceneManager : MonoBehaviour
     {
         public bool isMultiplayer;
-        [Header("Settings")] [SerializeField] public float fieldLenght = 22f;
+        [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
 
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical;
         [SerializeField] private GameObject gameManagerPrefab, basePrefab;

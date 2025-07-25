@@ -4,13 +4,17 @@ namespace Partials.State.Unit
 {
     public class AttackState : IState
     {
-        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 0.85f;
+        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 2f;
 
         public override bool Equals(object obj) => obj is AttackState;
         public override int GetHashCode() => 0;
 
-        public void Enter(Prefabs.Unit unit) =>
+        public void Enter(Prefabs.Unit unit)
+        {
             unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
+            if (!unit.Sm.isMultiplayer)
+                LastAttack = 0;
+        }
 
         public void Update(Prefabs.Unit unit)
         {
