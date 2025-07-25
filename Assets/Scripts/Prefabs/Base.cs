@@ -4,6 +4,7 @@ using System.Linq;
 using Interfaces;
 using Managers;
 using Model.Bases;
+using Model.Turrets;
 using Model.Units;
 using UI;
 using Unity.Mathematics;
@@ -13,27 +14,59 @@ using LogType = UI.LogType;
 
 namespace Prefabs
 {
-    // [RequireComponent(typeof(Observable))]
     public class Base : NetworkBehaviour, IDamageable
     {
+        #region IDamageable implementation
+
+        public Transform PrefabTransform => _isDestroyed ? null : BasePrefab?.transform;
+        public string Name => Model.Value.Name;
+        public ulong Owner => IsBot.Value ? 2 : OwnerClientId;
+
+        // Server-only
+        public void Damage(float damage)
+        {
+            if (!IsServer || damage <= 0 || !Model.Value.HasValue || _isDestroyed || _sm.GameManager.IsGameOver) return;
+
+            // Bot resistance
+            if (!_sm.isMultiplayer && IsBot.Value)
+                damage *= 0.45f;
+
+            var newModel = Model.Value;
+            newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
+            Model.Value = newModel;
+        }
+
+        #endregion
+
+        #region References & Components
+
+        private SceneManager _sm;
         [SerializeField] private GameObject unitPrefab;
         [SerializeField] private Transform hpBarPoint;
-
         [NonSerialized] public BasePrefab BasePrefab;
-        [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
-        private SceneManager _sm;
         private HpBar _hpBar;
+
+        #endregion
+
+        #region Data
+
+        [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
+        private bool _isLeft;
 
-        #region NetworkVariables
+        #endregion
 
-        [NonSerialized] public readonly NetworkVariable<Model.Bases.Base> Model = new(BaseFactory.Cave(),
-            writePerm: NetworkVariableWritePermission.Owner);
+        #region NetVars
 
+        public readonly NetworkVariable<Model.Bases.Base> Model = new(BaseFactory.Cave());
+        public readonly NetworkVariable<bool> IsBot = new(); // Readonly
+
+        #region Listeners
+
+        // Host & Client
         private void OnModelChanged(Model.Bases.Base value, Model.Bases.Base newValue)
         {
             if (!newValue.HasValue) return;
-            _sm.logger.Log($"Obtaining {(IsOwner ? "Ally" : "Enemy")} base state");
 
             // Reload the unit prefab if the unit type has changed
             if (BasePrefab is null || !value.HasValue || value.Prefab != newValue.Prefab)
@@ -46,6 +79,7 @@ namespace Prefabs
                 if (_hpBar is null)
                 {
                     var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
+                    go.transform.position = Vector3.down * 100;
                     _hpBar = go.GetComponent<HpBar>();
                     _hpBar.Target = hpBarPoint;
                 }
@@ -56,38 +90,65 @@ namespace Prefabs
             // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
             if (newValue.Hp <= 0)
             {
-                if (IsServer)
-                    gameObject.GetComponent<NetworkObject>().Despawn(destroy: true);
+                _isDestroyed = true;
+
+                // Hide turrets
+                foreach (var turret in Turrets)
+                    turret?.gameObject.SetActive(false);
+
+                // TODO: spawn explosion
+                _sm.EndGame();
+
+                // Hide base and hpBar
+                _hpBar.gameObject.SetActive(false);
+                gameObject.SetActive(false);
             }
 
             // Update the turret configuration (lazy)
-            BasePrefab?.UpdateState(newValue.UnlockedExpansions, newValue.Turrets);
+            BasePrefab?.UpdateTurretConfiguration(newValue.UnlockedExpansions, newValue.Turrets);
+
+            if (_isLeft)
+                _sm.statsMenu.UpdateUI(Model.Value.Money, 0);
         }
 
         #endregion
 
-        public Transform Transform => BasePrefab.transform;
-        public bool IsDamageable => !_isDestroyed && !IsOwner;
-        public string Name => Model.Value.Name;
+        #endregion
 
         #region Events
 
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            
+            // Spawn HP bar
+            // var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
+            // go.transform.position = Vector3.down * 100;
+            // _hpBar = go.GetComponent<HpBar>();
+            // _hpBar.Target = hpBarPoint;
         }
 
         public override void OnNetworkSpawn()
         {
-            _sm.logger.Log("Spawning a Base, isOwner=" + IsOwner, LogType.NetworkSpawn);
-            if (IsOwner) _sm.GameManager.BaseAlly = this;
+            _isLeft = IsOwner && !IsBot.Value;
+            if (IsBot.Value) gameObject.AddComponent<BotAI>();
+
+            if (_isLeft) _sm.GameManager.BaseAlly = this;
             else _sm.GameManager.BaseEnemy = this;
+            
+            // Add infinite money to bot
+            if (IsBot.Value)
+            {
+                var oldModel = Model.Value;
+                oldModel.Money = int.MaxValue;
+                Model.Value = oldModel;
+            }
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
 
             // Initialize the base position based on ownership.
-            if (IsOwner)
+            if (_isLeft)
             {
                 transform.position = new Vector3(-_sm.fieldLenght / 2, transform.position.y, transform.position.z);
                 transform.localScale = new Vector3(1, 1, 1);
@@ -102,52 +163,41 @@ namespace Prefabs
         public override void OnNetworkDespawn()
         {
             Model.OnValueChanged -= OnModelChanged;
-            _isDestroyed = true;
-            _sm.EndGame();
         }
 
         private void Update()
         {
-            if (!IsOwner) return;
-
-            // Owner only ================================
-            if (Input.GetKeyDown(KeyCode.Space))
-                SpawnUnitServerRpc(0);
-            if (Input.GetKeyDown(KeyCode.LeftShift))
-                SpawnUnitServerRpc(1);
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            // Player Input is always owner-only
+            // This is for debug purpose only.
+            if (_isLeft)
             {
-                var model = Model.Value;
-                model.UnlockedExpansions = math.max(model.UnlockedExpansions, 1);
-                model.Turrets[0] = BaseFactory.BaseTurrets[BaseFactory.Cave][0]();
-                model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone();
-                Model.Value = model;
-            }
+                // Units
+                /*if (Input.GetKeyDown(KeyCode.Space))
+                    BuyUnitServerRpc(0);
+                if (Input.GetKeyDown(KeyCode.LeftShift))
+                    BuyUnitServerRpc(1);
+                if (Input.GetKeyDown(KeyCode.Tab))
+                    BuyUnitServerRpc(2);
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                var model = Model.Value;
-                model.UnlockedExpansions = math.max(model.UnlockedExpansions, 2);
-                model.Turrets[1] = BaseFactory.BaseTurrets[BaseFactory.Cave][1]();
-                model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone();
-                Model.Value = model;
-            }
+                if (Input.GetKeyDown(KeyCode.RightAlt))
+                    EvolveServerRpc();
 
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                var model = Model.Value;
-                model.UnlockedExpansions = math.max(model.UnlockedExpansions, 3);
-                model.Turrets[2] = BaseFactory.BaseTurrets[BaseFactory.Cave][2]();
-                model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone();
-                Model.Value = model;
-            }
-
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-                var model = Model.Value;
-                model.UnlockedExpansions = 0;
-                model.Turrets = new Model.Turrets.Turret[] { default, default, default, default };
-                Model.Value = model;
+                // Turrets
+                if (Input.GetKeyDown(KeyCode.Alpha1))
+                    BuyTurretServerRpc(0, 0);
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                    BuyTurretServerRpc(0, 1);
+                if (Input.GetKeyDown(KeyCode.Alpha3))
+                    BuyTurretServerRpc(0, 2);
+                if (Input.GetKeyDown(KeyCode.Alpha4))
+                    BuyExpansionServerRpc();
+                if (Input.GetKeyDown(KeyCode.Alpha0))
+                {
+                    SellTurretServerRpc(0);
+                    SellTurretServerRpc(1);
+                    SellTurretServerRpc(2);
+                    SellTurretServerRpc(3);
+                }*/
             }
         }
 
@@ -156,39 +206,105 @@ namespace Prefabs
         #region RPCs
 
         [ServerRpc]
-        public void SpawnUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
+        // unitIndex is 0-based
+        public void BuyUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
         {
             var senderClientId = rpcParams.Receive.SenderClientId;
-            var model = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
-            var unit = Instantiate(unitPrefab, Vector3.up * 999f, Quaternion.identity)
-                .GetComponent<Unit>(); // Spawn out of map
-            unit.Model.Value = model;
-            unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
+            var model = Model.Value;
+            var unitModel = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
+
+            // Money check
+            if (model.Money < unitModel.Cost)
+                return;
+            model.Money -= unitModel.Cost;
+            Model.Value = model;
+
+            if (_isLeft)
+                _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, SpawnUnit);
+            else SpawnUnit();
+            return;
+
+            void SpawnUnit()
+            {
+                var unit = Instantiate(
+                    unitPrefab,
+                    new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),
+                    Quaternion.identity
+                ).GetComponent<Unit>();
+
+                // Assigning before spawning to ensure having the value in onNetworkSpawn()
+                // ...it works, but is it safe?
+                unit.Model.Value = unitModel;
+                unit.IsBot.Value = IsBot.Value;
+                unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
+            }
         }
 
-        [Rpc(SendTo.Owner)]
-        public void DamageRpc(float damage)
+        [ServerRpc]
+        public void BuyTurretServerRpc(byte expansionIndex, byte turretIndex)
         {
-            if (damage <= 0 || !Model.Value.HasValue) return;
-            var newModel = Model.Value;
-            newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
+            var model = Model.Value;
+            var turretModel = TurretFactory.Turrets[Model.Value.Level - 1][turretIndex]();
+
+            // The requested expansion has not been bought or the spot is already occupied
+            if (model.UnlockedExpansions - 1 < expansionIndex || model.Turrets[expansionIndex].HasValue) return;
+
+            // Money check
+            if (model.Money < turretModel.Cost)
+                return;
+            model.Money -= turretModel.Cost;
+
+            model.Turrets[expansionIndex] = turretModel;
+            model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone(); // Force trigger the change
+            Model.Value = model;
+        }
+
+        [ServerRpc]
+        public void SellTurretServerRpc(byte expansionIndex)
+        {
+            // TODO money
+            var model = Model.Value;
+            model.Turrets[expansionIndex] = default;
+            model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone(); // Force trigger the change
+            Model.Value = model;
+        }
+
+        [ServerRpc]
+        public void BuyExpansionServerRpc()
+        {
+            // TODO money
+            var model = Model.Value;
+            model.UnlockedExpansions = math.min(4, model.UnlockedExpansions + 1);
+            Model.Value = model;
+        }
+
+        [ServerRpc]
+        public void EvolveServerRpc()
+        {
+            //TODO check exp
+
+            // No more ages
+            if (BaseFactory.Bases.Count <= Model.Value.Level) return;
+
+            var newModel = BaseFactory.Bases[Model.Value.Level]();
+            newModel.Hp = Model.Value.Hp;
+            newModel.Money = Model.Value.Money;
+            newModel.UnlockedExpansions = newModel.UnlockedExpansions;
             Model.Value = newModel;
-        }
-
-        [Rpc(SendTo.Owner)]
-        public void EvolveRpc()
-        {
-            //TODO evolve base
         }
 
         #endregion
 
-        // Reload the Base prefab
+        #region Methods
+
+        // Host & Client
         private void LoadPrefab(string prefab)
         {
             if (BasePrefab is not null)
                 Destroy(BasePrefab);
             BasePrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<BasePrefab>();
         }
+
+        #endregion
     }
 }

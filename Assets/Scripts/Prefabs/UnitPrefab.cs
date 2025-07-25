@@ -1,4 +1,5 @@
 using System;
+using Managers;
 using Partials;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,8 +11,12 @@ namespace Prefabs
     /// </summary>
     public class UnitPrefab : MonoBehaviour
     {
+        #region Constants
+
         private static readonly Vector2 BloodSpawnBounds = new(0.15f, 0.25f);
         private const float MinBloodDelay = 0.025f;
+
+        #endregion
 
         [SerializeField] public float bulletSpeed = 3.5f;
         [SerializeField] public Transform hpBarPoint;
@@ -21,12 +26,16 @@ namespace Prefabs
         [SerializeField] private GameObject bulletPrefab;
         [NonSerialized] public Unit Unit;
         private float _lastBlood;
+        private SceneManager _sm;
 
         private void Awake()
         {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             Unit = transform.parent.GetComponent<Unit>();
         }
 
+        // Host & Client
+        // We don't care if the blood is not synced.
         public void SpawnBlood()
         {
             if (Time.time - _lastBlood < MinBloodDelay) return;
@@ -37,25 +46,26 @@ namespace Prefabs
             Instantiate(bloodPrefab, spawnPoint, Quaternion.identity);
         }
 
-
         // Host & Client
+        // We don't care if the bullet is not synced. But the collision must be server-side.
         public void SpawnBullet(Transform target)
         {
-            // if (target is null) return; Checked by caller
+            if (target is null || _sm.GameManager.IsGameOver) return;
 
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
             var rb = bullet.GetComponent<Rigidbody>();
-            var dir = Unit.IsOwner ? Vector3.right : Vector3.left;
+            var dir = Unit.IsLeft ? Vector3.right : Vector3.left;
             rb.linearVelocity = dir * bulletSpeed;
             var destroyable = bullet.GetComponent<Destroyable>();
-            destroyable.Target = target.gameObject;
 
-            if (Unit.IsOwner)
+            // destroyable.Target = target.gameObject;
+            destroyable.TargetOwner = Unit.IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+            if (!_sm.isMultiplayer && !Unit.IsBot.Value)
+                destroyable.TargetOwner = 2;
+
+            if (Unit.IsServer)
                 destroyable.OnDestroyCallback = damageable =>
-                {
-                    if (damageable is not { IsDamageable: true }) return;
-                    damageable.DamageRpc(Unit.Model.Value.ShootDamage);
-                };
+                    damageable.Damage(Unit.Model.Value.ShootDamage);
         }
     }
 }

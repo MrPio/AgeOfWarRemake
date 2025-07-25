@@ -1,5 +1,4 @@
-﻿using System;
-using Interfaces;
+﻿using Interfaces;
 using Model.Turrets;
 using Model.Utils;
 using Unity.Netcode;
@@ -11,14 +10,14 @@ namespace Model.Bases
         private const string PrefabPath = "Prefabs/Bases/";
 
         public float Hp, MaxHp;
-        public int ExpRequired, UnlockedExpansions,Level;
+        public int ExpRequired, UnlockedExpansions, Level, Money;
         public NetString Name;
         public NetString Prefab;
-        public Turrets.Turret[] Turrets;
+        public Turret[] Turrets;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Base(NetString name, float maxHp, int expRequired, int level , Turrets.Turret[] turrets = null,
-            int unlockedExpansions = 0)
+        public Base(NetString name, float maxHp, int expRequired, int level, Turret[] turrets = null,
+                    int unlockedExpansions = 1, int money = -1)
         {
             Hp = maxHp;
             MaxHp = maxHp;
@@ -28,6 +27,7 @@ namespace Model.Bases
             UnlockedExpansions = unlockedExpansions;
             Level = level;
             Prefab = PrefabPath + name;
+            Money = money;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -40,6 +40,7 @@ namespace Model.Bases
             serializer.SerializeValue(ref UnlockedExpansions);
             serializer.SerializeValue(ref Turrets);
             serializer.SerializeValue(ref Level);
+            serializer.SerializeValue(ref Money);
         }
 
         public override string ToString() =>

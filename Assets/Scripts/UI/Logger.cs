@@ -42,17 +42,18 @@ namespace UI
                 text.color = color;
             }
 
-            if (alsoConsole) Debug.Log(message);
+            if (alsoConsole) UnityEngine.Debug.Log(message);
         }
 
         public void LogError(string message)
         {
             Log(message, LogType.Error, alsoConsole: false);
-            Debug.LogError(message);
+            UnityEngine.Debug.LogError(message);
         }
 
         private void Update()
         {
+            if (!Application.isEditor) return;
             if (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.KeypadMinus))
                 _canvasGroup.alpha = 1 - _canvasGroup.alpha;
         }

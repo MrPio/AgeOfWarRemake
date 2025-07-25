@@ -15,9 +15,9 @@ namespace Model.Units
         public float Armor;
         public float MaxArmor;
         public float MoveSpeed;
-        public float AttackRate;
+        public float AttackDuration;
         public float ShootRate;
-        public int Cost;
+        public int Cost, Revenue;
         public float SpawnTime;
         public int Level;
         public NetString Prefab;
@@ -26,8 +26,8 @@ namespace Model.Units
         public bool HasValue => !DisplayName.Message.IsEmpty;
 
         public Unit(
-            NetString displayName, NetString prefabName, float maxHp, float damage, int cost, float spawnTime,
-            int level, float maxShootingDistance = 0, float moveSpeed = 0.75f * 1.25f, float attackRate = 1f,
+            NetString displayName, NetString prefabName, float maxHp, float damage, int cost, int revenue, float spawnTime,
+            int level, float maxShootingDistance = 0, float moveSpeed = 0.7f /** 1.25f*/, float attackDuration = 1f,
             float armor = 0f, float maxArmor = 0f, float shootDamage = 0f, float shootRate = 1f)
         {
             DisplayName = displayName;
@@ -38,8 +38,9 @@ namespace Model.Units
             Armor = armor;
             MaxArmor = maxArmor;
             MoveSpeed = moveSpeed;
-            AttackRate = attackRate;
+            AttackDuration = attackDuration;
             Cost = cost;
+            Revenue = revenue;
             SpawnTime = spawnTime;
             Level = level;
             MaxShootingDistance = maxShootingDistance;
@@ -56,9 +57,10 @@ namespace Model.Units
             serializer.SerializeValue(ref Armor);
             serializer.SerializeValue(ref MaxArmor);
             serializer.SerializeValue(ref MoveSpeed);
-            serializer.SerializeValue(ref AttackRate);
+            serializer.SerializeValue(ref AttackDuration);
             serializer.SerializeValue(ref ShootRate);
             serializer.SerializeValue(ref Cost);
+            serializer.SerializeValue(ref Revenue);
             serializer.SerializeValue(ref SpawnTime);
             serializer.SerializeValue(ref Level);
             serializer.SerializeValue(ref MaxShootingDistance);

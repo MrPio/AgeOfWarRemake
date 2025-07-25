@@ -1,18 +1,22 @@
-﻿using Managers;
-using Unity.Netcode;
-
-namespace Partials.State.Unit
+﻿namespace Partials.State.Unit
 {
     public class DieState : IState
     {
+        public override bool Equals(object obj) => obj is DieState;
+        public override int GetHashCode() => 0;
+
         public void Enter(Prefabs.Unit unit)
         {
             // Free waiting units before running animation
-            (unit.IsOwner ? unit.Sm.GameManager.UnitsAlly : unit.Sm.GameManager.UnitsEnemy).Remove(unit);
-
-            if (!unit.IsOwner) return;
-            unit.Animator.SetTrigger(Prefabs.Unit.DieTrigger);
-            unit.PlayingAnimation.Value = Prefabs.Unit.DieTrigger;
+            (unit.IsLeft ? unit.Sm.GameManager.UnitsAlly : unit.Sm.GameManager.UnitsEnemy).Remove(unit);
+            unit.PlayAnimation(Prefabs.Unit.DieTrigger);
+            unit.Sm.musicManager.PlayDie(unit.AllyBase.Model.Value.Level, unit.Model.Value.Level);
+            unit.Die();
+            
+            // Add money to the enemy
+            var enemyBaseModel = unit.EnemyBase.Model.Value;
+            enemyBaseModel.Money += unit.Model.Value.Revenue;
+            unit.EnemyBase.Model.Value = enemyBaseModel;
         }
 
         public void Update(Prefabs.Unit unit)

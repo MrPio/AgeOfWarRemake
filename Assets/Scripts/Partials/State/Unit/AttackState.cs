@@ -1,31 +1,30 @@
-﻿using Managers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Partials.State.Unit
 {
     public class AttackState : IState
     {
-        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 0.5f;
+        public float LastAttack = Time.time - (float)new System.Random().NextDouble() * 2f;
+
+        public override bool Equals(object obj) => obj is AttackState;
+        public override int GetHashCode() => 0;
 
         public void Enter(Prefabs.Unit unit)
         {
-            if (!unit.IsOwner) return;
-            unit.Animator.SetTrigger(Prefabs.Unit.IdleTrigger);
-            unit.PlayingAnimation.Value = Prefabs.Unit.IdleTrigger;
+            unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
+            if (!unit.Sm.isMultiplayer)
+                LastAttack = 0;
         }
 
         public void Update(Prefabs.Unit unit)
         {
-            if (!unit.IsOwner) return;
             var model = unit.Model.Value;
             if (!model.HasValue) return;
 
-            if (Time.time - LastAttack > model.AttackRate)
+            if (Time.time - LastAttack > model.AttackDuration)
             {
                 LastAttack = Time.time;
-                unit.Animator.SetTrigger(Prefabs.Unit.AttackTrigger);
-                unit.PlayingAnimation.Value = Prefabs.Unit.IdleTrigger;
-                unit.PlayingAnimation.Value = Prefabs.Unit.AttackTrigger;
+                unit.PlayAnimation(Prefabs.Unit.AttackTrigger);
             }
         }
 

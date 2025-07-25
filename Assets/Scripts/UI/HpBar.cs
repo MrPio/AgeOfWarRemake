@@ -36,7 +36,8 @@ namespace UI
 
         private void Update()
         {
-            transform.position = _sm.cam.WorldToScreenPoint(Target.position);
+            if (Target)
+                transform.position = _sm.cam.WorldToScreenPoint(Target.position);
         }
     }
 }

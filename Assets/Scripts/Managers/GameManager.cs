@@ -15,17 +15,16 @@ namespace Managers
         private SceneManager _sm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
-        [SerializeField] private bool isMultiplayer;
         private bool _isHost;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly, BaseEnemy;
-        [NonSerialized] public ulong Winner;
-        [NonSerialized] public int Moneys = 175;
+        [NonSerialized] public ulong? Winner;
+        [NonSerialized] public bool IsGameOver;
 
-        #region NetworkVariables
+        #region NetVars
 
-        public readonly NetworkVariable<bool> GameStarted = new();
+        private readonly NetworkVariable<bool> _gameStarted = new();
 
         #endregion
 
@@ -45,31 +44,25 @@ namespace Managers
 
         private async void Start()
         {
-            try
-            {
-                if (isMultiplayer)
-                {
-                    _isHost = _serializer.Deserialize($"{ISerializer.DebugDir}/NeedHost", true);
-                    _serializer.Serialize(!_isHost, $"{ISerializer.DebugDir}", "NeedHost");
-                    await UnityServices.InitializeAsync();
-                    _sm.logger.Log($"Starting as {(_isHost ? "Host" : "Client")}");
+            await UnityServices.InitializeAsync();
+            if (AuthenticationService.Instance.IsSignedIn)
+                AuthenticationService.Instance.SignOut();
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-                    // Ensuring no credential re-use between runs.
-                    if (AuthenticationService.Instance.IsSignedIn)
-                        AuthenticationService.Instance.SignOut();
-                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-                    if (_isHost)
-                        NetworkManager.Singleton.StartHost();
-                    else
-                        NetworkManager.Singleton.StartClient();
-                }
-            }
-            catch (Exception e)
+            // Start Host or Client depending on isMultiplayer bool
+            if (_sm.isMultiplayer)
             {
-                _sm.logger.Log("An error occurred while starting the game in GameManager::Start. See below.");
-                _sm.logger.LogError(e.Message);
+                _isHost = _serializer.Deserialize($"{ISerializer.DebugDir}/NeedHost", true);
+                _serializer.Serialize(!_isHost, $"{ISerializer.DebugDir}", "NeedHost");
+                _sm.logger.Log($"Starting as {(_isHost ? "Host" : "Client")}");
+
+                if (_isHost)
+                    NetworkManager.Singleton.StartHost();
+                else
+                    NetworkManager.Singleton.StartClient();
             }
+            else
+                NetworkManager.Singleton.StartHost();
         }
 
         public override void OnNetworkSpawn()
@@ -80,7 +73,7 @@ namespace Managers
                 NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
             }
 
-            GameStarted.OnValueChanged += OnGameStartedChanged;
+            _gameStarted.OnValueChanged += OnGameStartedChanged;
         }
 
         public override void OnDestroy()
@@ -95,8 +88,8 @@ namespace Managers
                 }
             }
 
-            if (GameStarted != null)
-                GameStarted.OnValueChanged -= OnGameStartedChanged;
+            if (_gameStarted != null)
+                _gameStarted.OnValueChanged -= OnGameStartedChanged;
         }
 
         #endregion
@@ -112,17 +105,18 @@ namespace Managers
         private void OnClientDisconnected(ulong clientId)
         {
             _sm.logger.Log($"Player {clientId} disconnected.", LogType.HostClientConnection);
-            if (GameStarted.Value)
+            if (_gameStarted.Value)
                 EndGame();
         }
 
         // Host only
         private void TryStartGame()
         {
-            if (NetworkManager.Singleton.ConnectedClients.Count == 2) // This includes the host
+            if (NetworkManager.Singleton.ConnectedClients.Count ==
+                (_sm.isMultiplayer ? 2 : 1)) // This includes the host
             {
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
-                GameStarted.Value = true;
+                _gameStarted.Value = true;
             }
             else
             {
@@ -134,9 +128,9 @@ namespace Managers
         private void EndGame()
         {
             _sm.logger.Log("Ending game...", LogType.HostClientConnection);
-            GameStarted.Value = false;
+            _gameStarted.Value = false;
 
-            // You could also trigger a UI message, return to menu, etc.
+            // Trigger a UI message, return to menu, etc.
         }
 
         // Host & Client
@@ -157,6 +151,9 @@ namespace Managers
                     _sm.logger.Log($"{id} is the Client!", LogType.ReadingStatus);
                 }
             }
+
+            if (!_sm.isMultiplayer)
+                ClientId = HostId;
 
             if (newValue)
             {
