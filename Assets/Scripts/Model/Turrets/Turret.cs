@@ -12,13 +12,13 @@ namespace Model.Turrets
 
         // The ROF is given by the animation speed
         public float Damage, Range, BulletSpeed;
-        public int Cost, SellPrice, Level;
+        public int Cost, SellPrice, Level, Age;
         public NetString Name;
         public NetString Prefab;
         public bool HasValue => !Name.Message.IsEmpty;
 
         public Turret(float damage, float range, int cost, NetString name,
-                      NetString prefabName, int level,float bulletSpeed = 0f)
+                      NetString prefabName, int level,int age,float bulletSpeed = 0f)
         {
             Damage = damage;
             Range = range;
@@ -27,6 +27,7 @@ namespace Model.Turrets
             SellPrice = (int)(cost * DefaultSellRatio);
             Name = name;
             Level = level;
+            Age = age;
             Prefab = PrefabPath + prefabName;
         }
 
@@ -39,6 +40,7 @@ namespace Model.Turrets
             serializer.SerializeValue(ref SellPrice);
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Level);
+            serializer.SerializeValue(ref Age);
             serializer.SerializeValue(ref Prefab);
         }
 

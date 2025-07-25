@@ -8,6 +8,7 @@ namespace ExtensionFunctions
     public static class ListExtensions
     {
         private static readonly System.Random Random = new();
+
         public static T RandomItem<T>(this List<T> list) =>
             list[Random.Next(0, list.Count)];
 
@@ -19,7 +20,9 @@ namespace ExtensionFunctions
                 var k = Random.Next(n--);
                 (list[n], list[k]) = (list[k], list[n]);
             }
-            return list;        }
+
+            return list;
+        }
 
         public static void ForEach<T>(this List<T> list, Action<T, int> action)
         {
@@ -34,7 +37,23 @@ namespace ExtensionFunctions
         {
             UnityEngine.Debug.Log(string.Join(", ", list));
             // foreach (var item in list)
-                // Debug.Log(item.ToString());
+            // Debug.Log(item.ToString());
+        }
+
+        public static T RandomWeighted<T>(this List<T> items, List<float> weights)
+        {
+            var totalWeight = weights.Sum();
+            var randomValue = Random.NextDouble() * totalWeight;
+            var cumulative = 0f;
+
+            for (var i = 0; i < items.Count; i++)
+            {
+                cumulative += weights[i];
+                if (randomValue < cumulative)
+                    return items[i];
+            }
+
+            return items[^1];
         }
     }
 }

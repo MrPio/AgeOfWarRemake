@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using ExtensionFunctions;
 using Managers;
 using Model.Bases;
 using Model.Units;
@@ -104,27 +106,43 @@ public class BotAI : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(interval);
+            interval = initialTurretInterval;
+
             if (_sm.GameManager.IsGameOver) yield break;
+
             var currentTurrets = _base.Model.Value.Turrets.ToList();
             var validTurrets = currentTurrets.Where(turret => turret.HasValue).OrderBy(turret => turret.Cost).ToList();
-            switch (Random.Range(0, 2))
+            var baseModel = _base.Model.Value;
+
+            switch (Random.Range(0, 3))
             {
-                // case 1 when enemyBase.HasEmptySpot():
-                //     enemyBase.SpawnAITurret(age);
-                //     interval += 15f;
-                //     break;
-                // case 2:
-                //     enemyBase.UpgradeAITurret(age);
-                //     break;
-                case 0 when validTurrets.Count < 4:
-                    var spot = currentTurrets.FindIndex(turret => !turret.HasValue);
-                    if (_base.Model.Value.UnlockedExpansions - 1 < spot)
-                        _base.BuyExpansionServerRpc();
-                    _base.BuyTurretServerRpc((byte)spot, (byte)Random.Range(0, 3));
+                // Upgrade a turret
+                case 0 when validTurrets.Count > 0:
+                    var toUpgrade = validTurrets.Where(turret => turret.Age < baseModel.Level || turret.Level < 3)
+                        .ToList().RandomItem();
+                    var toUpgradePos = (byte)currentTurrets.IndexOf(toUpgrade);
+                    _base.SellTurretServerRpc(toUpgradePos);
+
+                    // The new turret is a lower or same level if changing age, else the next level of the same age
+                    var upgradedChoice = toUpgrade.Age < baseModel.Level
+                        ? Random.Range(0, toUpgrade.Level)
+                        : toUpgrade.Level;
+                    _base.BuyTurretServerRpc(toUpgradePos, (byte)upgradedChoice);
                     interval += 15f;
                     break;
-                case 1 when validTurrets.Count > 1:
-                    // Sell the worst turret
+
+                // Buy a turret on an empty slot
+                case 1 when validTurrets.Count < 4:
+                    var spot = currentTurrets.FindIndex(turret => !turret.HasValue);
+                    var choice = new List<int> { 0, 1, 2 }.RandomWeighted(new List<float> { 1f, 0.75f, 0.5f });
+                    if (baseModel.UnlockedExpansions - 1 < spot)
+                        _base.BuyExpansionServerRpc();
+                    _base.BuyTurretServerRpc((byte)spot, (byte)choice);
+                    interval += 15f;
+                    break;
+
+                // Sell the worst turret
+                case 2 when validTurrets.Count > 1:
                     _base.SellTurretServerRpc((byte)currentTurrets.IndexOf(validTurrets[0]));
                     break;
             }
