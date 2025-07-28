@@ -43,6 +43,12 @@ namespace Partials
             }
         }
 
+        public void Initialize()
+        {
+            _targetT = 1;
+            _lastScroll = Time.time;
+        }
+
         private void FixedUpdate()
         {
             if (Mathf.Abs(_t - _targetT) < 0.05f) return;
