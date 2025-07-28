@@ -123,7 +123,18 @@ namespace Prefabs
 
             // Server-only constraint delegated to method
             if (newValue.Hp <= 0)
+            {
                 ChangeState(new DieState());
+
+                // Spawn floating money
+                if (!IsLeft)
+                {
+                    var go = Instantiate(Sm.floatingText, Sm.canvas.transform);
+                    go.transform.position = Sm.cam.WorldToScreenPoint(_hpBarPoint.position + Vector3.up * 0.25f);
+                    var floatingText = go.GetComponent<FloatingText>();
+                    floatingText.Initialize($"+ {newValue.Revenue:N0}");
+                }
+            }
         }
 
         // Client-only
@@ -372,7 +383,7 @@ namespace Prefabs
         }
 
         // Server-only
-        public void Die()
+        public void DelayedDestroy()
         {
             if (!IsServer) return;
             StartCoroutine(DelayedDead());

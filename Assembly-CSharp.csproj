@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
     <Compile Include="Assets\Scripts\Managers\MusicManager.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\DieState.cs" />
+    <Compile Include="Assets\Scripts\UI\FloatingText.cs" />
     <Compile Include="Assets\Scripts\UI\EndGameMenu.cs" />
     <Compile Include="Assets\Scripts\Prefabs\BasePrefab.cs" />
     <Compile Include="Assets\Scripts\Partials\Unit\UnitAnimationEvents.cs" />
@@ -988,6 +989,9 @@
     </Reference>
     <Reference Include="Unity.Services.Multiplayer.Editor.Shared">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.Services.Multiplayer.Editor.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Sprite.Editor">
+      <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Multiplayer.Multiplay.Authoring.Core">
       <HintPath>C:\UnityProjects\Age of war - Remake\Library\ScriptAssemblies\Unity.Services.Multiplayer.Multiplay.Authoring.Core.dll</HintPath>
