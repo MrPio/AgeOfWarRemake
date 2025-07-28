@@ -1,6 +1,8 @@
 ﻿## TODO
 - [ ] Sound proportional to distance
 - [ ] Pause menu with settings
+- [ ] Turret buy/sell
+- [ ] Show price on hover in Actionmenu
 - [ ] I proiettili ci mettono un po' a cambiare bersaglio  si distruggono spesso prima di raggiungerlo per un po'
 - [ ] il tempo di uccisione è maggiore dello spawn rate nemico
 
