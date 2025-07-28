@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Partials;
 using Prefabs;
 using UI;
 using Unity.Netcode;
@@ -37,6 +38,8 @@ namespace Managers
         {
             waitForClientScreen.SetActive(false);
             musicManager.StartLevel();
+            cam.GetComponent<CameraZoom>().Initialize();
+
 
             // Host only
             if (NetworkManager.Singleton.IsServer)
@@ -82,7 +85,7 @@ namespace Managers
             Application.Quit();
             // await lobbyManager.LeaveLobby();
             // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager
-                // .GetActiveScene().buildIndex);
+            // .GetActiveScene().buildIndex);
         }
     }
 }
