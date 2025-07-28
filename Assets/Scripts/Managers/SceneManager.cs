@@ -14,7 +14,7 @@ namespace Managers
         public bool isMultiplayer;
         [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
 
-        [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical;
+        [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical, floatingText;
         [SerializeField] private GameObject gameManagerPrefab, basePrefab;
 
         [Header("References")] public Camera cam;
