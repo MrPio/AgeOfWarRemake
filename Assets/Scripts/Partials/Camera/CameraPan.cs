@@ -1,4 +1,5 @@
 using Managers;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Partials.Camera
@@ -8,14 +9,15 @@ namespace Partials.Camera
         [SerializeField] private float edgeThreshold = 225f, edgeScrollSensitivity = 5f;
         [SerializeField] public float marginFromBase = 2.8f;
         [SerializeField] private float dragSensitivity = 0.01f, skyRotationFactor = 0.25f;
+        [SerializeField] private float allowedY = 0.75f;
         [SerializeField] private UnityEngine.Camera cam;
         [SerializeField] private Texture2D cursorArrow, cursorHand;
-        private float _currentSpeed;
-        private Vector2 _boundX;
         private static SceneManager _sm;
-        private bool isDragging;
-        private float lastMouseX;
+        private float _currentSpeed, _lastMouseX;
+        private Vector2 _boundX;
+        private bool _isDragging;
         private RotateSkybox _rotateSkybox;
+        public bool BlockPan = false;
 
         private void Awake()
         {
@@ -33,15 +35,15 @@ namespace Partials.Camera
 
         private void LateUpdate()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && IsPanAllowed())
             {
-                isDragging = true;
-                lastMouseX = Input.mousePosition.x;
+                _isDragging = true;
+                _lastMouseX = Input.mousePosition.x;
                 Cursor.SetCursor(cursorHand, Vector2.zero, CursorMode.Auto);
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                isDragging = false;
+                _isDragging = false;
                 Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
             }
 
@@ -49,16 +51,16 @@ namespace Partials.Camera
             var actualXBound =
                 _boundX / ((float)Screen.width / Screen.height / (16f / 9f)); // Window may resize runtime
             var camPos = cam.transform.position;
-            float deltaX;
+            float deltaX = 0;
 
             // Drag behaviour
-            if (isDragging)
+            if (_isDragging)
             {
-                deltaX = (lastMouseX - Input.mousePosition.x) * dragSensitivity;
-                lastMouseX = Input.mousePosition.x;
+                deltaX = (_lastMouseX - Input.mousePosition.x) * dragSensitivity;
+                _lastMouseX = Input.mousePosition.x;
             }
             // Edge scroll behaviour
-            else
+            else if (IsPanAllowed())
             {
                 var speed = 0f;
                 var mouseX = Input.mousePosition.x;
@@ -83,6 +85,12 @@ namespace Partials.Camera
             var x = Mathf.Clamp(camPos.x + deltaX, actualXBound.x, actualXBound.y);
             _rotateSkybox.RotationAcc = x * skyRotationFactor;
             cam.transform.position = new Vector3(x, camPos.y, camPos.z);
+        }
+
+        private bool IsPanAllowed()
+        {
+            var threshold = Screen.height * allowedY;
+            return !BlockPan && Input.mousePosition.y < threshold;
         }
     }
 }
