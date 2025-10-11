@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
-using Managers;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI
+namespace UI.Menu
 {
+    /// <summary>
+    /// This is the loading bar displaying the units being trained.
+    /// The number of slots depends on <c>slots</c>'s cardinality.
+    /// </summary>
     public class UnitLoadingMenu : MonoBehaviour
     {
         [SerializeField] private Slider slider;

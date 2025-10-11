@@ -13,11 +13,11 @@ namespace Model.Turrets
         // The ROF is given by the animation speed
         public float Damage, Range, BulletSpeed;
         public int Cost, SellPrice, Level, Age;
-        public NetString Name;
+        public NetString DisplayName;
         public NetString Prefab;
-        public bool HasValue => !Name.Message.IsEmpty;
+        public bool HasValue => !DisplayName.Message.IsEmpty;
 
-        public Turret(float damage, float range, int cost, NetString name,
+        public Turret(float damage, float range, int cost, NetString displayName,
                       NetString prefabName, int level,int age,float bulletSpeed = 0f)
         {
             Damage = damage;
@@ -25,7 +25,7 @@ namespace Model.Turrets
             BulletSpeed = bulletSpeed;
             Cost = cost;
             SellPrice = (int)(cost * DefaultSellRatio);
-            Name = name;
+            DisplayName = displayName;
             Level = level;
             Age = age;
             Prefab = PrefabPath + prefabName;
@@ -38,7 +38,7 @@ namespace Model.Turrets
             serializer.SerializeValue(ref BulletSpeed);
             serializer.SerializeValue(ref Cost);
             serializer.SerializeValue(ref SellPrice);
-            serializer.SerializeValue(ref Name);
+            serializer.SerializeValue(ref DisplayName);
             serializer.SerializeValue(ref Level);
             serializer.SerializeValue(ref Age);
             serializer.SerializeValue(ref Prefab);
@@ -47,7 +47,7 @@ namespace Model.Turrets
         // Equality ================================================
         public static bool operator ==(Turret a, Turret b)
         {
-            return a.Name.Message == b.Name.Message;
+            return a.DisplayName.Message == b.DisplayName.Message;
         }
 
         public static bool operator !=(Turret a, Turret b)
@@ -56,11 +56,11 @@ namespace Model.Turrets
         }
 
         public override string ToString() =>
-            $"{nameof(Damage)}: {Damage}, {nameof(Range)}: {Range}, {nameof(BulletSpeed)}: {BulletSpeed}, {nameof(Cost)}: {Cost}, {nameof(SellPrice)}: {SellPrice}, {nameof(Name)}: {Name}";
+            $"{nameof(Damage)}: {Damage}, {nameof(Range)}: {Range}, {nameof(BulletSpeed)}: {BulletSpeed}, {nameof(Cost)}: {Cost}, {nameof(SellPrice)}: {SellPrice}, {nameof(DisplayName)}: {DisplayName}";
 
         public bool Equals(Turret other)
         {
-            return Name.Message.Equals(other.Name);
+            return DisplayName.Message.Equals(other.DisplayName);
         }
 
         public override bool Equals(object obj)
@@ -70,7 +70,7 @@ namespace Model.Turrets
 
         public override int GetHashCode()
         {
-            return Name.Message.GetHashCode();
+            return DisplayName.Message.GetHashCode();
         }
     }
 }

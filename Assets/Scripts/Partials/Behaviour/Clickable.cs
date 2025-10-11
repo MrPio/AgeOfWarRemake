@@ -1,21 +1,28 @@
 using System;
-using System.Linq;
 using Managers;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Partials
+namespace Partials.Behaviour
 {
+    /// <summary>
+    /// Adds clickable visual + sound  effects to a UI go.
+    /// - Colorization (hover + down) must be customized
+    /// - Sounding is fixed
+    /// - OnClick/OnHover can be registered
+    /// </summary>
     public class Clickable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
                              IPointerDownHandler, IPointerUpHandler
     {
         private SceneManager _sm;
         private Image _image;
         private Color _startColor;
-        [SerializeField] private Color hoverColor, downColor;
-        [NonSerialized] public Action OnClick;
+
+        [SerializeField] private Color hoverColor = new Color(0.75f, 0.75f, 0.75f, 1f),
+            downColor = new Color(0.9f, 0.9f, 0.9f, 0.75f);
+
+        [NonSerialized] public Action OnClick, OnHover, OnExit;
 
 
         private void Start()
@@ -29,11 +36,13 @@ namespace Partials
         {
             _sm.musicManager.PlayUI("hover");
             _image.color = hoverColor;
+            OnHover?.Invoke();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             _image.color = _startColor;
+            OnExit?.Invoke();
         }
 
         public void OnPointerDown(PointerEventData eventData)

@@ -1,9 +1,8 @@
 ﻿using Managers;
 using TMPro;
 using UnityEngine;
-using Clickable = Partials.Clickable;
 
-namespace UI
+namespace UI.Menu
 {
     public class StatsMenu : MonoBehaviour
     {

@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Interfaces;
 using Managers;
 using Model.Bases;
 using Model.Turrets;
 using Model.Units;
+using Partials.AI;
 using UI;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
-using LogType = UI.LogType;
 
 namespace Prefabs
 {
@@ -120,7 +119,7 @@ namespace Prefabs
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            
+
             // Spawn HP bar
             // var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
             // go.transform.position = Vector3.down * 100;
@@ -135,7 +134,7 @@ namespace Prefabs
 
             if (_isLeft) _sm.GameManager.BaseAlly = this;
             else _sm.GameManager.BaseEnemy = this;
-            
+
             // Add infinite money to bot
             if (IsBot.Value)
             {
@@ -250,8 +249,7 @@ namespace Prefabs
             if (model.UnlockedExpansions - 1 < expansionIndex || model.Turrets[expansionIndex].HasValue) return;
 
             // Money check
-            if (model.Money < turretModel.Cost)
-                return;
+            if (model.Money < turretModel.Cost) return;
             model.Money -= turretModel.Cost;
 
             model.Turrets[expansionIndex] = turretModel;
@@ -262,18 +260,36 @@ namespace Prefabs
         [ServerRpc]
         public void SellTurretServerRpc(byte expansionIndex)
         {
-            // TODO money
             var model = Model.Value;
+            var turretModel = model.Turrets[expansionIndex];
             model.Turrets[expansionIndex] = default;
             model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone(); // Force trigger the change
+            model.Money += turretModel.SellPrice;
             Model.Value = model;
+
+            // Spawn floating text
+            var go = Instantiate(_sm.floatingText, _sm.canvas.transform);
+            var target = BasePrefab.turretsPos[expansionIndex].transform;
+            go.transform.position = _sm.cam.WorldToScreenPoint(target.position + Vector3.up * 0.25f);
+            var floatingText = go.GetComponent<FloatingText>();
+            floatingText.Initialize($"+ {turretModel.SellPrice:N0}");
         }
 
         [ServerRpc]
+        // UnlockedExpansions is 1-based
         public void BuyExpansionServerRpc()
         {
-            // TODO money
             var model = Model.Value;
+
+            // Availability check
+            if (BaseFactory.ExpansionCosts.Count <= model.UnlockedExpansions - 1) return;
+
+            // Money check
+            var cost = BaseFactory.ExpansionCosts[model.UnlockedExpansions - 1];
+            if (model.Money < cost) return;
+
+            // Commit
+            model.Money -= cost;
             model.UnlockedExpansions = math.min(4, model.UnlockedExpansions + 1);
             Model.Value = model;
         }

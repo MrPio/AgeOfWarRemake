@@ -10,18 +10,18 @@ namespace Model.Bases
         private const string PrefabPath = "Prefabs/Bases/";
 
         public float Hp, MaxHp;
-        public int ExpRequired, UnlockedExpansions, Level, Money;
+        public int EvolveExpRequired, UnlockedExpansions, Level, Money;
         public NetString Name;
         public NetString Prefab;
         public Turret[] Turrets;
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public Base(NetString name, float maxHp, int expRequired, int level, Turret[] turrets = null,
+        public Base(NetString name, float maxHp, int evolveExpRequired, int level, Turret[] turrets = null,
                     int unlockedExpansions = 1, int money = -1)
         {
             Hp = maxHp;
             MaxHp = maxHp;
-            ExpRequired = expRequired;
+            EvolveExpRequired = evolveExpRequired;
             Name = name;
             Turrets = turrets ?? new Turret[] { default, default, default, default };
             UnlockedExpansions = unlockedExpansions;
@@ -34,7 +34,7 @@ namespace Model.Bases
         {
             serializer.SerializeValue(ref Hp);
             serializer.SerializeValue(ref MaxHp);
-            serializer.SerializeValue(ref ExpRequired);
+            serializer.SerializeValue(ref EvolveExpRequired);
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref UnlockedExpansions);
@@ -44,6 +44,6 @@ namespace Model.Bases
         }
 
         public override string ToString() =>
-            $"{nameof(Hp)}: {Hp}, {nameof(MaxHp)}: {MaxHp}, {nameof(ExpRequired)}: {ExpRequired}, {nameof(Name)}: {Name}, {nameof(Prefab)}: {Prefab}, {nameof(HasValue)}: {HasValue}";
+            $"{nameof(Hp)}: {Hp}, {nameof(MaxHp)}: {MaxHp}, {nameof(EvolveExpRequired)}: {EvolveExpRequired}, {nameof(Name)}: {Name}, {nameof(Prefab)}: {Prefab}, {nameof(HasValue)}: {HasValue}";
     }
 }

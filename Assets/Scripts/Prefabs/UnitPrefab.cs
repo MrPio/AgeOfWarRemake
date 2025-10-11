@@ -1,6 +1,7 @@
 using System;
 using Managers;
 using Partials;
+using Partials.Behaviour;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

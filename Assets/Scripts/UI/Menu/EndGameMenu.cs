@@ -3,7 +3,7 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace UI
+namespace UI.Menu
 {
     public class EndGameMenu : MonoBehaviour
     {

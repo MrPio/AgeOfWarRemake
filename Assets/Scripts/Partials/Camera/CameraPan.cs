@@ -1,3 +1,4 @@
+using System;
 using Managers;
 using Unity.Mathematics;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Partials.Camera
         private Vector2 _boundX;
         private bool _isDragging;
         private RotateSkybox _rotateSkybox;
-        public bool BlockPan = false;
+        [NonSerialized] public bool BlockPan = false;
 
         private void Awake()
         {

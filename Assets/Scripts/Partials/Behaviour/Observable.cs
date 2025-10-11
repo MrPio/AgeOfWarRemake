@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Partials
+namespace Partials.Behaviour
 {
     public class Observable : MonoBehaviour
     {

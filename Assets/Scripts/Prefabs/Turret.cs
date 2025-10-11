@@ -3,6 +3,7 @@ using Interfaces;
 using Managers;
 using Model.Turrets;
 using Partials;
+using Partials.Behaviour;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;

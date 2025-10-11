@@ -3,7 +3,7 @@ using System.Collections;
 using Interfaces;
 using UnityEngine;
 
-namespace Partials
+namespace Partials.Behaviour
 {
     public class Destroyable : MonoBehaviour
     {

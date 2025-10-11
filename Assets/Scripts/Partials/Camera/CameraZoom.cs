@@ -1,7 +1,6 @@
-using Partials.Camera;
 using UnityEngine;
 
-namespace Partials
+namespace Partials.Camera
 {
     public class CameraZoom : MonoBehaviour
     {
