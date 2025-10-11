@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\EndGameMenu.cs" />
     <Compile Include="Assets\Scripts\Interfaces\INullable.cs" />
+    <Compile Include="Assets\Scripts\Managers\SpecialAttackManager.cs" />
     <Compile Include="Assets\Scripts\Partials\Camera\CameraZoom.cs" />
     <Compile Include="Assets\Scripts\Model\Utils\NetString.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\EnumExtensions.cs" />

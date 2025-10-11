@@ -18,12 +18,13 @@ namespace Managers
         [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
 
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical, floatingText;
-        [SerializeField] private GameObject gameManagerPrefab, basePrefab;
+        [SerializeField] private GameObject gameManagerPrefab, specialAttackManager, basePrefab;
 
         [Header("References")] public Camera cam;
         public Canvas canvas;
         public Logger logger;
         [NonSerialized] public GameManager GameManager;
+        [NonSerialized] public SpecialAttackManager SpecialAttackManager;
         public MusicManager musicManager;
         [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
         [SerializeField] public StatsMenu statsMenu;
@@ -33,6 +34,7 @@ namespace Managers
         private void Start()
         {
             GameManager = Instantiate(gameManagerPrefab).GetComponent<GameManager>();
+            SpecialAttackManager = Instantiate(specialAttackManager).GetComponent<SpecialAttackManager>();
             waitForClientScreen.SetActive(true);
         }
 

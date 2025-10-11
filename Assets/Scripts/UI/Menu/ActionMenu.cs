@@ -6,6 +6,7 @@ using Model.Turrets;
 using Model.Units;
 using Partials.Behaviour;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using Clickable = Partials.Behaviour.Clickable;
 
@@ -30,7 +31,8 @@ namespace UI.Menu
             buyTurret,
             sellTurret,
             buyExpansion,
-            evolve;
+            evolve,
+            special;
 
         [SerializeField] private GameObject unitMenu, turretMenu, mainMenu;
         [Header("Prefabs")] [SerializeField] private GameObject positiveButtonPrefab;
@@ -58,6 +60,9 @@ namespace UI.Menu
             buyTurret.OnClick += () => ToggleMenu(mainMenu, turretMenu);
             buyTurret.OnHover += () => descriptor.text = "Build a turret";
             buyTurret.OnExit += Exit;
+            special.OnClick += UseSpecial;
+            special.OnHover += () => descriptor.text = "Use special attack";
+            special.OnExit += Exit;
 
             // Main menu
             sellTurret.OnClick += SellTurret;
@@ -94,7 +99,6 @@ namespace UI.Menu
         }
 
         private void Exit() => descriptor.text = "";
-
 
         #region Unit
 
@@ -209,6 +213,15 @@ namespace UI.Menu
             descriptor.text = BaseModel.Level < BaseFactory.Bases.Count
                 ? $"Evolve for {BaseModel.EvolveExpRequired} EXP"
                 : "Can't evolve any more";
+        }
+
+        #endregion
+
+        #region Special
+
+        private void UseSpecial()
+        {
+            _sm.SpecialAttackManager.RainAttack(BaseModel.Level - 1, NetworkManager.Singleton.LocalClientId);
         }
 
         #endregion
