@@ -68,10 +68,15 @@ namespace Managers
             var destroyable = bullet.GetComponentInChildren<Destroyable>();
             destroyable.TargetOwner =
                 attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
-
+            if (!_sm.isMultiplayer)
+                destroyable.TargetOwner = 2;
+            
+            // TODO exclude enemy BASE
+            // TODO add explosion prefab
+            
             if (IsServer)
                 destroyable.OnDestroyCallback = target =>
-                    target.Damage(25);
+                    target.Damage(60f);
         }
     }
 }

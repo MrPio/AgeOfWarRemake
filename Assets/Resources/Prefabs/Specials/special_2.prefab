@@ -4976,7 +4976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Partials.Behaviour.Destroyable
   onStart: 0
-  onTrigger: 0
+  onTrigger: 1
   spawnOnDestroy: {fileID: 0}
   lifespan: 30
 --- !u!65 &6696210821861376290
