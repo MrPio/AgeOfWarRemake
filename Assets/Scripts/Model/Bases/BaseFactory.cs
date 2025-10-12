@@ -5,7 +5,7 @@ namespace Model.Bases
 {
     public static class BaseFactory
     {
-        public static Base Cave() => new(name: "Cave", maxHp: 500, evolveExpRequired: 4_000, level: 1, money: 175,
+        public static Base Cave() => new(name: "Cave", maxHp: 500, evolveExpRequired: 4_000, level: 1, money: 99175,
             special: new SpecialAttack(damage: 70, rate: 3, range: 0.5f, name: "Volcano eruption", prefab: "special_1",
                 explosionPrefab: "explosion", type: 0, maxAngle: 20, speed: 200));
 

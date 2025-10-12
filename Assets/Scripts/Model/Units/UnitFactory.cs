@@ -36,7 +36,7 @@ namespace Model.Units
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Swordman3() => new(displayName: "Canoneer", prefabName: "swordman_3", maxHp: 600,
-            damage: 120, attackDuration: 1f, cost: 1_000, revenue: 1_300, spawnTime: 5, level: 3);
+            damage: 120,shootDamage:80, attackDuration: 1.5f, cost: 1_000, revenue: 1_300, spawnTime: 5, level: 3, maxShootingDistance: 3.5f,shootRate: 0.5f);
 
         // === Modern age =================================================================
         private static Unit Soldier1() => new(displayName: "Melee Infantry", prefabName: "soldier_1", maxHp: 350,

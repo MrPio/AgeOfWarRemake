@@ -15,6 +15,7 @@ namespace Managers
         {
             new[] { "whack_01", "whack_01", "stab_01" },
             new[] { "stab_02", "whack_01", "stab_01" },
+            new[] { "stab_01", "whack_01", "whack_01" },
             // other ages
         };
 
@@ -22,6 +23,7 @@ namespace Managers
         {
             new[] { null, "whoosh_02", null },
             new[] { null, "medival_range_attack", null },
+            new[] { null, "medival_range_attack", "medival_tank_attack" },
             // other ages
         };
 

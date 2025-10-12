@@ -18,8 +18,7 @@ namespace Model.Bases
         public bool HasValue => !Name.Message.IsEmpty;
 
         public Base(NetString name, float maxHp, int evolveExpRequired, int level, SpecialAttack special,
-                    Turret[] turrets = null,
-                    int unlockedExpansions = 1, int money = -1)
+                    Turret[] turrets = null, int unlockedExpansions = 1, int money = -1)
         {
             Hp = maxHp;
             MaxHp = maxHp;
@@ -76,8 +75,8 @@ namespace Model.Bases
             Prefab = PrefabPath + prefab;
             Type = type;
             ExplosionPrefab = ExplosionPrefabPath + explosionPrefab;
-            MaxAngle=maxAngle;
-            Speed=speed;
+            MaxAngle = maxAngle;
+            Speed = speed;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
