@@ -221,7 +221,7 @@ namespace UI.Menu
 
         private void UseSpecial()
         {
-            _sm.SpecialAttackManager.RainAttack(BaseModel.Level - 1, NetworkManager.Singleton.LocalClientId);
+            _sm.SpecialAttackManager.RainAttackServerRpc();
         }
 
         #endregion

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Model.Bases;
 using Partials.Behaviour;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,15 +11,7 @@ namespace Managers
 {
     public class SpecialAttackManager : NetworkBehaviour
     {
-        [SerializeField] private float spawnXMargin = 1f,
-            spawnY = 10f,
-            spawnZ = 0f,
-            maxAngle = 0.5f,
-            duration = 15,
-            rate = 5f,
-            speed = 25f;
-
-        [SerializeField] private List<GameObject> bullets;
+        private float spawnXMargin = 1f, spawnY = 12f, spawnZ = 0f;
 
         private SceneManager _sm;
         private bool _isAttacking;
@@ -33,21 +25,30 @@ namespace Managers
             _spawnX2 = _sm.fieldLenght / 2 * spawnXMargin;
         }
 
+        private Base GetBaseModel(ulong attackerId) => attackerId == NetworkManager.Singleton.LocalClientId
+            ? _sm.GameManager.BaseAlly.Model.Value
+            : _sm.GameManager.BaseEnemy.Model.Value;
+
         // Server-only
-        public void RainAttack(int bulletIdx, ulong attackerId)
+        [ServerRpc(RequireOwnership = false)]
+        public void RainAttackServerRpc(ServerRpcParams rpcParams = default)
         {
-            if (!IsServer || _isAttacking) return;
+            if (_isAttacking) return;
             _isAttacking = true;
+            var attackerId = rpcParams.Receive.SenderClientId;
+            var baseModel = GetBaseModel(attackerId);
+            var model = baseModel.Special;
+
             StartCoroutine(SpawnRandomBullet());
             return;
 
             IEnumerator SpawnRandomBullet()
             {
                 var start = Time.time;
-                while (start + duration > Time.time)
+                while (start + model.Duration > Time.time)
                 {
-                    SpawnBulletRpc(bulletIdx, attackerId);
-                    yield return new WaitForSeconds(1 / rate);
+                    SpawnBulletRpc(attackerId);
+                    yield return new WaitForSeconds(1 / model.Rate);
                 }
 
                 _isAttacking = false;
@@ -56,27 +57,34 @@ namespace Managers
 
         // Host & Client
         [Rpc(SendTo.Everyone)]
-        private void SpawnBulletRpc(int bulletIdx, ulong attackerId)
+        private void SpawnBulletRpc(ulong attackerId)
         {
-            var spawnX = Random.Range(_spawnX1, _spawnX2);
-            var dx = Random.Range(-maxAngle, maxAngle);
-            var bullet = Instantiate(bullets[bulletIdx], transform);
-            bullet.transform.localPosition = new Vector3(spawnX, spawnY, spawnZ);
-            var rb = bullet.GetComponentInChildren<Rigidbody>();
-            rb.AddForce((-bullet.transform.up + new Vector3(dx, 0, 0)) * speed);
+            var baseModel = GetBaseModel(attackerId);
+            var model = baseModel.Special;
 
-            var destroyable = bullet.GetComponentInChildren<Destroyable>();
-            destroyable.TargetOwner =
-                attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
-            if (!_sm.isMultiplayer)
-                destroyable.TargetOwner = 2;
-            
-            // TODO exclude enemy BASE
-            // TODO add explosion prefab
-            
-            if (IsServer)
-                destroyable.OnDestroyCallback = target =>
-                    target.Damage(60f);
+            // Spawn bullet
+            var spawnX = Random.Range(_spawnX1, _spawnX2);
+            var bulletPrefab = Resources.Load<GameObject>(model.Prefab);
+            var bullet = Instantiate(bulletPrefab, transform);
+            bullet.transform.localPosition = new Vector3(spawnX, spawnY, spawnZ);
+
+            // Add initial force
+            var maxAngle = Mathf.Sin(model.MaxAngle * Mathf.Deg2Rad);
+            var dx = Random.Range(-maxAngle, maxAngle);
+            var rb = bullet.GetComponentInChildren<Rigidbody>();
+            rb.AddForce((-bullet.transform.up + new Vector3(dx, 0, 0)) * model.Speed);
+
+            // Add explodable behaviour
+            var explodable = bullet.GetComponentInChildren<Explodable>();
+            var explosionPrefab = Resources.Load<GameObject>(model.ExplosionPrefab);
+            explodable.Initialize(
+                targets: new List<string> { "Ground", "Unit", "Base" },
+                range: model.Range,
+                damage: model.Damage,
+                attackerId: attackerId,
+                explosion: explosionPrefab,
+                onExplode: () => _sm.musicManager.PlaySpecial(baseModel.Level)
+            );
         }
     }
 }

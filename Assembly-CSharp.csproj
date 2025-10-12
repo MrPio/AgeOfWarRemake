@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Partials\Behaviour\Clickable.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\VectorExtensions.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
+    <Compile Include="Assets\Scripts\Partials\Behaviour\Explodable.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\Turret.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\ByteExtensions.cs" />

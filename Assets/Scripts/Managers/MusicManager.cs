@@ -11,21 +11,27 @@ namespace Managers
         [SerializeField] private string sfxDir = "Audio/Sfx/";
         [SerializeField] private List<string> dieClips = new() { "die_01", "die_02", "die_03", "die_04", "die_05" };
 
-        private readonly string[][] attackClips =
+        private readonly string[][] _attackClips =
         {
             new[] { "whack_01", "whack_01", "stab_01" },
             // other ages
         };
 
-        private readonly string[][] rangeClips =
+        private readonly string[][] _rangeClips =
         {
             new[] { null, "whoosh_02", null },
             // other ages
         };
 
-        private readonly string[][] turretClips =
+        private readonly string[][] _turretClips =
         {
             new[] { "knight_range_attack", "cave_turret_2_attack", "catapult" },
+            // other ages
+        };
+
+        private readonly string[][] _specialClips =
+        {
+            new[] { "explosion_01", "explosion_02" },
             // other ages
         };
 
@@ -34,7 +40,7 @@ namespace Managers
         #region Data
 
         [SerializeField] private AudioSource sfxAudioSource, backgroundAudioSource;
-        private readonly Dictionary<string, AudioClip> sfxClips = new();
+        private readonly Dictionary<string, AudioClip> _sfxClips = new();
         private readonly Dictionary<string, float> _lastPlayed = new();
 
         #endregion
@@ -55,13 +61,19 @@ namespace Managers
         public void PlayAttack(int age, int unitLevel, bool isRanged)
         {
             // TODO: move caller to handle client&Host
-            PlaySfx((isRanged ? rangeClips : attackClips)[age - 1][unitLevel - 1]);
+            PlaySfx((isRanged ? _rangeClips : _attackClips)[age - 1][unitLevel - 1]);
         }
 
         public void PlayTurret(int age, int turretLevel)
         {
             // TODO: move caller to handle client&Host
-            PlaySfx((turretClips)[age - 1][turretLevel - 1]);
+            PlaySfx(_turretClips[age - 1][turretLevel - 1]);
+        }
+
+        public void PlaySpecial(int age)
+        {
+            var sfxs = _specialClips[age - 1];
+            PlaySfx(sfxs[Random.Range(0, sfxs.Length)], maxPitchShift: 0.25f, volume: 0.1f);
         }
 
         public void PlayUI(string type)
@@ -78,20 +90,20 @@ namespace Managers
 
         #region Private Methods
 
-        private void PlaySfx(string clip)
+        private void PlaySfx(string clip, float maxPitchShift = 0.05f, float volume = 1f)
         {
             if (_lastPlayed.ContainsKey(clip) && Time.time - _lastPlayed[clip] < 0.035f) return;
             _lastPlayed[clip] = Time.time;
-            sfxAudioSource.pitch = Random.Range(0.965f, 1.04f);
-            sfxAudioSource.PlayOneShot(GetSfx(clip));
+            sfxAudioSource.pitch = Random.Range(1 - maxPitchShift, 1 + maxPitchShift);
+            sfxAudioSource.PlayOneShot(GetSfx(clip), volume);
         }
 
         private AudioClip GetSfx(string clip)
         {
             print(sfxDir + clip);
-            if (!sfxClips.ContainsKey(clip))
-                sfxClips.Add(clip, Resources.Load<AudioClip>(sfxDir + clip));
-            return sfxClips[clip];
+            if (!_sfxClips.ContainsKey(clip))
+                _sfxClips.Add(clip, Resources.Load<AudioClip>(sfxDir + clip));
+            return _sfxClips[clip];
         }
 
         #endregion

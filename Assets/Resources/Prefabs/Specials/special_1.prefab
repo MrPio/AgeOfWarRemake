@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 8092515099279805402}
   - component: {fileID: 6411916141843781787}
   - component: {fileID: 6908796972339997184}
-  - component: {fileID: 8394272454668667270}
+  - component: {fileID: 4484135229498051008}
+  - component: {fileID: 2334550782230467822}
   m_Layer: 0
   m_Name: container
   m_TagString: Untagged
@@ -142,7 +143,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.38318226, y: 0.33418974, z: 0.3578516}
   m_Center: {x: 0.006797821, y: -0.007155769, z: 0.0046122223}
---- !u!114 &8394272454668667270
+--- !u!114 &4484135229498051008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683896347451353550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac1aee6a8bfd404ea2143ca17ed930cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Partials.Behaviour.Explodable
+--- !u!114 &2334550782230467822
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -155,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Partials.Behaviour.Destroyable
   onStart: 0
-  onTrigger: 1
+  onTrigger: 0
   spawnOnDestroy: {fileID: 0}
   lifespan: 30
 --- !u!1 &2065300287162146564
