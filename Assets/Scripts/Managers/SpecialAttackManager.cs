@@ -54,7 +54,9 @@ namespace Managers
                 var start = Time.time;
                 while (start + model.Duration > Time.time)
                 {
-                    SpawnBulletRpc(attackerId);
+                    var spawnX = Random.Range(_spawnX1, _spawnX2);
+                    var angle = Random.Range(-model.MaxAngle, model.MaxAngle);
+                    SpawnBulletRpc(attackerId, spawnX, angle);
                     yield return new WaitForSeconds(1 / model.Rate);
                 }
 
@@ -75,20 +77,18 @@ namespace Managers
 
         // Host & Client
         [Rpc(SendTo.Everyone)]
-        private void SpawnBulletRpc(ulong attackerId)
+        private void SpawnBulletRpc(ulong attackerId, float spawnX, float angle)
         {
             var baseModel = GetBaseModel(attackerId);
             var model = baseModel.Special;
 
             // Spawn bullet
-            var spawnX = Random.Range(_spawnX1, _spawnX2);
             var bulletPrefab = Resources.Load<GameObject>(model.Prefab);
             var bullet = Instantiate(bulletPrefab, transform);
             bullet.transform.localPosition = new Vector3(spawnX, spawnY, spawnZ);
 
             // Add initial force
-            var maxAngle = Mathf.Sin(model.MaxAngle * Mathf.Deg2Rad);
-            var dx = Random.Range(-maxAngle, maxAngle);
+            var dx = Mathf.Sin(angle * Mathf.Deg2Rad);
             var rb = bullet.GetComponentInChildren<Rigidbody>();
             rb.AddForce((-bullet.transform.up + new Vector3(dx, 0, 0)) * model.Speed);
 

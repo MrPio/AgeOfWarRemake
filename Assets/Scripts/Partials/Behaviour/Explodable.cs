@@ -58,15 +58,18 @@ namespace Partials.Behaviour
                     ? _sm.GameManager.UnitsEnemy
                     : _sm.GameManager.UnitsAlly;
                 for (var i = 0; i < enemies.Count; i++)
-                    if (Mathf.Abs(enemies[i].transform.position.x - transform.position.x) < _range)
+                {
+                    var maxDistance = enemies[i].ColliderWidth / 2 + _range;
+                    if (Mathf.Abs(enemies[i].transform.position.x - transform.position.x) < maxDistance)
                         enemies[i].Damage(_damage);
+                }
             }
 
             _onExplode?.Invoke();
-            
+
             GetComponent<Collider>().enabled = false;
             GetComponent<MeshRenderer>().enabled = false;
-            Destroy(gameObject,10f);
+            Destroy(gameObject, 10f);
         }
     }
 }
