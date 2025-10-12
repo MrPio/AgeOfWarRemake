@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Model.Bases;
 using Partials.Behaviour;
+using Partials.Camera;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,18 +12,18 @@ namespace Managers
 {
     public class SpecialAttackManager : NetworkBehaviour
     {
-        private float spawnXMargin = 1f, spawnY = 12f, spawnZ = 0f;
+        private static SceneManager _sm;
+        private float spawnXMargin = 2f, spawnY = 12f, spawnZ = 0f;
 
-        private SceneManager _sm;
-        private bool _isAttacking;
+        [NonSerialized] public bool IsAttacking;
         private float _spawnX1, _spawnX2;
 
         private void Start()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
-            _isAttacking = false;
-            _spawnX1 = -_sm.fieldLenght / 2 * spawnXMargin;
-            _spawnX2 = _sm.fieldLenght / 2 * spawnXMargin;
+            IsAttacking = false;
+            _spawnX1 = -(_sm.fieldLenght / 2 - spawnXMargin);
+            _spawnX2 = _sm.fieldLenght / 2 - spawnXMargin;
         }
 
         private Base GetBaseModel(ulong attackerId) => attackerId == NetworkManager.Singleton.LocalClientId
@@ -33,12 +34,13 @@ namespace Managers
         [ServerRpc(RequireOwnership = false)]
         public void RainAttackServerRpc(ServerRpcParams rpcParams = default)
         {
-            if (_isAttacking) return;
-            _isAttacking = true;
+            if (IsAttacking) return;
+            IsAttacking = true;
             var attackerId = rpcParams.Receive.SenderClientId;
             var baseModel = GetBaseModel(attackerId);
             var model = baseModel.Special;
 
+            InitializeSpecialAttackRpc(model);
             StartCoroutine(SpawnRandomBullet());
             return;
 
@@ -51,9 +53,18 @@ namespace Managers
                     yield return new WaitForSeconds(1 / model.Rate);
                 }
 
-                _isAttacking = false;
+                IsAttacking = false;
             }
         }
+
+        // Host & Client
+        [Rpc(SendTo.Everyone)]
+        private void InitializeSpecialAttackRpc(SpecialAttack model)
+        {
+            _sm.cam.GetComponent<CameraShake>().Shake(model.Duration);
+            // TODO eruption sound
+        }
+
 
         // Host & Client
         [Rpc(SendTo.Everyone)]

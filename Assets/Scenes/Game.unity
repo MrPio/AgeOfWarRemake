@@ -2822,6 +2822,7 @@ GameObject:
   - component: {fileID: 658877793}
   - component: {fileID: 658877792}
   - component: {fileID: 658877798}
+  - component: {fileID: 658877799}
   m_Layer: 0
   m_Name: Main Camera (original)
   m_TagString: MainCamera
@@ -2997,6 +2998,18 @@ MonoBehaviour:
   maxFov: 36
   maxBaseMargin: 6.06
   lerpSpeed: 4
+--- !u!114 &658877799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 658877791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c56bba4bf3334526a8e3ccc760dfc109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Partials.Camera.CameraShake
 --- !u!1 &673983821
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,11 @@
+using Managers;
 using UnityEngine;
 
 namespace Partials.Camera
 {
     public class CameraZoom : MonoBehaviour
     {
+        private static SceneManager _sm;
         [SerializeField] private Vector3 maxPos = new(-5.42f, 5.6f, -11.2f);
         [SerializeField] private float maxFov = 42f;
         [SerializeField] private float maxBaseMargin = 6.06f;
@@ -19,6 +21,7 @@ namespace Partials.Camera
 
         private void Awake()
         {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             _cam = GetComponent<UnityEngine.Camera>();
             _cameraEdgePan = GetComponent<CameraEdgePan>();
             _minPos = transform.position;
@@ -28,7 +31,7 @@ namespace Partials.Camera
 
         private void Update()
         {
-            if (Time.time - _lastScroll < 0.1f) return;
+            if (Time.time - _lastScroll < 0.1f || _sm.SpecialAttackManager.IsAttacking) return;
             var scroll = Input.GetAxis("Mouse ScrollWheel");
             if (scroll > 0.01)
             {

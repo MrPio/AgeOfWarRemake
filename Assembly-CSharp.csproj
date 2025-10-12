@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\UI\Menu\UnitLoadingMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\Camera\RotateSkybox.cs" />
+    <Compile Include="Assets\Scripts\Partials\Camera\CameraShake.cs" />
     <Compile Include="Assets\Scripts\Model\UnitState.cs" />
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
