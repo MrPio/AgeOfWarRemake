@@ -75,6 +75,7 @@
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
     <Compile Include="Assets\Scripts\Managers\MusicManager.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\DieState.cs" />
+    <Compile Include="Assets\Scripts\UI\RechargeBar.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Observable.cs" />
     <Compile Include="Assets\Scripts\UI\FloatingText.cs" />
     <Compile Include="Assets\Scripts\Prefabs\BasePrefab.cs" />

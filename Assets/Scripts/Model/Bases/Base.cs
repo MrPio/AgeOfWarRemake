@@ -63,7 +63,7 @@ namespace Model.Bases
         public bool HasValue => !Name.Message.IsEmpty;
 
         public SpecialAttack(float damage, float rate, float range, NetString name, NetString prefab,
-                             NetString explosionPrefab, byte type, float duration = 15f, float cooldown = 60f,
+                             NetString explosionPrefab, byte type, float duration = 15f, float cooldown = 120f,
                              float maxAngle = 0.5f, float speed = 25f
         )
         {

@@ -29,7 +29,7 @@ namespace Managers
         [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
         [SerializeField] public StatsMenu statsMenu;
         [SerializeField] public UnitLoadingMenu unitLoadingMenu;
-
+        [SerializeField] public RechargeBar specialAttackRechargeBar;
 
         private void Start()
         {

@@ -17,6 +17,7 @@ namespace Managers
 
         [NonSerialized] public bool IsAttacking;
         private float _spawnX1, _spawnX2;
+        private readonly Dictionary<ulong, float> _lastAttacks = new();
 
         private void Start()
         {
@@ -40,7 +41,11 @@ namespace Managers
             var baseModel = GetBaseModel(attackerId);
             var model = baseModel.Special;
 
-            InitializeSpecialAttackRpc(model);
+            // Check cooldown requirement
+            if (_lastAttacks.ContainsKey(attackerId) && Time.time - _lastAttacks[attackerId] < model.Cooldown) return;
+            _lastAttacks[attackerId] = Time.time;
+
+            InitializeSpecialAttackRpc(model, attackerId);
             StartCoroutine(SpawnRandomBullet());
             return;
 
@@ -59,9 +64,11 @@ namespace Managers
 
         // Host & Client
         [Rpc(SendTo.Everyone)]
-        private void InitializeSpecialAttackRpc(SpecialAttack model)
+        private void InitializeSpecialAttackRpc(SpecialAttack model, ulong attackerId)
         {
             _sm.cam.GetComponent<CameraShake>().Shake(model.Duration);
+            var cooldown = attackerId == NetworkManager.Singleton.LocalClientId ? model.Cooldown : model.Duration;
+            _sm.specialAttackRechargeBar.Recharge(cooldown, 1, 0);
             // TODO eruption sound
         }
 
