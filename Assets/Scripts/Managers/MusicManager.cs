@@ -14,12 +14,14 @@ namespace Managers
         private readonly string[][] _attackClips =
         {
             new[] { "whack_01", "whack_01", "stab_01" },
+            new[] { "stab_02", "whack_01", "stab_01" },
             // other ages
         };
 
         private readonly string[][] _rangeClips =
         {
             new[] { null, "whoosh_02", null },
+            new[] { null, "medival_range_attack", null },
             // other ages
         };
 
@@ -32,8 +34,11 @@ namespace Managers
         private readonly string[][] _specialClips =
         {
             new[] { "explosion_01", "explosion_02" },
+            new[] { "stab_01" },
             // other ages
         };
+
+        private readonly float[] _specialVolumes = { 0.35f, 0.5f, 0.2f, 0.2f, 0.2f };
 
         #endregion
 
@@ -73,7 +78,7 @@ namespace Managers
         public void PlaySpecial(int age)
         {
             var sfxs = _specialClips[age - 1];
-            PlaySfx(sfxs[Random.Range(0, sfxs.Length)], maxPitchShift: 0.25f, volume: 0.1f);
+            PlaySfx(sfxs[Random.Range(0, sfxs.Length)], maxPitchShift: 0.25f, volume: _specialVolumes[age - 1]);
         }
 
         public void PlayUI(string type)
@@ -100,7 +105,6 @@ namespace Managers
 
         private AudioClip GetSfx(string clip)
         {
-            print(sfxDir + clip);
             if (!_sfxClips.ContainsKey(clip))
                 _sfxClips.Add(clip, Resources.Load<AudioClip>(sfxDir + clip));
             return _sfxClips[clip];

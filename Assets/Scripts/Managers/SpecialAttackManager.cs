@@ -15,6 +15,8 @@ namespace Managers
         private static SceneManager _sm;
         private float spawnXMargin = 2f, spawnY = 12f, spawnZ = 0f;
 
+        private List<bool> _hideOnExplode = new() { true, false };
+
         [NonSerialized] public bool IsAttacking;
         private float _spawnX1, _spawnX2;
         private readonly Dictionary<ulong, float> _lastAttacks = new();
@@ -86,11 +88,11 @@ namespace Managers
             var bulletPrefab = Resources.Load<GameObject>(model.Prefab);
             var bullet = Instantiate(bulletPrefab, transform);
             bullet.transform.localPosition = new Vector3(spawnX, spawnY, spawnZ);
+            bullet.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
             // Add initial force
-            var dx = Mathf.Sin(angle * Mathf.Deg2Rad);
             var rb = bullet.GetComponentInChildren<Rigidbody>();
-            rb.AddForce((-bullet.transform.up + new Vector3(dx, 0, 0)) * model.Speed);
+            rb.AddForce(-bullet.transform.up * model.Speed);
 
             // Add explodable behaviour
             var explodable = bullet.GetComponentInChildren<Explodable>();
@@ -101,7 +103,12 @@ namespace Managers
                 damage: model.Damage,
                 attackerId: attackerId,
                 explosion: explosionPrefab,
-                onExplode: () => _sm.musicManager.PlaySpecial(baseModel.Level)
+                onExplode: collisionTag =>
+                {
+                    if (collisionTag == "Unit")
+                        _sm.musicManager.PlaySpecial(baseModel.Level);
+                },
+                hideOnExplode: _hideOnExplode[baseModel.Level - 1]
             );
         }
     }

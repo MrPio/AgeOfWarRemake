@@ -6,8 +6,8 @@ using Model.Turrets;
 using Model.Units;
 using Partials.Behaviour;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 using Clickable = Partials.Behaviour.Clickable;
 
 namespace UI.Menu
@@ -22,6 +22,7 @@ namespace UI.Menu
         [SerializeField] private Clickable unitMelee,
             unitRange,
             unitTank,
+            unitSpecial,
             unitBack,
             turretS,
             turretM,
@@ -78,7 +79,7 @@ namespace UI.Menu
             evolve.OnExit += Exit;
 
             // Unit menu
-            var unitButtons = new[] { unitMelee, unitRange, unitTank };
+            var unitButtons = new[] { unitMelee, unitRange, unitTank, unitSpecial };
             for (var i = 0; i < unitButtons.Length; i++)
             {
                 var idx = i;
@@ -96,6 +97,25 @@ namespace UI.Menu
                 turretButtons[i].OnHover += () => HoverTurret(idx);
                 turretButtons[i].OnExit += Exit;
             }
+
+            Initialize(0);
+        }
+
+        public void Initialize(int age)
+        {
+            var unitButtons = new[] { unitMelee, unitRange, unitTank };
+            for (var i = 0; i < unitButtons.Length; i++)
+                unitButtons[i].GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>($"Sprites/Buttons/unit_{age + 1}_{i + 1}");
+
+            var turretButtons = new[] { turretS, turretM, turretL };
+            for (var i = 0; i < turretButtons.Length; i++)
+                turretButtons[i].GetComponent<Image>().sprite =
+                    Resources.Load<Sprite>($"Sprites/Buttons/turret_{age + 1}_{i + 1}");
+
+            unitSpecial.enabled = age == 4;
+            special.GetComponent<Image>().sprite =
+                Resources.Load<Sprite>($"Sprites/Specials/{age + 1}");
         }
 
         private void Exit() => descriptor.text = "";
@@ -205,7 +225,7 @@ namespace UI.Menu
 
         private void Evolve()
         {
-            throw new System.NotImplementedException();
+            _sm.GameManager.BaseAlly.EvolveServerRpc();
         }
 
         private void HoverEvolution()

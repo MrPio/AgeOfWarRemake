@@ -30,6 +30,7 @@ namespace Managers
         [SerializeField] public StatsMenu statsMenu;
         [SerializeField] public UnitLoadingMenu unitLoadingMenu;
         [SerializeField] public RechargeBar specialAttackRechargeBar;
+        [SerializeField] public ActionMenu actionMenu;
 
         private void Start()
         {

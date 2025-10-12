@@ -21,7 +21,7 @@ namespace Model.Units
             damage: 32, attackDuration: 1f, cost: 50, revenue: 65, spawnTime: 2, level: 1);
 
         private static Unit Knight2() => new(displayName: "Archer", prefabName: "knight_2", maxHp: 80,
-            damage: 20, shootDamage: 9f, attackDuration: 1.15f, shootRate: 1.25f, cost: 75, revenue: 98, spawnTime: 1,
+            damage: 20, shootDamage: 9f, attackDuration: 1.15f, shootRate: 1f, cost: 75, revenue: 98, spawnTime: 1,
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Knight3() => new(displayName: "Knight", prefabName: "knight_3", maxHp: 300,

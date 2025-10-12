@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Interfaces;
 using Managers;
 using Unity.Netcode;
 using UnityEngine;
@@ -15,10 +14,11 @@ namespace Partials.Behaviour
         private float _range, _damage;
         private GameObject _explosion;
         private ulong _attackerId;
-        private Action _onExplode;
+        private Action<string> _onExplode;
+        private bool _hideOnExplode;
 
         public void Initialize(List<string> targets, float range, float damage, ulong attackerId,
-                               GameObject explosion = null, Action onExplode = null)
+                               GameObject explosion = null, Action<string> onExplode = null, bool hideOnExplode = true)
         {
             _targets = targets;
             _range = range;
@@ -26,6 +26,7 @@ namespace Partials.Behaviour
             _attackerId = attackerId;
             _explosion = explosion;
             _onExplode = onExplode;
+            _hideOnExplode = hideOnExplode;
         }
 
         private void Start()
@@ -39,13 +40,13 @@ namespace Partials.Behaviour
         private void OnTriggerEnter(Collider other)
         {
             if (_targets.Where(other.CompareTag).Any())
-                Explode();
+                Explode(other.tag);
         }
 
         /// <summary>
         /// Spawn explosion and damage all damageable in range.
         /// </summary>
-        private void Explode()
+        private void Explode(string collisionTag)
         {
             // Spawn explosion
             if (_explosion != null)
@@ -65,10 +66,14 @@ namespace Partials.Behaviour
                 }
             }
 
-            _onExplode?.Invoke();
+            _onExplode?.Invoke(collisionTag);
 
-            GetComponent<Collider>().enabled = false;
-            GetComponent<MeshRenderer>().enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
+            GetComponent<Rigidbody>().isKinematic = true;
+            foreach (var particleSystem in transform.GetComponentsInChildren<ParticleSystem>())
+                particleSystem.Stop();
+            if (_hideOnExplode)
+                GetComponent<MeshRenderer>().enabled = false;
             Destroy(gameObject, 10f);
         }
     }

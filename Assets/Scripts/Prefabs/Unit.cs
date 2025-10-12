@@ -30,7 +30,7 @@ namespace Prefabs
 
             // Bot resistance
             if (!Sm.isMultiplayer && IsBot.Value)
-                damage *= 0.866f;
+                damage *= 0.9f;
 
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);

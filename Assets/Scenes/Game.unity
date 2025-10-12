@@ -4793,6 +4793,7 @@ MonoBehaviour:
   unitMelee: {fileID: 618540897}
   unitRange: {fileID: 487679366}
   unitTank: {fileID: 525375883}
+  unitSpecial: {fileID: 2124842642}
   unitBack: {fileID: 208709791}
   turretS: {fileID: 2102039508}
   turretM: {fileID: 905094532}
@@ -6277,7 +6278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d9cbfc74d4f7342abdb11e1a318107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMultiplayer: 1
+  isMultiplayer: 0
   fieldLenght: 23
   hpBarHorizontal: {fileID: 5319533488982568307, guid: 6c842d3db0c83e241b74020aadfa3cd1, type: 3}
   hpBarVertical: {fileID: 5319533488982568307, guid: bab97e2e710181049b68b1e27a5595e7, type: 3}
@@ -6294,6 +6295,7 @@ MonoBehaviour:
   statsMenu: {fileID: 12061912}
   unitLoadingMenu: {fileID: 714394285}
   specialAttackRechargeBar: {fileID: 627244545}
+  actionMenu: {fileID: 1066177061}
 --- !u!4 &1538787701
 Transform:
   m_ObjectHideFlags: 0

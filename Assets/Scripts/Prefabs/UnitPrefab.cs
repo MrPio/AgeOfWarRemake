@@ -24,7 +24,7 @@ namespace Prefabs
         [SerializeField] private Transform bloodSpawnPoint;
         [SerializeField] private GameObject bloodPrefab;
         [SerializeField] private Transform bulletSpawnPoint;
-        [SerializeField] private GameObject bulletPrefab;
+        [SerializeField] private GameObject bulletPrefab, shootEffectPrefab;
         [NonSerialized] public Unit Unit;
         private float _lastBlood;
         private SceneManager _sm;
@@ -58,6 +58,9 @@ namespace Prefabs
             var dir = Unit.IsLeft ? Vector3.right : Vector3.left;
             rb.linearVelocity = dir * bulletSpeed;
             var destroyable = bullet.GetComponent<Destroyable>();
+
+            if (shootEffectPrefab is not null)
+                Instantiate(shootEffectPrefab, bulletSpawnPoint.transform);
 
             // destroyable.Target = target.gameObject;
             destroyable.TargetOwner = Unit.IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;

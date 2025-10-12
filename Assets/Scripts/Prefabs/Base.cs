@@ -28,7 +28,7 @@ namespace Prefabs
 
             // Bot resistance
             if (!_sm.isMultiplayer && IsBot.Value)
-                damage *= 0.45f;
+                damage *= 0.5f;
 
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
@@ -303,10 +303,12 @@ namespace Prefabs
             if (BaseFactory.Bases.Count <= Model.Value.Level) return;
 
             var newModel = BaseFactory.Bases[Model.Value.Level]();
-            newModel.Hp = Model.Value.Hp;
+            newModel.Hp = Mathf.Min(newModel.MaxHp, Model.Value.Hp + (newModel.MaxHp - Model.Value.MaxHp));
             newModel.Money = Model.Value.Money;
             newModel.UnlockedExpansions = newModel.UnlockedExpansions;
             Model.Value = newModel;
+
+            _sm.actionMenu.Initialize(newModel.Level - 1);
         }
 
         #endregion
@@ -317,7 +319,7 @@ namespace Prefabs
         private void LoadPrefab(string prefab)
         {
             if (BasePrefab is not null)
-                Destroy(BasePrefab);
+                Destroy(BasePrefab.gameObject);
             BasePrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<BasePrefab>();
         }
 
