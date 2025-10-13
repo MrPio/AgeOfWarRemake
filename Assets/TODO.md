@@ -5,6 +5,7 @@
 - [ ] Show price on hover in Actionmenu
 - [ ] I proiettili ci mettono un po' a cambiare bersaglio  si distruggono spesso prima di raggiungerlo per un po'
 - [ ] il tempo di uccisione è maggiore dello spawn rate nemico
+- [ ] quando switchi da shoot ad attack, elimina il lag
 
 ## DONE
 - [x] le torrette nemiche non si aggiornano. --> ho dato al bot inf soldi

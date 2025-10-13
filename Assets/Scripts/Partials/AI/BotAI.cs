@@ -120,6 +120,7 @@ namespace Partials.AI
                     // Upgrade a turret
                     case 0 when validTurrets.Count > 0:
 // TODO After selling my own turret, i get: ArgumentOutOfRangeException: Index was out of range on the following line
+// Lo anche altre volte. Forse alla chiusura? 
                         var toUpgrade = validTurrets.Where(turret => turret.Age < baseModel.Level || turret.Level < 3)
                             .ToList().RandomItem();
                         var toUpgradePos = (byte)currentTurrets.IndexOf(toUpgrade);

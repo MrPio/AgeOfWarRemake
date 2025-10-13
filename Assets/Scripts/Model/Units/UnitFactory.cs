@@ -32,29 +32,34 @@ namespace Model.Units
             damage: 79, attackDuration: 1f, cost: 200, revenue: 260, spawnTime: 3, level: 1);
 
         private static Unit Swordman2() => new(displayName: "Mousquettere", prefabName: "swordman_2", maxHp: 160,
-            damage: 40, shootDamage: 20f, attackDuration: 1.15f, shootRate: 0.75f, cost: 400, revenue: 520, spawnTime: 3,
+            damage: 40, shootDamage: 20f, attackDuration: 1.15f, shootRate: 0.75f, cost: 400, revenue: 520,
+            spawnTime: 3,
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Swordman3() => new(displayName: "Canoneer", prefabName: "swordman_3", maxHp: 600,
-            damage: 120,shootDamage:80, attackDuration: 1.5f, cost: 1_000, revenue: 1_300, spawnTime: 5, level: 3, maxShootingDistance: 3.5f,shootRate: 0.5f);
+            damage: 120, shootDamage: 80, attackDuration: 1.5f, cost: 1_000, revenue: 1_300, spawnTime: 5, level: 3,
+            maxShootingDistance: 3.5f, shootRate: 0.5f);
 
         // === Modern age =================================================================
         private static Unit Soldier1() => new(displayName: "Melee Infantry", prefabName: "soldier_1", maxHp: 350,
             damage: 100, attackDuration: 1f, cost: 1_500, revenue: 1_950, spawnTime: 3, level: 1);
 
         private static Unit Soldier2() => new(displayName: "Infantry", prefabName: "soldier_2", maxHp: 300,
-            damage: 60, shootDamage: 30f, attackDuration: 1.15f, shootRate: 1f, cost: 2_000, revenue: 2_600, spawnTime: 3,
+            damage: 60, shootDamage: 10f, attackDuration: 1.15f, shootRate: 1f, cost: 2_000, revenue: 2_600,
+            spawnTime: 3,
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Soldier3() => new(displayName: "Tank", prefabName: "soldier_3", maxHp: 1_200,
-            damage: 300, attackDuration: 0.5f, cost: 7_000, revenue: 9_100, spawnTime: 8, level: 3);
+            damage: 300, shootDamage: 300f, shootRate: 0.35f, maxShootingDistance: 5f, attackDuration: 1f / 0.35f,
+            cost: 7_000, revenue: 9_100, spawnTime: 8, level: 3);
 
         // === Future age =================================================================
         private static Unit Trooper1() => new(displayName: "God's Blade", prefabName: "trooper_1", maxHp: 1_000,
             damage: 250, attackDuration: 1f, cost: 5_000, revenue: 6_500, spawnTime: 3, level: 1);
 
         private static Unit Trooper2() => new(displayName: "Blaster", prefabName: "trooper_2", maxHp: 800,
-            damage: 130, shootDamage: 80f, attackDuration: 1.15f, shootRate: 1f, cost: 6_000, revenue: 7_800, spawnTime: 3,
+            damage: 130, shootDamage: 80f, attackDuration: 1.15f, shootRate: 1f, cost: 6_000, revenue: 7_800,
+            spawnTime: 3,
             level: 2, maxShootingDistance: 6f);
 
         private static Unit Trooper3() => new(displayName: "War Machine", prefabName: "trooper_3", maxHp: 3_000,

@@ -305,7 +305,7 @@ namespace Prefabs
             var newModel = BaseFactory.Bases[Model.Value.Level]();
             newModel.Hp = Mathf.Min(newModel.MaxHp, Model.Value.Hp + (newModel.MaxHp - Model.Value.MaxHp));
             newModel.Money = Model.Value.Money;
-            newModel.UnlockedExpansions = newModel.UnlockedExpansions;
+            newModel.UnlockedExpansions = Model.Value.UnlockedExpansions;
             Model.Value = newModel;
 
             _sm.actionMenu.Initialize(newModel.Level - 1);

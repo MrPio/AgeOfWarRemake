@@ -59,7 +59,7 @@ namespace Prefabs
             rb.linearVelocity = dir * bulletSpeed;
             var destroyable = bullet.GetComponent<Destroyable>();
 
-            if (shootEffectPrefab is not null)
+            if (shootEffectPrefab != null)
                 Instantiate(shootEffectPrefab, bulletSpawnPoint.transform);
 
             // destroyable.Target = target.gameObject;

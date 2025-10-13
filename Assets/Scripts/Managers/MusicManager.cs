@@ -16,6 +16,7 @@ namespace Managers
             new[] { "whack_01", "whack_01", "stab_01" },
             new[] { "stab_02", "whack_01", "stab_01" },
             new[] { "stab_01", "whack_01", "whack_01" },
+            new[] { "stab_01", "miltary_range_attack", null },
             // other ages
         };
 
@@ -24,6 +25,7 @@ namespace Managers
             new[] { null, "whoosh_02", null },
             new[] { null, "medival_range_attack", null },
             new[] { null, "medival_range_attack", "medival_tank_attack" },
+            new[] { null, "miltary_range_attack_single", "explosion_02" },
             // other ages
         };
 
@@ -61,6 +63,11 @@ namespace Managers
                 PlaySfx("cave_tank_die");
             else if (age == 2 && unitType == 3)
                 PlaySfx("knight_tank_die");
+            else if (age == 4 && unitType == 3)
+            {
+                PlaySfx("explosion_01");
+                PlaySfx("fire_01");
+            }
             else
                 PlaySfx(dieClips.RandomItem());
         }

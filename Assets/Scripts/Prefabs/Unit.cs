@@ -306,7 +306,7 @@ namespace Prefabs
 
             // Attacking the base
             else if (enemyBase is not null &&
-                     math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) < ColliderWidth)
+                     math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) < ColliderWidth+1f)
             {
                 newState = new AttackState();
                 _target = enemyBase;
@@ -351,7 +351,7 @@ namespace Prefabs
             // Store the unit prefab component references
             _animator = _unitPrefab.GetComponent<Animator>();
             _hpBarPoint = _unitPrefab.hpBarPoint;
-            ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x;
+            ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x * math.abs(_unitPrefab.transform.localScale.x) ;
             _animationNotify = _unitPrefab.GetComponent<UnitAnimationEvents>();
 
             #region Animation events listeners
