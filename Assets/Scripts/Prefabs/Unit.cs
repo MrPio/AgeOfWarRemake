@@ -230,23 +230,27 @@ namespace Prefabs
             // Prevent re-assigning the same state
             if (_state?.Equals(newState) == true) return;
 
+            if (OwnerClientId == 0)
+                Sm.logger.Log($"Set state of {name} to {newState}");
+
+            // State Design Pattern
+            _state?.Exit(this);
+            newState?.Enter(this);
+
             // Remove shooting lag between 2 shooting states
             var wasShooting = _state is IdleState { Shooting: true } or WalkState { Shooting: true };
             var isShooting = newState is IdleState { Shooting: true } or WalkState { Shooting: true };
             if (wasShooting && isShooting)
-                if (newState is WalkState walkState)
-                    walkState.LastShoot = 0;
-                else if (newState is IdleState idleState)
-                    idleState.LastShoot = 0;
+                if (newState is WalkState walkState && _state is IdleState idleStateOld)
+                    walkState.LastShoot = idleStateOld.LastShoot;
+                else if (newState is IdleState idleState && _state is WalkState walkStateOld)
+                    idleState.LastShoot = walkStateOld.LastShoot;
 
             // Remove attack wait if the attacking unit is different from this
             if (newState is AttackState attackState && _target.Name != Name)
-                attackState.LastAttack = 0;
+                attackState.LastAttack = Time.time - Model.Value.AttackDuration / 2;
 
-            // State Design Pattern
-            _state?.Exit(this);
             _state = newState;
-            _state?.Enter(this);
         }
 
         // Server-only
@@ -306,7 +310,8 @@ namespace Prefabs
 
             // Attacking the base
             else if (enemyBase is not null &&
-                     math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) < ColliderWidth+1f)
+                     math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) <
+                     ColliderWidth + 1f)
             {
                 newState = new AttackState();
                 _target = enemyBase;
@@ -349,9 +354,11 @@ namespace Prefabs
             _unitPrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<UnitPrefab>();
 
             // Store the unit prefab component references
+            name = $"{_unitPrefab.name}_{Sm.GameManager.UnitsAlly.Count}";
             _animator = _unitPrefab.GetComponent<Animator>();
             _hpBarPoint = _unitPrefab.hpBarPoint;
-            ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x * math.abs(_unitPrefab.transform.localScale.x) ;
+            ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x *
+                            math.abs(_unitPrefab.transform.localScale.x);
             _animationNotify = _unitPrefab.GetComponent<UnitAnimationEvents>();
 
             #region Animation events listeners

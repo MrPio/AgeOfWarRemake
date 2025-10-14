@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Interfaces;
 using Managers;
 using Model.Turrets;
@@ -177,6 +178,7 @@ namespace Prefabs
                                 Model.Value.BulletSpeed;
 
             var destroyable = bullet.GetComponent<Destroyable>();
+            destroyable.AllowedTags = new List<string> { "Base", "Unit" };
             destroyable.TargetOwner = IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
             if (!_sm.isMultiplayer && !IsBot.Value)
                 destroyable.TargetOwner = 2;

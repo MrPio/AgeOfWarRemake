@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Managers;
 using Partials;
 using Partials.Behaviour;
@@ -63,6 +64,7 @@ namespace Prefabs
                 Instantiate(shootEffectPrefab, bulletSpawnPoint.transform);
 
             // destroyable.Target = target.gameObject;
+            destroyable.AllowedTags = new List<string> { "Base", "Unit" };
             destroyable.TargetOwner = Unit.IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
             if (!_sm.isMultiplayer && !Unit.IsBot.Value)
                 destroyable.TargetOwner = 2;

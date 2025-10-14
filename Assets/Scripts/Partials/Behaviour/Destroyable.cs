@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Interfaces;
 using UnityEngine;
 
@@ -11,6 +13,7 @@ namespace Partials.Behaviour
         [SerializeField] private GameObject spawnOnDestroy;
         [SerializeField] private float lifespan = 30;
         [NonSerialized] public Action<IDamageable> OnDestroyCallback;
+        [NonSerialized] public List<string> AllowedTags;
         [NonSerialized] public GameObject Target;
         [NonSerialized] public ulong? TargetOwner; // Used when there is not a precise Target
         private float _spawnTime;
@@ -33,6 +36,7 @@ namespace Partials.Behaviour
         {
             if (_destroyed || !onTrigger || (Target is not null && other.gameObject != Target)) return;
             if (other.CompareTag("Bullet")) return;
+            if (AllowedTags is null || !AllowedTags.Any(other.CompareTag)) return;
 
             if (other.transform.parent && other.transform.parent.TryGetComponent<IDamageable>(out var damageable))
             {
@@ -40,7 +44,7 @@ namespace Partials.Behaviour
                 OnDestroyCallback?.Invoke(damageable);
             }
 
-            Destroy(delay: 0.04f);
+            Destroy(delay: 0.05f);
         }
 
         private void Destroy(float delay = 0f)

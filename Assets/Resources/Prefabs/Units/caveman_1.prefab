@@ -1172,7 +1172,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1779605843424199914}
-  - component: {fileID: 6576267249985573566}
+  - component: {fileID: 2589582101413406206}
   m_Layer: 0
   m_Name: LegR
   m_TagString: Untagged
@@ -1195,7 +1195,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5185738201427821263}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!137 &6576267249985573566
+--- !u!137 &2589582101413406206
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1290,8 +1290,8 @@ SkinnedMeshRenderer:
   m_BlendShapeWeights: []
   m_RootBone: {fileID: 8944746408216898194}
   m_AABB:
-    m_Center: {x: -0.0003317543, y: -0.0026399978, z: 0.000398393}
-    m_Extent: {x: 0.0009885742, y: 0.0029029432, z: 0.0007784832}
+    m_Center: {x: -0.00033175643, y: -0.0026563131, z: 0.0005024036}
+    m_Extent: {x: 0.0009885738, y: 0.0028866255, z: 0.0006460163}
   m_DirtyAABB: 0
 --- !u!1 &3504879563226018073
 GameObject:
@@ -1427,6 +1427,7 @@ MonoBehaviour:
   bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}
   bulletSpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 0}
+  shootEffectPrefab: {fileID: 0}
 --- !u!114 &2925499693851382915
 MonoBehaviour:
   m_ObjectHideFlags: 0

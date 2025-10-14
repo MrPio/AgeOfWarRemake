@@ -669,22 +669,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: tank_explosion
       objectReference: {fileID: 0}
-    - target: {fileID: 1060015339853634, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4234352977839720, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4234352977839720, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4234352977839720, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 4234352977839720, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.01
@@ -724,10 +708,6 @@ PrefabInstance:
     - target: {fileID: 4234352977839720, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5417287816408719733, guid: 7418440deb61ffe47b46c5516a871d6c, type: 3}
-      propertyPath: lifespan
-      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

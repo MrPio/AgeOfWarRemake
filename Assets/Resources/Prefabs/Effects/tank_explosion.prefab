@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4234352977839720
 Transform:
   m_ObjectHideFlags: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4517537148510489}
@@ -2358,7 +2358,7 @@ MonoBehaviour:
   onStart: 0
   onTrigger: 0
   spawnOnDestroy: {fileID: 0}
-  lifespan: 10
+  lifespan: 30
 --- !u!1 &1099805815232518
 GameObject:
   m_ObjectHideFlags: 0
@@ -16394,7 +16394,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: lengthInSec
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: ShapeModule.angle
@@ -16441,6 +16441,10 @@ PrefabInstance:
       value: 2.32
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
       value: 3
       objectReference: {fileID: 0}
@@ -16466,15 +16470,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.b
-      value: 0.55345905
+      value: 0.32215884
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.g
-      value: 0.55345905
+      value: 0.32215884
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key0.r
-      value: 0.55345905
+      value: 0.57232696
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: ColorModule.gradient.maxGradient.key1.a
@@ -16498,15 +16502,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5633944432644777143, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5633944432644777143, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5633944432644777143, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 5633944432644777143, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: m_LocalPosition.x
