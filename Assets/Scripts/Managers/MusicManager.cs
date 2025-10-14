@@ -17,7 +17,7 @@ namespace Managers
             new[] { "stab_02", "whack_01", "stab_01" },
             new[] { "stab_01", "whack_01", "whack_01" },
             new[] { "stab_01", "miltary_range_attack", null },
-            // other ages
+            new[] { "sword_clash_02", "whack_01", null },
         };
 
         private readonly string[][] _rangeClips =
@@ -26,6 +26,7 @@ namespace Managers
             new[] { null, "medival_range_attack", null },
             new[] { null, "medival_range_attack", "medival_tank_attack" },
             new[] { null, "miltary_range_attack_single", "explosion_02" },
+            new[] { null, "future_range_attack_single", "future_tank_attack" },
             // other ages
         };
 
