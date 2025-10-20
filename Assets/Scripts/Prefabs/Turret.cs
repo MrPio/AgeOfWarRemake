@@ -8,6 +8,7 @@ using Partials.Behaviour;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Prefabs
 {
@@ -176,6 +177,8 @@ namespace Prefabs
             rb.linearVelocity = ((_target.PrefabTransform.position + Vector3.up * 0.75f) - bulletSpawnPoint.position)
                                 .normalized *
                                 Model.Value.BulletSpeed;
+            rb.AddTorque(Random.insideUnitSphere * Random.Range(5f,20f), ForceMode.Impulse);
+
 
             var destroyable = bullet.GetComponent<Destroyable>();
             destroyable.AllowedTags = new List<string> { "Base", "Unit" };

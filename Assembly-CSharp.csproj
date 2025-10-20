@@ -53,6 +53,7 @@
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\LoadingMenu.cs" />
+    <Compile Include="Assets\Scripts\Partials\ClusterSpawn.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\ActionMenu.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
