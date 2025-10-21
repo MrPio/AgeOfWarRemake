@@ -24,7 +24,7 @@ namespace Model.Turrets
             displayName: "Stone Catapult", "turret_2_1", bulletSpeed: 6f, level: 1, age: 2);
 
         private static Turret FireCatapult() => new(damage: 45, range: 4.75f, cost: 750,
-            displayName: "Fire Catapult", "turret_2_2", bulletSpeed: 5f, level: 2, age: 2);
+            displayName: "Fire Catapult", "turret_2_2", bulletSpeed: 5f, clusterDamage: 15, level: 2, age: 2);
 
         private static Turret Oil() => new(damage: 60, range: 1.25f, cost: 1000,
             displayName: "Oil", "turret_2_3", level: 3, age: 2);

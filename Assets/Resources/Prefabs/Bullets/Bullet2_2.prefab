@@ -109,7 +109,7 @@ MonoBehaviour:
   onTrigger: 1
   spawnOnDestroy: {fileID: 0}
   lifespan: 30
-  destroyDelay: 0.15
+  destroyDelay: 0.065
   AllowedTags: []
 --- !u!54 &5723476147483393115
 Rigidbody:
@@ -152,8 +152,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   toSpawn: {fileID: 3203123110745391531, guid: e9793dfefa0fc3f41876fcafb574597e, type: 3}
   impulse: 3
-  spawnDistance: 0.35
-  howMany: 8
+  spawnDistance: 0.5
+  howMany: 5
 --- !u!65 &8850140191170042152
 BoxCollider:
   m_ObjectHideFlags: 0
