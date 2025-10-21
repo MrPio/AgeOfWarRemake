@@ -45,6 +45,7 @@ namespace Prefabs
         private const float SpawnWalkDelay = 0.25f;
         private const float DeadDelay = 10.0f;
         private const float MinUnitsDistance = 0.25f;
+        private const float MinDistanceFromEnemyBase = 1.5f;
         [NonSerialized] public float ColliderWidth;
 
         // Animation trigger hashes
@@ -319,7 +320,7 @@ namespace Prefabs
             // Attacking the base
             else if (enemyBase is not null &&
                      math.abs(enemyBase.BasePrefab.unitSpawnPointX.position.x - transform.position.x) <
-                     ColliderWidth + 1f)
+                     ColliderWidth / 2 + MinDistanceFromEnemyBase)
             {
                 newState = new AttackState();
                 _target = enemyBase;

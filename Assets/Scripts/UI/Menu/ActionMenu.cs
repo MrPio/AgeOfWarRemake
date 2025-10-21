@@ -151,7 +151,7 @@ namespace UI.Menu
                 if (BaseModel.Turrets[i].HasValue) continue;
                 var target = baseAlly.BasePrefab.turretsPos[i].transform;
                 var button = Instantiate(positiveButtonPrefab, _sm.canvas.transform);
-                button.GetComponent<Followable>().target = new FollowableTarget(target);
+                button.GetComponent<Followable>().Initialize(new FollowableTarget(target));
 
                 var expansionIdx = (byte)i;
                 var turretIdx = (byte)type;
@@ -185,7 +185,7 @@ namespace UI.Menu
                 if (!turret.HasValue) continue;
                 var target = baseAlly.BasePrefab.turretsPos[i].transform;
                 var button = Instantiate(negativeButtonPrefab, _sm.canvas.transform);
-                button.GetComponent<Followable>().target = new FollowableTarget(target);
+                button.GetComponent<Followable>().Initialize(new FollowableTarget(target));
                 var clickable = button.GetComponent<Clickable>();
                 clickable.OnHover += () =>
                     descriptor.text = $"Sell {turret.DisplayName.Message.Value} at ${turret.SellPrice:N0}";

@@ -35,6 +35,7 @@ namespace Managers
             new[] { "knight_range_attack", "cave_turret_2_attack", "catapult" },
             new[] { "catapult", "catapult", "fire_01" },
             new[] { "medival_range_attack", "medival_range_attack", "medival_range_attack" },
+            new[] { "miltary_turret_attack", "medival_tank_attack", "miltary_turret_3_attack" },
             // other ages
         };
 
@@ -69,12 +70,12 @@ namespace Managers
             else if (age == 4 && unitType == 3)
             {
                 PlaySfx("explosion_01");
-                PlaySfx("fire_01", force:true);
+                PlaySfx("fire_01", force: true);
             }
             else if (age == 5 && unitType == 3)
             {
                 PlaySfx("explosion_01");
-                PlaySfx("fire_01", force:true);
+                PlaySfx("fire_01", force: true);
             }
             else
                 PlaySfx(dieClips.RandomItem());
@@ -112,8 +113,9 @@ namespace Managers
 
         #region Private Methods
 
-        private void PlaySfx(string clip, float maxPitchShift = 0.05f, float volume = 1f, bool force=false)
+        private void PlaySfx(string clip, float maxPitchShift = 0.05f, float volume = 1f, bool force = false)
         {
+            if (clip is null) return;
             if (!force && _lastPlayed.ContainsKey(clip) && Time.time - _lastPlayed[clip] < 0.035f) return;
             _lastPlayed[clip] = Time.time;
             sfxAudioSource.pitch = Random.Range(1 - maxPitchShift, 1 + maxPitchShift);

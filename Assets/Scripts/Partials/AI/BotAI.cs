@@ -41,7 +41,7 @@ namespace Partials.AI
         {
             StartCoroutine(SpawnLoop());
             StartCoroutine(PhaseLoop());
-            // StartCoroutine(AgeLoop());
+            StartCoroutine(AgeLoop());
             StartCoroutine(TurretLoop());
         }
 

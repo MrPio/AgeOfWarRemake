@@ -309,7 +309,8 @@ namespace Prefabs
             newModel.Turrets = Model.Value.Turrets;
             Model.Value = newModel;
 
-            _sm.actionMenu.Initialize(newModel.Level - 1);
+            if(_isLeft)
+                _sm.actionMenu.Initialize(newModel.Level - 1);
         }
 
         #endregion

@@ -25,7 +25,7 @@ namespace Prefabs
         #region References & Components
 
         private SceneManager _sm;
-        [SerializeField] private Transform bulletSpawnPoint;
+        [SerializeField] private Transform bulletSpawnPoint, bulletSecondarySpawnPoint;
         [SerializeField] private GameObject bulletPrefab;
         private Animator _animator;
         [NonSerialized] private Base _base;
@@ -122,7 +122,7 @@ namespace Prefabs
             if (!Model.Value.IsFluid)
             {
                 var angle = 0f;
-                if (_target?.PrefabTransform is not null) 
+                if (_target?.PrefabTransform is not null)
                 {
                     var dir = ((_target.PrefabTransform.position + Vector3.up * 0.65f) - transform.position) *
                               (_isLeft ? 1 : -1);
@@ -176,10 +176,11 @@ namespace Prefabs
         }
 
         // Host & Client (Called by animation event)
-        private void SpawnBullet()
+        private void SpawnBullet(int idx = 0)
         {
             if (_target is null) return;
-            var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+            var spawnPoint = idx == 0 ? bulletSpawnPoint : bulletSecondarySpawnPoint;
+            var bullet = Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
 
             if (Model.Value.IsFluid)
             {
@@ -197,10 +198,17 @@ namespace Prefabs
             {
                 var rb = bullet.GetComponent<Rigidbody>();
                 rb.linearVelocity =
-                    ((_target.PrefabTransform.position + Vector3.up * 0.75f) - bulletSpawnPoint.position)
+                    ((_target.PrefabTransform.position + Vector3.up * 0.75f) - spawnPoint.position)
                     .normalized *
                     Model.Value.BulletSpeed;
-                rb.AddTorque(Random.insideUnitSphere * Random.Range(5f, 20f), ForceMode.Impulse);
+                if (Model.Value.IsFollow)
+                    bullet.AddComponent<Followable>().Initialize(
+                        target: new FollowableTarget(followLastEnemy: true, isLeft: _isLeft),
+                        smoothing: 0.9f,
+                        updateAngle: true
+                    );
+                else
+                    rb.AddTorque(Random.insideUnitSphere * Random.Range(5f, 20f), ForceMode.Impulse);
 
                 var destroyable = bullet.GetComponent<Destroyable>();
                 destroyable.AllowedTags = new List<string> { "Unit", "Ground" };

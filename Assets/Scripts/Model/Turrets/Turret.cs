@@ -15,12 +15,12 @@ namespace Model.Turrets
         public int Cost, SellPrice, Level, Age;
         public NetString DisplayName;
         public NetString Prefab;
-        public bool IsFluid;
+        public bool IsFluid, IsFollow;
         public bool HasValue => !DisplayName.Message.IsEmpty;
 
         public Turret(float damage, float range, int cost, NetString displayName,
                       NetString prefabName, int level, int age, float bulletSpeed = 0f, float clusterDamage = -1f,
-                      bool isFluid = false)
+                      bool isFluid = false, bool isFollow=false)
         {
             Damage = damage;
             Range = range;
@@ -33,6 +33,7 @@ namespace Model.Turrets
             Prefab = PrefabPath + prefabName;
             ClusterDamage = clusterDamage;
             IsFluid = isFluid;
+            IsFollow = isFollow;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -48,6 +49,7 @@ namespace Model.Turrets
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref ClusterDamage);
             serializer.SerializeValue(ref IsFluid);
+            serializer.SerializeValue(ref IsFollow);
         }
 
         // Equality ================================================

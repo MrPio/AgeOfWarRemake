@@ -41,13 +41,13 @@ namespace Model.Turrets
 
         // === Modern age =================================================================
         private static Turret SingleTurret() => new(damage: 50, range: 5.75f, cost: 7_000,
-            displayName: "Single Turret", "turret_4_1", bulletSpeed: 2f, level: 1, age: 4);
+            displayName: "Single Turret", "turret_4_1", bulletSpeed: 8f, level: 1, age: 4);
 
-        private static Turret RocketLauncher() => new(damage: 100, range: 5.25f, cost: 9_000,
-            displayName: "Rocket Launcher", "turret_4_2", bulletSpeed: 7f, level: 2, age: 4);
+        private static Turret RocketLauncher() => new(damage: 100, range: 7f, cost: 9_000,
+            displayName: "Rocket Launcher", "turret_4_2", bulletSpeed: 2.75f, level: 2, age: 4, isFollow: true);
 
         private static Turret DoubleTurret() => new(damage: 50, range: 5.25f, cost: 14_000,
-            displayName: "Double Turret", "turret_4_3", bulletSpeed: 7f, level: 3, age: 4); // @
+            displayName: "Double Turret", "turret_4_3", bulletSpeed: 8f, level: 3, age: 4); // @
 
         // === Future age =================================================================
         private static Turret TitaniumShooter() => new(damage: 100, range: 5.75f, cost: 24_000,

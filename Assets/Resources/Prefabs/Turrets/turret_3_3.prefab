@@ -75,6 +75,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Prefabs.Turret
   ShowTopMostFoldoutHeaderGroup: 1
   bulletSpawnPoint: {fileID: 2694282499537721299}
+  bulletSecondarySpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 275663183365207472, guid: 1dbc66f2d9709d54184cd4964867df02, type: 3}
 --- !u!95 &6680296304412223124
 Animator:
@@ -124,14 +125,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3134555792870159499}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.70706224, y: -0, z: -0, w: 0.70715135}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2694282499537721299}
   m_Father: {fileID: 7295066718716429392}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &5998542412452176171
 MeshFilter:
   m_ObjectHideFlags: 0
