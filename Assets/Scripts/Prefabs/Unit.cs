@@ -44,7 +44,7 @@ namespace Prefabs
         // Unit constants (Server-only)
         private const float SpawnWalkDelay = 0.25f;
         private const float DeadDelay = 10.0f;
-        private const float MinUnitsDistance = 0.25f;
+        private const float MinUnitsDistance = 0.2f;
         private const float MinDistanceFromEnemyBase = 1.5f;
         [NonSerialized] public float ColliderWidth;
 

@@ -12,11 +12,16 @@
             unit.PlayAnimation(Prefabs.Unit.DieTrigger);
             unit.Sm.musicManager.PlayDie(unit.AllyBase.Model.Value.Level, unit.Model.Value.Level);
             unit.DelayedDestroy();
-            
+
             // Add money to the enemy
             var enemyBaseModel = unit.EnemyBase.Model.Value;
             enemyBaseModel.Money += unit.Model.Value.Revenue;
+            enemyBaseModel.Exp += unit.Model.Value.Revenue * 2;
             unit.EnemyBase.Model.Value = enemyBaseModel;
+
+            var allyBaseModel = unit.AllyBase.Model.Value;
+            allyBaseModel.Exp += (int)(unit.Model.Value.Revenue * 0.5);
+            unit.AllyBase.Model.Value = allyBaseModel;
         }
 
         public void Update(Prefabs.Unit unit)

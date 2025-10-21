@@ -107,7 +107,7 @@ namespace Prefabs
             BasePrefab?.UpdateTurretConfiguration(newValue.UnlockedExpansions, newValue.Turrets);
 
             if (_isLeft)
-                _sm.statsMenu.UpdateUI(Model.Value.Money, 0);
+                _sm.statsMenu.UpdateUI(Model.Value.Money, Model.Value.Exp);
         }
 
         #endregion
@@ -297,7 +297,7 @@ namespace Prefabs
         [ServerRpc]
         public void EvolveServerRpc()
         {
-            //TODO check exp
+            if (Model.Value.Exp < Model.Value.EvolveExpRequired || Model.Value.Level >= BaseFactory.Bases.Count) return;
 
             // No more ages
             if (BaseFactory.Bases.Count <= Model.Value.Level) return;
@@ -305,11 +305,12 @@ namespace Prefabs
             var newModel = BaseFactory.Bases[Model.Value.Level]();
             newModel.Hp = Mathf.Min(newModel.MaxHp, Model.Value.Hp + (newModel.MaxHp - Model.Value.MaxHp));
             newModel.Money = Model.Value.Money;
+            newModel.Exp = Model.Value.Exp;
             newModel.UnlockedExpansions = Model.Value.UnlockedExpansions;
             newModel.Turrets = Model.Value.Turrets;
             Model.Value = newModel;
 
-            if(_isLeft)
+            if (_isLeft)
                 _sm.actionMenu.Initialize(newModel.Level - 1);
         }
 

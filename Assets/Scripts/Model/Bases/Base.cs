@@ -10,7 +10,7 @@ namespace Model.Bases
         private const string PrefabPath = "Prefabs/Bases/";
 
         public float Hp, MaxHp;
-        public int EvolveExpRequired, UnlockedExpansions, Level, Money;
+        public int EvolveExpRequired, UnlockedExpansions, Level, Money, Exp;
         public NetString Name;
         public NetString Prefab;
         public Turret[] Turrets;
@@ -18,7 +18,7 @@ namespace Model.Bases
         public bool HasValue => !Name.Message.IsEmpty;
 
         public Base(NetString name, float maxHp, int evolveExpRequired, int level, SpecialAttack special,
-                    Turret[] turrets = null, int unlockedExpansions = 1, int money = -1)
+                    Turret[] turrets = null, int unlockedExpansions = 1, int money = -1, int exp=0)
         {
             Hp = maxHp;
             MaxHp = maxHp;
@@ -30,6 +30,7 @@ namespace Model.Bases
             Level = level;
             Prefab = PrefabPath + name;
             Money = money;
+            Exp = exp;
         }
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
@@ -44,6 +45,7 @@ namespace Model.Bases
             serializer.SerializeValue(ref Level);
             serializer.SerializeValue(ref Money);
             serializer.SerializeValue(ref Special);
+            serializer.SerializeValue(ref Exp);
         }
 
         public override string ToString() =>

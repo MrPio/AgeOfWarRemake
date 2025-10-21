@@ -17,7 +17,7 @@ namespace UI.Menu
         public void UpdateUI(int money, int exp)
         {
             moneyText.text = money.ToString("N0");
-            // expText.text = exp.ToString("N0");
+            expText.text = exp.ToString("N0");
         }
     }
 }

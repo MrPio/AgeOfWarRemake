@@ -20,7 +20,9 @@ namespace Partials.AI
 
     public class BotAI : MonoBehaviour
     {
-        [SerializeField] private float[] phaseDurations = { 60f, 60f }; // [0]=melee, [1]=melee+range, [2]=melee+range+tank
+        [SerializeField]
+        private float[] phaseDurations = { 60f, 60f }; // [0]=melee, [1]=melee+range, [2]=melee+range+tank
+
         [SerializeField] private float initialAgeInterval = 180f;
         [SerializeField] private float initialTurretInterval = 10f;
         private Base _base;
@@ -112,26 +114,30 @@ namespace Partials.AI
                 if (_sm.GameManager.IsGameOver) yield break;
 
                 var currentTurrets = _base.Model.Value.Turrets.ToList();
-                var validTurrets = currentTurrets.Where(turret => turret.HasValue).OrderBy(turret => turret.Cost).ToList();
+                var validTurrets = currentTurrets.Where(turret => turret.HasValue).OrderBy(turret => turret.Cost)
+                    .ToList();
                 var baseModel = _base.Model.Value;
 
                 switch (Random.Range(0, 3))
                 {
                     // Upgrade a turret
                     case 0 when validTurrets.Count > 0:
-// TODO After selling my own turret, i get: ArgumentOutOfRangeException: Index was out of range on the following line
-// Lo anche altre volte. Forse alla chiusura? 
-                        var toUpgrade = validTurrets.Where(turret => turret.Age < baseModel.Level || turret.Level < 3)
-                            .ToList().RandomItem();
-                        var toUpgradePos = (byte)currentTurrets.IndexOf(toUpgrade);
-                        _base.SellTurretServerRpc(toUpgradePos);
+                        var toUpgrades = validTurrets.Where(turret => turret.Age < baseModel.Level || turret.Level < 3)
+                            .ToList();
+                        if (toUpgrades.Count > 0)
+                        {
+                            var toUpgrade = toUpgrades.RandomItem();
+                            var toUpgradePos = (byte)currentTurrets.IndexOf(toUpgrade);
+                            _base.SellTurretServerRpc(toUpgradePos);
 
-                        // The new turret is a lower or same level if changing age, else the next level of the same age
-                        var upgradedChoice = toUpgrade.Age < baseModel.Level
-                            ? Random.Range(0, toUpgrade.Level)
-                            : toUpgrade.Level;
-                        _base.BuyTurretServerRpc(toUpgradePos, (byte)upgradedChoice);
-                        interval += 15f;
+                            // The new turret is a lower or same level if changing age, else the next level of the same age
+                            var upgradedChoice = toUpgrade.Age < baseModel.Level
+                                ? Random.Range(0, toUpgrade.Level)
+                                : toUpgrade.Level;
+                            _base.BuyTurretServerRpc(toUpgradePos, (byte)upgradedChoice);
+                            interval += 15f;
+                        }
+
                         break;
 
                     // Buy a turret on an empty slot

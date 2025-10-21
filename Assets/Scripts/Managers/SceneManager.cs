@@ -52,14 +52,13 @@ namespace Managers
             if (NetworkManager.Singleton.IsServer)
             {
                 // Spawn ally base
-                var allybase=Instantiate(basePrefab);
-                allybase.name = "Base (Ally)";
-                allybase.GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
+                var allyBase=Instantiate(basePrefab);
+                allyBase.name = "Base (Ally)";
+                allyBase.GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
 
                 // Spawn enemy base
                 var enemyBase = Instantiate(basePrefab).GetComponent<NetworkObject>();
                 enemyBase.name = "Base (Enemy)";
-                enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
                 enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
                 enemyBase.SpawnWithOwnership(GameManager.ClientId);
             }
