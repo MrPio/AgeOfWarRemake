@@ -11,7 +11,7 @@ namespace Model.Bases
 
         public static Base Castle() => new(name: "Castle", maxHp: 1_200, evolveExpRequired: 14_000, level: 2,
             special: new SpecialAttack(damage: 70, rate: 12, range: 0f, name: "Archers' support", prefab: "special_2",
-                explosionPrefab: "ground_damage", type: 0, maxAngle: 10, speed: 300));
+                explosionPrefab: "ground_damage_small", type: 0, maxAngle: 10, speed: 300));
 
         public static Base Church() => new(name: "Church", maxHp: 2_000, evolveExpRequired: 45_000, level: 3,
             special: new SpecialAttack(damage: 70, rate: 5, range: 0.5f, name: "Blessing", prefab: "special_3",
