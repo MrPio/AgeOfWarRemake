@@ -213,8 +213,8 @@ namespace UI.Menu
         private void HoverExpansion()
         {
             var idx = BaseModel.UnlockedExpansions - 1;
-            var cost = BaseFactory.ExpansionCosts[idx];
-            descriptor.text = BaseFactory.ExpansionCosts.Count > idx
+            int? cost = idx < BaseFactory.ExpansionCosts.Count ? BaseFactory.ExpansionCosts[idx] : null;
+            descriptor.text = cost != null
                 ? $"Buy an expansion for ${cost:N0}"
                 : "Can't buy any more";
         }

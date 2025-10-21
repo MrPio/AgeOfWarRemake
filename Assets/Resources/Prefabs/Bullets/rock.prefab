@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4093185331152481604}
   - component: {fileID: 1525950143861946534}
   - component: {fileID: 8795653561995032219}
-  - component: {fileID: 7698039498242927552}
   - component: {fileID: 9148758691195825784}
+  - component: {fileID: 7698039498242927552}
   - component: {fileID: 2958099530892677501}
   m_Layer: 0
   m_Name: rock
@@ -64,6 +64,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -85,10 +87,29 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9148758691195825784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5398717212169755877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2f2a6915724bc846b79d84eeeb4c3e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onStart: 0
+  onTrigger: 1
+  spawnOnDestroy: {fileID: 1571455291051028, guid: cc1a4c50bc7d1e449af434304f20e852, type: 3}
+  lifespan: 5
+  destroyDelay: 0.07
+  AllowedTags: []
 --- !u!65 &7698039498242927552
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -110,22 +131,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.8722078, y: 1.9139594, z: 1.9554083}
   m_Center: {x: 0.014222324, y: -0.035681486, z: 0.020999938}
---- !u!114 &9148758691195825784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5398717212169755877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2f2a6915724bc846b79d84eeeb4c3e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onStart: 0
-  onTrigger: 1
-  spawnOnDestroy: {fileID: 0}
-  lifespan: 5
 --- !u!54 &2958099530892677501
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -133,10 +138,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5398717212169755877}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}

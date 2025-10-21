@@ -17,17 +17,17 @@ namespace Model.Turrets
             displayName: "Egg Automatic", "turret_1_2", bulletSpeed: 4f, level: 2, age: 1);
 
         private static Turret Catapult() => new(damage: 30, range: 5.5f, cost: 500,
-            displayName: "Primitive Catapult", "turret_1_3", bulletSpeed: 8f, level: 3, age: 1);
+            displayName: "Primitive Catapult", "turret_1_3", bulletSpeed: 9f, level: 3, age: 1);
 
         // === Medieval age =================================================================
         private static Turret StoneCatapult() => new(damage: 32, range: 4.5f, cost: 500,
-            displayName: "Stone Catapult", "turret_2_1", bulletSpeed: 6f, level: 1, age: 2);
+            displayName: "Stone Catapult", "turret_2_1", bulletSpeed: 7f, level: 1, age: 2);
 
         private static Turret FireCatapult() => new(damage: 45, range: 4.75f, cost: 750,
-            displayName: "Fire Catapult", "turret_2_2", bulletSpeed: 5f, clusterDamage: 15, level: 2, age: 2);
+            displayName: "Fire Catapult", "turret_2_2", bulletSpeed: 5.5f, clusterDamage: 15, level: 2, age: 2);
 
-        private static Turret Oil() => new(damage: 60, range: 1.25f, cost: 1000,
-            displayName: "Oil", "turret_2_3", level: 3, age: 2);
+        private static Turret Oil() => new(damage: 60, range: 2.75f, cost: 1000,
+            displayName: "Oil", "turret_2_3", isFluid: true, level: 3, age: 2);
 
         // === Renaissance age =================================================================
         private static Turret SmallCannon() => new(damage: 50, range: 3.75f, cost: 1_500,

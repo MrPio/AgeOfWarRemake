@@ -483,7 +483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2600994321
+  GlobalObjectIdHash: 425237599
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -510,7 +510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   bulletSpawnPoint: {fileID: 8321055490278739017}
-  bulletPrefab: {fileID: 3203123110745391531, guid: f281489f1f4a4eb46b0e3ced83be9fb0, type: 3}
+  bulletPrefab: {fileID: 5398717212169755877, guid: 7e3a9650e84deb14f91ab3115ae5bdae, type: 3}
 --- !u!95 &1128110126830797140
 Animator:
   serializedVersion: 7

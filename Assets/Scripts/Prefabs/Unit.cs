@@ -169,8 +169,16 @@ namespace Prefabs
             _spawnTime = Time.time;
             AllyBase = IsLeft ? Sm.GameManager.BaseAlly : Sm.GameManager.BaseEnemy;
             EnemyBase = IsLeft ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
+            var allyUnits = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
             (IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Add(this);
-            transform.localScale = new Vector3(IsLeft ? 1 : -1, 1, 1); // Rendering concern
+            transform.localScale = new Vector3(
+                x: transform.localScale.x * (IsLeft ? 1 : -1),
+                y: transform.localScale.y,
+                z: transform.localScale.z
+            ); // Rendering concern
+            gameObject.name =
+                $"Unit {AllyBase.Model.Value.Level}-{Model.Value.Level} ({allyUnits.Count})";
+
 
             # region NetVars listening
 
@@ -354,7 +362,6 @@ namespace Prefabs
             _unitPrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<UnitPrefab>();
 
             // Store the unit prefab component references
-            name = $"{_unitPrefab.name}_{Sm.GameManager.UnitsAlly.Count}";
             _animator = _unitPrefab.GetComponent<Animator>();
             _hpBarPoint = _unitPrefab.hpBarPoint;
             ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x *

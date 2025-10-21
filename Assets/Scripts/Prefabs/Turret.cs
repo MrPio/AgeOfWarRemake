@@ -82,7 +82,11 @@ namespace Prefabs
             var i = Index.Value;
             _base.Turrets[i] = this;
             transform.position = _base.BasePrefab.turretsPos[i].transform.position;
-            transform.localScale = new Vector3(_isLeft ? 1 : -1, 1, 1);
+            transform.localScale = new Vector3(
+                x: transform.localScale.x * (_isLeft ? 1 : -1),
+                y: transform.localScale.y,
+                z: transform.localScale.z
+            );
 
             # region NetVar listening
 
@@ -115,16 +119,19 @@ namespace Prefabs
                 CheckCollision();
 
             // Rotate if there's a target
-            var angle = 0f;
-            if (_target?.PrefabTransform is not null)
+            if (!Model.Value.IsFluid)
             {
-                var dir = ((_target.PrefabTransform.position + Vector3.up * 0.75f) - transform.position) *
-                          (_isLeft ? 1 : -1);
-                angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            }
+                var angle = 0f;
+                if (_target?.PrefabTransform is not null)
+                {
+                    var dir = ((_target.PrefabTransform.position + Vector3.up * 0.65f) - transform.position) *
+                              (_isLeft ? 1 : -1);
+                    angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                }
 
-            var currentEuler = transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.Euler(currentEuler.x, currentEuler.y, -angle);
+                var currentEuler = transform.rotation.eulerAngles;
+                transform.rotation = Quaternion.Euler(currentEuler.x, currentEuler.y, -angle);
+            }
         }
 
         #endregion
@@ -173,31 +180,48 @@ namespace Prefabs
         {
             if (_target is null) return;
             var bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
-            var rb = bullet.GetComponent<Rigidbody>();
-            rb.linearVelocity = ((_target.PrefabTransform.position + Vector3.up * 0.75f) - bulletSpawnPoint.position)
-                                .normalized *
-                                Model.Value.BulletSpeed;
-            rb.AddTorque(Random.insideUnitSphere * Random.Range(5f, 20f), ForceMode.Impulse);
 
-            var destroyable = bullet.GetComponent<Destroyable>();
-            destroyable.AllowedTags = new List<string> { "Base", "Unit" };
-            destroyable.TargetOwner = !_sm.isMultiplayer && !IsBot.Value ? 2 :
-                IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
-
-            if (IsServer)
-                destroyable.OnDestroyCallback = target =>
-                    target.Damage(Model.Value.Damage);
-
-            // Cluster explosion effect
-            if (Model.Value.ClusterDamage > 0f)
+            if (Model.Value.IsFluid)
             {
-                var clusterSpawn = bullet.GetComponent<ClusterSpawn>() ?? bullet.AddComponent<ClusterSpawn>();
-                clusterSpawn.Initialize(destroyable.TargetOwner.Value, Model.Value.ClusterDamage);
+                var rate = 10f;
+                bullet.AddComponent<Tickable>().Initialize(tickLength: 1f / rate, startDelay: 0.5f, onTick: () =>
+                {
+                    if (!IsServer) return;
+                    foreach (var enemy in _sm.GameManager.UnitsEnemy)
+                        if (Mathf.Abs(bullet.transform.position.x - enemy.transform.position.x) -
+                            enemy.ColliderWidth / 2 < 1)
+                            enemy.Damage(Model.Value.Damage / rate);
+                });
+            }
+            else
+            {
+                var rb = bullet.GetComponent<Rigidbody>();
+                rb.linearVelocity =
+                    ((_target.PrefabTransform.position + Vector3.up * 0.75f) - bulletSpawnPoint.position)
+                    .normalized *
+                    Model.Value.BulletSpeed;
+                rb.AddTorque(Random.insideUnitSphere * Random.Range(5f, 20f), ForceMode.Impulse);
+
+                var destroyable = bullet.GetComponent<Destroyable>();
+                destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
+                destroyable.TargetOwner = !_sm.isMultiplayer && !IsBot.Value ? 2 :
+                    IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+
+                if (IsServer)
+                    destroyable.OnDestroyCallback = target =>
+                        target.Damage(Model.Value.Damage);
+
+                // Cluster explosion effect
+                if (Model.Value.ClusterDamage > 0f)
+                {
+                    var clusterSpawn = bullet.GetComponent<ClusterSpawn>() ?? bullet.AddComponent<ClusterSpawn>();
+                    clusterSpawn.Initialize(destroyable.TargetOwner.Value, Model.Value.ClusterDamage);
+                }
             }
         }
 
         private void PlaySound() =>
-            _sm.musicManager.PlayTurret(_base.Model.Value.Level, Model.Value.Level);
+            _sm.musicManager.PlayTurret(Model.Value.Age, Model.Value.Level);
 
         #endregion
     }

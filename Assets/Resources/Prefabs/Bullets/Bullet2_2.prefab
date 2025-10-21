@@ -108,7 +108,7 @@ MonoBehaviour:
   onStart: 0
   onTrigger: 1
   spawnOnDestroy: {fileID: 0}
-  lifespan: 30
+  lifespan: 5
   destroyDelay: 0.065
   AllowedTags: []
 --- !u!54 &5723476147483393115
@@ -149,11 +149,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd23774f8cfadb8428aa6e7842612419, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::Partials.ClusterSpawn
   toSpawn: {fileID: 3203123110745391531, guid: e9793dfefa0fc3f41876fcafb574597e, type: 3}
-  impulse: 3
-  spawnDistance: 0.5
-  howMany: 5
+  impulse: 5
+  spawnDistance: 0.75
+  howMany: 4
 --- !u!65 &8850140191170042152
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -169,7 +169,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

@@ -33,6 +33,7 @@ namespace Managers
         private readonly string[][] _turretClips =
         {
             new[] { "knight_range_attack", "cave_turret_2_attack", "catapult" },
+            new[] { "catapult", "catapult", "fire_01" },
             // other ages
         };
 

@@ -306,6 +306,7 @@ namespace Prefabs
             newModel.Hp = Mathf.Min(newModel.MaxHp, Model.Value.Hp + (newModel.MaxHp - Model.Value.MaxHp));
             newModel.Money = Model.Value.Money;
             newModel.UnlockedExpansions = Model.Value.UnlockedExpansions;
+            newModel.Turrets = Model.Value.Turrets;
             Model.Value = newModel;
 
             _sm.actionMenu.Initialize(newModel.Level - 1);
