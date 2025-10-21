@@ -35,7 +35,9 @@ namespace Managers
         private void Start()
         {
             GameManager = Instantiate(gameManagerPrefab).GetComponent<GameManager>();
+            GameManager.gameObject.name = "GameManager";
             SpecialAttackManager = Instantiate(specialAttackManager).GetComponent<SpecialAttackManager>();
+            SpecialAttackManager.gameObject.name = "SpecialAttackManager";
             waitForClientScreen.SetActive(true);
         }
 
@@ -50,10 +52,13 @@ namespace Managers
             if (NetworkManager.Singleton.IsServer)
             {
                 // Spawn ally base
-                Instantiate(basePrefab).GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
+                var allybase=Instantiate(basePrefab);
+                allybase.name = "Base (Ally)";
+                allybase.GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
 
                 // Spawn enemy base
                 var enemyBase = Instantiate(basePrefab).GetComponent<NetworkObject>();
+                enemyBase.name = "Base (Enemy)";
                 enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
                 enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
                 enemyBase.SpawnWithOwnership(GameManager.ClientId);

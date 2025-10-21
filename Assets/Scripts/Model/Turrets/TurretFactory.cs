@@ -30,23 +30,23 @@ namespace Model.Turrets
             displayName: "Oil", "turret_2_3", isFluid: true, level: 3, age: 2);
 
         // === Renaissance age =================================================================
-        private static Turret SmallCannon() => new(damage: 50, range: 3.75f, cost: 1_500,
+        private static Turret SmallCannon() => new(damage: 50, range: 4.75f, cost: 1_500,
             displayName: "Small Cannon", "turret_3_1", bulletSpeed: 8f, level: 1, age: 3);
 
-        private static Turret LargeCannon() => new(damage: 65, range: 4f, cost: 3_000,
+        private static Turret LargeCannon() => new(damage: 65, range: 5f, cost: 3_000,
             displayName: "Large Cannon", "turret_3_2", bulletSpeed: 8f, level: 2, age: 3);
 
-        private static Turret ExplosiveCannon() => new(damage: 80, range: 4.35f, cost: 6_000,
-            displayName: "Explosive Cannon", "turret_3_3", bulletSpeed: 8f, level: 3, age: 3);
+        private static Turret ExplosiveCannon() => new(damage: 80, range: 5.35f, cost: 6_000,
+            displayName: "Explosive Cannon", "turret_3_3", clusterDamage: 15, bulletSpeed: 8f, level: 3, age: 3);
 
         // === Modern age =================================================================
-        private static Turret SingleTurret() => new(damage: 50, range: 4.75f, cost: 7_000,
+        private static Turret SingleTurret() => new(damage: 50, range: 5.75f, cost: 7_000,
             displayName: "Single Turret", "turret_4_1", bulletSpeed: 2f, level: 1, age: 4);
 
-        private static Turret RocketLauncher() => new(damage: 100, range: 4.25f, cost: 9_000,
+        private static Turret RocketLauncher() => new(damage: 100, range: 5.25f, cost: 9_000,
             displayName: "Rocket Launcher", "turret_4_2", bulletSpeed: 7f, level: 2, age: 4);
 
-        private static Turret DoubleTurret() => new(damage: 50, range: 4.25f, cost: 14_000,
+        private static Turret DoubleTurret() => new(damage: 50, range: 5.25f, cost: 14_000,
             displayName: "Double Turret", "turret_4_3", bulletSpeed: 7f, level: 3, age: 4); // @
 
         // === Future age =================================================================

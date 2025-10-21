@@ -11,7 +11,7 @@ namespace Partials.Behaviour
     {
         [SerializeField] private bool onStart, onTrigger;
         [SerializeField] private GameObject spawnOnDestroy;
-        [SerializeField] private float lifespan = 30, destroyDelay=0.06f;
+        [SerializeField] private float lifespan = 30, destroyDelay = 0.06f;
         [NonSerialized] public Action<IDamageable> OnDestroyCallback;
         [SerializeField] public List<string> AllowedTags;
         [NonSerialized] public GameObject Target;
@@ -43,10 +43,8 @@ namespace Partials.Behaviour
                 if (TargetOwner is not null && damageable.Owner != TargetOwner) return; // Includes !IsOwner check
                 OnDestroyCallback?.Invoke(damageable);
             }
-            
-            print(other.name);
 
-            Destroy(delay: destroyDelay);
+            Destroy(delay: other.CompareTag("Ground") ? 0f : destroyDelay);
         }
 
         private void Destroy(float delay = 0f)

@@ -122,7 +122,7 @@ namespace Prefabs
             if (!Model.Value.IsFluid)
             {
                 var angle = 0f;
-                if (_target?.PrefabTransform is not null)
+                if (_target?.PrefabTransform is not null) 
                 {
                     var dir = ((_target.PrefabTransform.position + Vector3.up * 0.65f) - transform.position) *
                               (_isLeft ? 1 : -1);

@@ -107,7 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Partials.Behaviour.Destroyable
   onStart: 0
   onTrigger: 1
-  spawnOnDestroy: {fileID: 0}
+  spawnOnDestroy: {fileID: 1060015339853634, guid: 861a6af5c8c307f439b766b7e7b3ac0f, type: 3}
   lifespan: 5
   destroyDelay: 0.065
   AllowedTags: []
