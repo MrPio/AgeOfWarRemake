@@ -21,12 +21,12 @@ namespace Model.Bases
                 explosionPrefab: "ground_damage", type: SpecialType.Heal));
 
         public static Base Camp() => new(name: "Camp", maxHp: 3_200, evolveExpRequired: 200_000, level: 4,
-            special: new SpecialAttack(age: 4, damage: 70, rate: 5, range: 0.5f, name: "Aerial support",
+            special: new SpecialAttack(age: 4, damage: 400, rate: 3.5f, range: 0f, name: "Aerial support",
                 prefab: "special_4",
                 explosionPrefab: "ground_damage", type: SpecialType.Scan));
 
         public static Base Ship() => new(name: "Ship", maxHp: 5_000, evolveExpRequired: 0, level: 5,
-            special: new SpecialAttack(age: 5, damage: 70, rate: 5, range: 0.5f, name: "Satellite", prefab: "special_5",
+            special: new SpecialAttack(age: 5, damage: 1_500, rate: 2.5f, range: 0.5f, name: "Satellite", prefab: "special_5",
                 explosionPrefab: "ground_damage", type: SpecialType.Scan));
 
         public static readonly List<Func<Base>> Bases = new() { Cave, Castle, Church, Camp, Ship };

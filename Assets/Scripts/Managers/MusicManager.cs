@@ -49,6 +49,9 @@ namespace Managers
         {
             new[] { "explosion_01", "explosion_02" },
             new[] { "stab_01" },
+            null,
+            new[] { "explosion_01", "explosion_02" },
+            new[] { "future_tank_attack" },
             // other ages
         };
 

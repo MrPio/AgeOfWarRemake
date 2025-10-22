@@ -1,0 +1,70 @@
+using System.Collections;
+using System.Collections.Generic;
+using Managers;
+using Model.Bases;
+using Partials.Behaviour;
+using Unity.Netcode;
+using UnityEngine;
+
+namespace Prefabs
+{
+    public class Plane : MonoBehaviour
+    {
+        private static SceneManager _sm;
+        [SerializeField] private Vector3 spawnPosition;
+        [SerializeField] private float deltaX, dropMarginFromBase;
+        [SerializeField] private GameObject bomb;
+        [SerializeField] private Transform bombSpawnPoint;
+        private Rigidbody _rb;
+
+        private void Start()
+        {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
+
+        public void Initialize(SpecialAttack model, bool isLeft, ulong attackerId)
+        {
+            // Set dynamics
+            transform.position = new Vector3(
+                x: isLeft ? spawnPosition.x : -spawnPosition.x,
+                y: spawnPosition.y,
+                z: spawnPosition.z
+            );
+            transform.localScale = new Vector3(
+                x: transform.localScale.x * (isLeft ? 1 : -1),
+                y: transform.localScale.y,
+                z: transform.localScale.z
+            );
+            _rb = GetComponent<Rigidbody>();
+            _rb.linearVelocity = (isLeft ? Vector3.right : Vector3.left) * deltaX / model.Duration;
+
+            // Bomb drop routines
+            StartCoroutine(DropBomb());
+            return;
+
+            IEnumerator DropBomb()
+            {
+                while (true)
+                {
+                    yield return new WaitForSeconds(1f / model.Rate);
+                    // Check allowed drop zone
+                    if (Mathf.Abs(transform.position.x) > _sm.fieldLenght / 2 - dropMarginFromBase) continue;
+
+                    var bombGo = Instantiate(bomb, bombSpawnPoint.position, Quaternion.identity);
+                    var destroyable = bombGo.GetComponent<Destroyable>();
+                    destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
+                    destroyable.TargetOwner = !_sm.isMultiplayer && isLeft ? 2 :
+                        attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+
+                    // Server-only
+                    if (NetworkManager.Singleton.IsServer)
+                        destroyable.OnDestroyCallback = target =>
+                        {
+                            target.Damage(model.Damage);
+                            _sm.musicManager.PlayHitSpecial(model.Age);
+                        };
+                }
+            }
+        }
+    }
+}

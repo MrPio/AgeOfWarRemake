@@ -87,6 +87,7 @@
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Followable.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />
+    <Compile Include="Assets\Scripts\Prefabs\Plane.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\StatsMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\State\IState.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Tickable.cs" />

@@ -8,10 +8,14 @@ using Prefabs;
 using Unity.Netcode;
 using UnityEngine;
 using Base = Model.Bases.Base;
+using Plane = Prefabs.Plane;
 using Random = UnityEngine.Random;
 
 namespace Managers
 {
+    /// <summary>
+    /// Note: Doesn't work if the attacker is the bot.
+    /// </summary>
     public class SpecialAttackManager : NetworkBehaviour
     {
         private static SceneManager _sm;
@@ -22,8 +26,8 @@ namespace Managers
         [NonSerialized] public bool IsAttacking;
         private float _spawnX1, _spawnX2;
         private readonly Dictionary<ulong, float> _lastAttacks = new();
-        [SerializeField] private GameObject halo;
         private SpecialAttack _currentSpecialModel;
+        [SerializeField] private GameObject halo, plane;
 
         private void Start()
         {
@@ -37,7 +41,8 @@ namespace Managers
             ? _sm.GameManager.BaseAlly.Model.Value
             : _sm.GameManager.BaseEnemy.Model.Value;
 
-        // Server-only
+        #region Server-only
+
         [ServerRpc(RequireOwnership = false)]
         public void RunSpecialServerRpc(ServerRpcParams rpcParams = default)
         {
@@ -61,14 +66,12 @@ namespace Managers
                     SpawnHaloRpc(model, attackerId);
                     break;
                 case SpecialType.Scan:
-                    ScanSpecial(model, attackerId);
+                    if (model.Age == 4)
+                        SpawnPlaneRpc(model, attackerId);
                     break;
             }
         }
 
-        #region Special types
-
-        // Server-only
         private void RainSpecial(SpecialAttack model, ulong attackerId)
         {
             StartCoroutine(SpawnRandomBullet());
@@ -89,14 +92,10 @@ namespace Managers
             }
         }
 
-        // Server-only
-        private void ScanSpecial(SpecialAttack model, ulong attackerId)
-        {
-        }
-
         #endregion
 
-        // Host & Client
+        #region Host & Client
+
         [Rpc(SendTo.Everyone)]
         private void InitializeSpecialAttackRpc(SpecialAttack model, ulong attackerId)
         {
@@ -113,8 +112,6 @@ namespace Managers
             _sm.musicManager.PlayStartSpecial(model.Age);
         }
 
-
-        // Host & Client
         [Rpc(SendTo.Everyone)]
         private void SpawnBulletRpc(ulong attackerId, float spawnX, float angle)
         {
@@ -148,7 +145,6 @@ namespace Managers
             );
         }
 
-        // Host & Client
         [Rpc(SendTo.Everyone)]
         private void SpawnHaloRpc(SpecialAttack model, ulong attackerId)
         {
@@ -180,5 +176,16 @@ namespace Managers
                 (isAlly ? _sm.GameManager.OnAllySpawn : _sm.GameManager.OnEnemySpawn).Remove(AddHalo);
             }
         }
+
+
+        [Rpc(SendTo.Everyone)]
+        private void SpawnPlaneRpc(SpecialAttack model, ulong attackerId)
+        {
+            var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
+            Instantiate(plane, Vector3.up * 999f, Quaternion.identity).GetComponent<Plane>()
+                .Initialize(model: model, isLeft: isAlly, attackerId: attackerId);
+        }
+
+        #endregion
     }
 }
