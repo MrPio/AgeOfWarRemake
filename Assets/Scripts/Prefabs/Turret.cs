@@ -19,6 +19,7 @@ namespace Prefabs
         // Animation trigger hashes
         private static readonly int IdleTrigger = Animator.StringToHash("idle");
         private static readonly int AttackTrigger = Animator.StringToHash("attack");
+        public static readonly float UnitAimUp = 0.5f;
 
         #endregion
 
@@ -124,7 +125,7 @@ namespace Prefabs
                 var angle = 0f;
                 if (_target?.PrefabTransform is not null)
                 {
-                    var dir = ((_target.PrefabTransform.position + Vector3.up * 0.65f) - transform.position) *
+                    var dir = ((_target.PrefabTransform.position + Vector3.up * UnitAimUp) - transform.position) *
                               (_isLeft ? 1 : -1);
                     angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                 }
@@ -197,10 +198,13 @@ namespace Prefabs
             else
             {
                 var rb = bullet.GetComponent<Rigidbody>();
-                rb.linearVelocity =
-                    ((_target.PrefabTransform.position + Vector3.up * 0.75f) - spawnPoint.position)
-                    .normalized *
-                    Model.Value.BulletSpeed;
+                var speed = ((_target.PrefabTransform.position + Vector3.up * UnitAimUp) - spawnPoint.position)
+                    .normalized * Model.Value.BulletSpeed;
+                if (Model.Value is { Age: 5, Level: > 1 })
+                    bullet.AddComponent<Tickable>().Initialize(tickLength: 0,
+                        onTick: () => { rb.AddForce(speed, ForceMode.Acceleration); });
+                else rb.linearVelocity = speed;
+
                 if (Model.Value.IsFollow)
                     bullet.AddComponent<Followable>().Initialize(
                         target: new FollowableTarget(followLastEnemy: true, isLeft: _isLeft),

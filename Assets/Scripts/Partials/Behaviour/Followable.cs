@@ -2,6 +2,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Managers;
+using Prefabs;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -75,7 +76,7 @@ namespace Partials.Behaviour
             else
             {
                 a = transform.position;
-                b = target.position + Vector3.up * 0.65f;
+                b = target.position + Vector3.up * Turret.UnitAimUp;
             }
 
             if (Vector3.Distance(a, b) < 0.1f) return;

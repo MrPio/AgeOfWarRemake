@@ -10,7 +10,7 @@ namespace Partials.Behaviour
         private Action _onTick;
 
 
-        private void Update()
+        private void FixedUpdate()
         {
             // Check duration limit
             if (_duration != null && Time.time - _lastTick >= _duration.Value)

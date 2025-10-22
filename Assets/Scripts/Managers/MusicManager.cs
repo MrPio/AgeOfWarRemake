@@ -36,6 +36,7 @@ namespace Managers
             new[] { "catapult", "catapult", "fire_01" },
             new[] { "medival_range_attack", "medival_range_attack", "medival_range_attack" },
             new[] { "miltary_turret_attack", "medival_tank_attack", "miltary_turret_3_attack" },
+            new[] { "future_tank_attack", "future_turret_attack", "future_turret_attack" },
             // other ages
         };
 

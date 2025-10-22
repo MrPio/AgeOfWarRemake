@@ -50,14 +50,14 @@ namespace Model.Turrets
             displayName: "Double Turret", "turret_4_3", bulletSpeed: 8f, level: 3, age: 4); // @
 
         // === Future age =================================================================
-        private static Turret TitaniumShooter() => new(damage: 100, range: 5.75f, cost: 24_000,
-            displayName: "Titanium Shooter", "turret_5_1", bulletSpeed: 2f, level: 1, age: 5);
+        private static Turret TitaniumShooter() => new(damage: 100, range: 6.75f, cost: 24_000,
+            displayName: "Titanium Shooter", "turret_5_1", bulletSpeed: 4f, level: 1, age: 5);
 
-        private static Turret LaserCannon() => new(damage: 60, range: 6.85f, cost: 40_000,
-            displayName: "Laser Cannon", "turret_5_2", bulletSpeed: 2f, level: 2, age: 5);
+        private static Turret LaserCannon() => new(damage: 60, range: 7.85f, cost: 40_000,
+            displayName: "Laser Cannon", "turret_5_2", bulletSpeed: 5f, level: 2, age: 5);
 
-        private static Turret IonCannon() => new(damage: 75, range: 8.5f, cost: 100_000,
-            displayName: "Ion Cannon", "turret_5_3", bulletSpeed: 2f, level: 3, age: 5);
+        private static Turret IonCannon() => new(damage: 75, range: 9.5f, cost: 100_000,
+            displayName: "Ion Cannon", "turret_5_3", bulletSpeed: 5f, level: 3, age: 5);
 
         public static readonly List<List<Func<Turret>>> Turrets = new()
         {
