@@ -25,7 +25,7 @@ namespace Prefabs
         // Sever-only
         public void Damage(float damage)
         {
-            if (!IsServer || damage <= 0 || !Model.Value.HasValue || _state is DieState || _isDestroyed ||
+            if (!IsServer /*|| damage <= 0*/ || !Model.Value.HasValue || _state is DieState || _isDestroyed ||
                 Sm.GameManager.IsGameOver) return;
 
             // Bot resistance
@@ -122,6 +122,8 @@ namespace Prefabs
                 _unitPrefab.SpawnBlood();
             }
 
+            _hpBar?.gameObject.SetActive(newValue.Hp < newValue.MaxHp);
+
             // Server-only constraint delegated to method
             if (newValue.Hp <= 0)
             {
@@ -171,7 +173,12 @@ namespace Prefabs
             AllyBase = IsLeft ? Sm.GameManager.BaseAlly : Sm.GameManager.BaseEnemy;
             EnemyBase = IsLeft ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
             var allyUnits = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
+
+            // Observer pattern on unity spawn
             (IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Add(this);
+            foreach (var action in IsLeft ? Sm.GameManager.OnAllySpawn : Sm.GameManager.OnEnemySpawn)
+                action.Invoke(this);
+
             transform.localScale = new Vector3(
                 x: transform.localScale.x * (IsLeft ? 1 : -1),
                 y: transform.localScale.y,

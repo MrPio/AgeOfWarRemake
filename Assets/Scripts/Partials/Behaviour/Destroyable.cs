@@ -19,6 +19,11 @@ namespace Partials.Behaviour
         private float _spawnTime;
         private bool _destroyed;
 
+        public void Initialize(float? lifespan)
+        {
+            if (lifespan is not null) this.lifespan = lifespan.Value;
+        }
+
         private void Start()
         {
             _spawnTime = Time.time;

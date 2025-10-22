@@ -40,14 +40,19 @@ namespace Managers
             // other ages
         };
 
-        private readonly string[][] _specialClips =
+        private readonly string[] _specialStartClips =
+        {
+            "special_1", "special_2", "special_3", "special_4", "special_5"
+        };
+
+        private readonly string[][] _specialHitClips =
         {
             new[] { "explosion_01", "explosion_02" },
             new[] { "stab_01" },
             // other ages
         };
 
-        private readonly float[] _specialVolumes = { 0.35f, 0.5f, 0.2f, 0.2f, 0.2f };
+        private readonly float[] _specialVolumes = { 0.35f, 0.5f, 0.35f, 0.35f, 0.35f };
 
         #endregion
 
@@ -94,9 +99,12 @@ namespace Managers
             PlaySfx(_turretClips[age - 1][turretLevel - 1]);
         }
 
-        public void PlaySpecial(int age)
+        public void PlayStartSpecial(int age) =>
+            PlaySfx(_specialStartClips[age - 1], maxPitchShift: 0.05f);
+
+        public void PlayHitSpecial(int age)
         {
-            var sfxs = _specialClips[age - 1];
+            var sfxs = _specialHitClips[age - 1];
             PlaySfx(sfxs[Random.Range(0, sfxs.Length)], maxPitchShift: 0.25f, volume: _specialVolumes[age - 1]);
         }
 

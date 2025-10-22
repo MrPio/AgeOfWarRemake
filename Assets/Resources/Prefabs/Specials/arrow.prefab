@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 612950810540909798}
   m_Layer: 0
-  m_Name: special_2
+  m_Name: arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4980,6 +4980,8 @@ MonoBehaviour:
   onTrigger: 0
   spawnOnDestroy: {fileID: 0}
   lifespan: 30
+  destroyDelay: 0.06
+  AllowedTags: []
 --- !u!65 &6696210821861376290
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4999,8 +5001,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25, y: 0.16759875, z: 0.7612619}
-  m_Center: {x: 0.0000000041909516, y: -4.995999e-16, z: -1.2490125e-16}
+  m_Size: {x: 0.41453886, y: 0.2274282, z: 0.7612619}
+  m_Center: {x: 0.0024225116, y: -0.0032169372, z: 9.1774193e-17}
 --- !u!54 &1832467180193883573
 Rigidbody:
   m_ObjectHideFlags: 0

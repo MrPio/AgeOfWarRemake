@@ -71,13 +71,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Managers.SpecialAttackManager
   ShowTopMostFoldoutHeaderGroup: 1
-  spawnXMargin: 1
-  spawnY: 10
-  spawnZ: 0
-  maxAngle: 0.5
-  duration: 15
-  rate: 5
-  speed: 250
-  bullets:
-  - {fileID: 2065300287162146564, guid: bb624a0dbf8780d4b9bc4104419aaed5, type: 3}
-  - {fileID: 486357502951793455, guid: bba04002ff822a344b4fde1f394d74c6, type: 3}
+  halo: {fileID: 6464855336574621685, guid: 2b04ea54dd3476f469d9169b0d136067, type: 3}

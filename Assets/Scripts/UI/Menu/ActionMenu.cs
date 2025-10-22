@@ -241,7 +241,7 @@ namespace UI.Menu
 
         private void UseSpecial()
         {
-            _sm.SpecialAttackManager.RainAttackServerRpc();
+            _sm.SpecialAttackManager.RunSpecialServerRpc();
         }
 
         #endregion

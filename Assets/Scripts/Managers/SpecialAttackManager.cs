@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using Model.Bases;
 using Partials.Behaviour;
 using Partials.Camera;
+using Prefabs;
 using Unity.Netcode;
 using UnityEngine;
+using Base = Model.Bases.Base;
 using Random = UnityEngine.Random;
 
 namespace Managers
@@ -13,20 +15,22 @@ namespace Managers
     public class SpecialAttackManager : NetworkBehaviour
     {
         private static SceneManager _sm;
-        private float spawnXMargin = 2f, spawnY = 12f, spawnZ = 0f;
-
-        private List<bool> _hideOnExplode = new() { true, false };
-
+        private const float SpawnXMargin = 2f;
+        private const float SpawnY = 12f;
+        private const float SpawnZ = 0f;
+        private readonly List<bool> _hideOnExplode = new() { true, false };
         [NonSerialized] public bool IsAttacking;
         private float _spawnX1, _spawnX2;
         private readonly Dictionary<ulong, float> _lastAttacks = new();
+        [SerializeField] private GameObject halo;
+        private SpecialAttack _currentSpecialModel;
 
         private void Start()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             IsAttacking = false;
-            _spawnX1 = -(_sm.fieldLenght / 2 - spawnXMargin);
-            _spawnX2 = _sm.fieldLenght / 2 - spawnXMargin;
+            _spawnX1 = -(_sm.fieldLenght / 2 - SpawnXMargin);
+            _spawnX2 = _sm.fieldLenght / 2 - SpawnXMargin;
         }
 
         private Base GetBaseModel(ulong attackerId) => attackerId == NetworkManager.Singleton.LocalClientId
@@ -35,19 +39,38 @@ namespace Managers
 
         // Server-only
         [ServerRpc(RequireOwnership = false)]
-        public void RainAttackServerRpc(ServerRpcParams rpcParams = default)
+        public void RunSpecialServerRpc(ServerRpcParams rpcParams = default)
         {
             if (IsAttacking) return;
             IsAttacking = true;
             var attackerId = rpcParams.Receive.SenderClientId;
-            var baseModel = GetBaseModel(attackerId);
-            var model = baseModel.Special;
+            var model = GetBaseModel(attackerId).Special;
 
             // Check cooldown requirement
-            if (_lastAttacks.ContainsKey(attackerId) && Time.time - _lastAttacks[attackerId] < model.Cooldown) return;
+            if (_lastAttacks.ContainsKey(attackerId) &&
+                Time.time - _lastAttacks[attackerId] < model.Cooldown) return;
             _lastAttacks[attackerId] = Time.time;
 
             InitializeSpecialAttackRpc(model, attackerId);
+            switch (model.Type)
+            {
+                case SpecialType.Rain:
+                    RainSpecial(model, attackerId);
+                    break;
+                case SpecialType.Heal:
+                    SpawnHaloRpc(model, attackerId);
+                    break;
+                case SpecialType.Scan:
+                    ScanSpecial(model, attackerId);
+                    break;
+            }
+        }
+
+        #region Special types
+
+        // Server-only
+        private void RainSpecial(SpecialAttack model, ulong attackerId)
+        {
             StartCoroutine(SpawnRandomBullet());
             return;
 
@@ -66,14 +89,28 @@ namespace Managers
             }
         }
 
+        // Server-only
+        private void ScanSpecial(SpecialAttack model, ulong attackerId)
+        {
+        }
+
+        #endregion
+
         // Host & Client
         [Rpc(SendTo.Everyone)]
         private void InitializeSpecialAttackRpc(SpecialAttack model, ulong attackerId)
         {
-            _sm.cam.GetComponent<CameraShake>().Shake(model.Duration);
+            _currentSpecialModel = model;
+
+            // Camera Shake effect
+            if (model.Type is SpecialType.Rain)
+                _sm.cam.GetComponent<CameraShake>().Shake(model.Duration);
+
+            // Recharge bar effect
             var cooldown = attackerId == NetworkManager.Singleton.LocalClientId ? model.Cooldown : model.Duration;
-            _sm.specialAttackRechargeBar.Recharge(cooldown, 1, 0);
-            // TODO eruption sound
+            _sm.specialAttackRechargeBar.Recharge(1, 0, cooldown);
+
+            _sm.musicManager.PlayStartSpecial(model.Age);
         }
 
 
@@ -81,13 +118,12 @@ namespace Managers
         [Rpc(SendTo.Everyone)]
         private void SpawnBulletRpc(ulong attackerId, float spawnX, float angle)
         {
-            var baseModel = GetBaseModel(attackerId);
-            var model = baseModel.Special;
+            var model = _currentSpecialModel;
 
             // Spawn bullet
             var bulletPrefab = Resources.Load<GameObject>(model.Prefab);
             var bullet = Instantiate(bulletPrefab, transform);
-            bullet.transform.localPosition = new Vector3(spawnX, spawnY, spawnZ);
+            bullet.transform.localPosition = new Vector3(spawnX, SpawnY, SpawnZ);
             bullet.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
             // Add initial force
@@ -106,10 +142,43 @@ namespace Managers
                 onExplode: collisionTag =>
                 {
                     if (collisionTag == "Unit")
-                        _sm.musicManager.PlaySpecial(baseModel.Level);
+                        _sm.musicManager.PlayHitSpecial(model.Age);
                 },
-                hideOnExplode: _hideOnExplode[baseModel.Level - 1]
+                hideOnExplode: _hideOnExplode[model.Age - 1]
             );
+        }
+
+        // Host & Client
+        [Rpc(SendTo.Everyone)]
+        private void SpawnHaloRpc(SpecialAttack model, ulong attackerId)
+        {
+            var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
+            foreach (var unit in isAlly ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy)
+                AddHalo(unit);
+            (isAlly ? _sm.GameManager.OnAllySpawn : _sm.GameManager.OnEnemySpawn).Add(AddHalo);
+            StartCoroutine(RemoveListener());
+            return;
+
+            void AddHalo(Unit unit)
+            {
+                var elapsed = Time.time - _lastAttacks[attackerId];
+                var haloGo = Instantiate(halo, unit.transform);
+                haloGo.AddComponent<Destroyable>().Initialize(lifespan: model.Duration - elapsed);
+
+                // Server-only
+                if (NetworkManager.Singleton.IsServer)
+                    haloGo.AddComponent<Tickable>().Initialize(
+                        tickLength: 1f / model.Rate,
+                        // Note: the damage for special 3 is negative
+                        onTick: () => { unit.Damage(model.Damage / model.Rate); }
+                    );
+            }
+
+            IEnumerator RemoveListener()
+            {
+                yield return new WaitForSeconds(model.Duration);
+                (isAlly ? _sm.GameManager.OnAllySpawn : _sm.GameManager.OnEnemySpawn).Remove(AddHalo);
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Managers
         [NonSerialized] public Base BaseAlly, BaseEnemy;
         [NonSerialized] public ulong? Winner;
         [NonSerialized] public bool IsGameOver;
+        public List<Action<Unit>> OnAllySpawn = new(), OnEnemySpawn = new();
 
         #region NetVars
 

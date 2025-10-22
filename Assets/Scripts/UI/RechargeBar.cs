@@ -10,7 +10,7 @@ namespace UI
         private Coroutine _slideCoroutine;
         private float _remaining;
 
-        public void Recharge(float duration, float from, float to)
+        public void Recharge(float from, float to,float duration)
         {
             if (_remaining > duration) return;
             if (_slideCoroutine != null)

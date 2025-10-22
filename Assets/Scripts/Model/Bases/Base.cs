@@ -1,4 +1,5 @@
-﻿using Interfaces;
+﻿using System;
+using Interfaces;
 using Model.Turrets;
 using Model.Utils;
 using Unity.Netcode;
@@ -18,7 +19,7 @@ namespace Model.Bases
         public bool HasValue => !Name.Message.IsEmpty;
 
         public Base(NetString name, float maxHp, int evolveExpRequired, int level, SpecialAttack special,
-                    Turret[] turrets = null, int unlockedExpansions = 1, int money = -1, int exp=0)
+                    Turret[] turrets = null, int unlockedExpansions = 1, int money = -1, int exp = 0)
         {
             Hp = maxHp;
             MaxHp = maxHp;
@@ -52,22 +53,32 @@ namespace Model.Bases
             $"{nameof(Hp)}: {Hp}, {nameof(MaxHp)}: {MaxHp}, {nameof(EvolveExpRequired)}: {EvolveExpRequired}, {nameof(Name)}: {Name}, {nameof(Prefab)}: {Prefab}, {nameof(HasValue)}: {HasValue}";
     }
 
+    public enum SpecialType
+    {
+        Rain,
+        Heal,
+        Scan
+    }
+
     public struct SpecialAttack : INetworkSerializable, INullable
     {
         private const string PrefabPath = "Prefabs/Specials/";
         private const string ExplosionPrefabPath = "Prefabs/Effects/";
 
         public float Damage, Duration, Rate, Cooldown, Range, MaxAngle, Speed;
+        public int Age;
 
         public NetString Name, Prefab, ExplosionPrefab;
-        public byte Type; // 0=Rain, 1=Heal, 2=Scan
+        private byte _type; // 0=Rain, 1=Heal, 2=Scan
+        public SpecialType Type => (SpecialType)Enum.GetValues(typeof(SpecialType)).GetValue(_type);
         public bool HasValue => !Name.Message.IsEmpty;
 
-        public SpecialAttack(float damage, float rate, float range, NetString name, NetString prefab,
-                             NetString explosionPrefab, byte type, float duration = 15f, float cooldown = 120f,
+        public SpecialAttack(int age,float damage, float rate, float range, NetString name, NetString prefab,
+                             NetString explosionPrefab, SpecialType type, float duration = 15f, float cooldown = 120f,
                              float maxAngle = 0.5f, float speed = 25f
         )
         {
+            Age = age;
             Damage = damage;
             Duration = duration;
             Rate = rate;
@@ -75,7 +86,7 @@ namespace Model.Bases
             Range = range;
             Name = name;
             Prefab = PrefabPath + prefab;
-            Type = type;
+            _type = (byte)type;
             ExplosionPrefab = ExplosionPrefabPath + explosionPrefab;
             MaxAngle = maxAngle;
             Speed = speed;
@@ -83,6 +94,7 @@ namespace Model.Bases
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
+            serializer.SerializeValue(ref Age);
             serializer.SerializeValue(ref Damage);
             serializer.SerializeValue(ref Duration);
             serializer.SerializeValue(ref Rate);
@@ -91,7 +103,7 @@ namespace Model.Bases
             serializer.SerializeValue(ref Name);
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref ExplosionPrefab);
-            serializer.SerializeValue(ref Type);
+            serializer.SerializeValue(ref _type);
             serializer.SerializeValue(ref MaxAngle);
             serializer.SerializeValue(ref Speed);
         }
