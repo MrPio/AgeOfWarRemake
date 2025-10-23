@@ -46,6 +46,7 @@
     <Analyzer Include="C:\Program Files\6000.2.7f2\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Managers\DataManager.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\UnitLoadingMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\Camera\RotateSkybox.cs" />
     <Compile Include="Assets\Scripts\Partials\Camera\CameraShake.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Assets\Scripts\UI\HpBar.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\LoadingMenu.cs" />
+    <Compile Include="Assets\Scripts\UI\Menu\MainMenu.cs" />
     <Compile Include="Assets\Scripts\Partials\ClusterSpawn.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\ActionMenu.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />

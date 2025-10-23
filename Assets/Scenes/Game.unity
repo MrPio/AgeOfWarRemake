@@ -697,6 +697,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &132655551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1143,6 +1144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &208709792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1961,6 +1963,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!1 &487711977
 GameObject:
   m_ObjectHideFlags: 0
@@ -2329,6 +2332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!1 &578803301
 GameObject:
   m_ObjectHideFlags: 0
@@ -2825,6 +2829,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &618540898
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3125,6 +3130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &647438191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3874,6 +3880,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Partials.Behaviour.Clickable
   hoverColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
+  toShow: {fileID: 0}
 --- !u!1 &766973594
 GameObject:
   m_ObjectHideFlags: 0
@@ -4321,6 +4328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &905094533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5071,6 +5079,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &1082659256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5639,6 +5648,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &1165078577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5766,7 +5776,7 @@ GameObject:
   - component: {fileID: 1185476586}
   m_Layer: 0
   m_Name: MusicManager
-  m_TagString: Untagged
+  m_TagString: MusicManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6295,6 +6305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &1295879297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6385,6 +6396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &1466374895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6452,7 +6464,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d9cbfc74d4f7342abdb11e1a318107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isMultiplayer: 0
   fieldLenght: 23
   hpBarHorizontal: {fileID: 5319533488982568307, guid: 6c842d3db0c83e241b74020aadfa3cd1, type: 3}
   hpBarVertical: {fileID: 5319533488982568307, guid: bab97e2e710181049b68b1e27a5595e7, type: 3}
@@ -7699,6 +7710,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &1973881101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7789,6 +7801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &2010395944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8210,6 +8223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &2102039509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8300,6 +8314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hoverColor: {r: 0.72955966, g: 0.72955966, b: 0.72955966, a: 1}
   downColor: {r: 0.8930817, g: 0.8930817, b: 0.8930817, a: 0.74509805}
+  toShow: {fileID: 0}
 --- !u!114 &2124842643
 MonoBehaviour:
   m_ObjectHideFlags: 0

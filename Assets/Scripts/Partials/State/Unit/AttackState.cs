@@ -13,7 +13,7 @@ namespace Partials.State.Unit
         {
             var model = unit.Model.Value;
             unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
-            if (unit.Sm.isMultiplayer)
+            if (unit.Sm.IsMultiplayer)
             {
                 var toWait = (float)new System.Random().NextDouble() * 2f;
                 LastAttack = Time.time - model.AttackDuration + toWait;

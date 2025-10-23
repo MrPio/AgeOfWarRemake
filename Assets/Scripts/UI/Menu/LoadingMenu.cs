@@ -20,7 +20,7 @@ namespace UI.Menu
 
         private void OnEnable()
         {
-            text.text = _sm.isMultiplayer ? multiplayerText : singleplayerText;
+            text.text = _sm.IsMultiplayer ? multiplayerText : singleplayerText;
         }
     }
 }

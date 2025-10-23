@@ -208,7 +208,7 @@ namespace Managers
 
                     var destroyable = beamGo.GetComponent<Destroyable>();
                     destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
-                    destroyable.TargetOwner = !_sm.isMultiplayer && isAlly ? 2 :
+                    destroyable.TargetOwner = !_sm.IsMultiplayer && isAlly ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
                     destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
                     

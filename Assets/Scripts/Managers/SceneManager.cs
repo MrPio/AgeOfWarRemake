@@ -14,7 +14,7 @@ namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
-        public bool isMultiplayer;
+        public bool IsMultiplayer => DataManager.IsMultiplayer;
         [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
 
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical, floatingText;
@@ -62,7 +62,7 @@ namespace Managers
                 // Spawn enemy base
                 var enemyBase = Instantiate(basePrefab).GetComponent<NetworkObject>();
                 enemyBase.name = "Base (Enemy)";
-                enemyBase.GetComponent<Base>().IsBot.Value = !isMultiplayer;
+                enemyBase.GetComponent<Base>().IsBot.Value = !IsMultiplayer;
                 enemyBase.SpawnWithOwnership(GameManager.ClientId);
             }
         }
@@ -77,7 +77,7 @@ namespace Managers
             {
                 yield return new WaitForSeconds(1f);
 
-                if (isMultiplayer)
+                if (IsMultiplayer)
                     GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
                         ? GameManager.BaseEnemy.OwnerClientId
                         : GameManager.BaseAlly.OwnerClientId;

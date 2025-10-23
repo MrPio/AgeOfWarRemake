@@ -51,7 +51,7 @@ namespace Managers
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
             // Start Host or Client depending on isMultiplayer bool
-            if (_sm.isMultiplayer)
+            if (_sm.IsMultiplayer)
             {
                 _isHost = _serializer.Deserialize($"{ISerializer.DebugDir}/NeedHost", true);
                 _serializer.Serialize(!_isHost, $"{ISerializer.DebugDir}", "NeedHost");
@@ -114,7 +114,7 @@ namespace Managers
         private void TryStartGame()
         {
             if (NetworkManager.Singleton.ConnectedClients.Count ==
-                (_sm.isMultiplayer ? 2 : 1)) // This includes the host
+                (_sm.IsMultiplayer ? 2 : 1)) // This includes the host
             {
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
                 _gameStarted.Value = true;
@@ -153,7 +153,7 @@ namespace Managers
                 }
             }
 
-            if (!_sm.isMultiplayer)
+            if (!_sm.IsMultiplayer)
                 ClientId = HostId;
 
             if (newValue)

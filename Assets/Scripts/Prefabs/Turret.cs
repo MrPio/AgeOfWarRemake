@@ -216,7 +216,7 @@ namespace Prefabs
 
                 var destroyable = bullet.GetComponent<Destroyable>();
                 destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
-                destroyable.TargetOwner = !_sm.isMultiplayer && !IsBot.Value ? 2 :
+                destroyable.TargetOwner = !_sm.IsMultiplayer && !IsBot.Value ? 2 :
                     IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
 
                 if (IsServer)

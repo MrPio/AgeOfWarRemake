@@ -27,7 +27,7 @@ namespace Prefabs
             if (!IsServer || damage <= 0 || !Model.Value.HasValue || _isDestroyed || _sm.GameManager.IsGameOver) return;
 
             // Bot resistance
-            if (!_sm.isMultiplayer && IsBot.Value)
+            if (!_sm.IsMultiplayer && IsBot.Value)
                 damage *= 0.5f;
 
             var newModel = Model.Value;
