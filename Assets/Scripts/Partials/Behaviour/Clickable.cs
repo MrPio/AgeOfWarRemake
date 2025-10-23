@@ -1,5 +1,6 @@
 using System;
 using Managers;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,49 +16,59 @@ namespace Partials.Behaviour
     public class Clickable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler,
                              IPointerDownHandler, IPointerUpHandler
     {
-        private SceneManager _sm;
+        private MusicManager _musicManager;
         private Image _image;
+        private TextMeshProUGUI _text;
         private Color _startColor;
 
         [SerializeField] private Color hoverColor = new Color(0.75f, 0.75f, 0.75f, 1f),
             downColor = new Color(0.9f, 0.9f, 0.9f, 0.75f);
+
+        [SerializeField] private GameObject toShow;
 
         [NonSerialized] public Action OnClick, OnHover, OnExit;
 
 
         private void Start()
         {
-            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
             _image = GetComponent<Image>();
-            _startColor = _image.color;
+            _text = GetComponent<TextMeshProUGUI>();
+            _startColor = _image ? _image.color : _text.color;
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            _sm.musicManager.PlayUI("hover");
-            _image.color = hoverColor;
+            _musicManager.PlayUI("hover");
+            if (_image != null) _image.color = hoverColor;
+            if (_text != null) _text.color = hoverColor;
+            toShow?.SetActive(true);
             OnHover?.Invoke();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            _image.color = _startColor;
+            if (_image != null) _image.color = _startColor;
+            if (_text != null) _text.color = _startColor;
+            toShow?.SetActive(false);
             OnExit?.Invoke();
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            _image.color = downColor;
+            if (_image != null) _image.color = downColor;
+            if (_text != null) _text.color = downColor;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            _image.color = _startColor;
+            if (_image != null) _image.color = _startColor;
+            if (_text != null) _text.color = _startColor;
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            _sm.musicManager.PlayUI("click");
+            _musicManager.PlayUI("click");
             OnClick?.Invoke();
         }
     }

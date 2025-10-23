@@ -11,6 +11,7 @@ TagManager:
   - Turret
   - Bullet
   - Ground
+  - MusicManager
   layers:
   - Default
   - TransparentFX
