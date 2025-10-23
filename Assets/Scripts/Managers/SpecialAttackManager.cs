@@ -27,7 +27,7 @@ namespace Managers
         private float _spawnX1, _spawnX2;
         private readonly Dictionary<ulong, float> _lastAttacks = new();
         private SpecialAttack _currentSpecialModel;
-        [SerializeField] private GameObject halo, plane;
+        [SerializeField] private GameObject halo, plane, beam;
 
         private void Start()
         {
@@ -68,6 +68,8 @@ namespace Managers
                 case SpecialType.Scan:
                     if (model.Age == 4)
                         SpawnPlaneRpc(model, attackerId);
+                    else if (model.Age == 5)
+                        RunSatelliteRpc(model, attackerId);
                     break;
             }
         }
@@ -177,13 +179,44 @@ namespace Managers
             }
         }
 
-
         [Rpc(SendTo.Everyone)]
         private void SpawnPlaneRpc(SpecialAttack model, ulong attackerId)
         {
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
             Instantiate(plane, Vector3.up * 999f, Quaternion.identity).GetComponent<Plane>()
                 .Initialize(model: model, isLeft: isAlly, attackerId: attackerId);
+        }
+
+        [Rpc(SendTo.Everyone)]
+        private void RunSatelliteRpc(SpecialAttack model, ulong attackerId)
+        {
+            var steps = model.Duration * model.Rate;
+            var xMin = _sm.fieldLenght / 2 - 1.5f;
+            var stepLength = xMin * 2 / steps;
+            var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
+            StartCoroutine(SatelliteCoroutine());
+            return;
+
+            IEnumerator SatelliteCoroutine()
+            {
+                for (var i = 0; i < steps; i++)
+                {
+                    yield return new WaitForSeconds(1f / model.Rate);
+                    var spawnPos = new Vector3(x: (-xMin + i * stepLength) * (isAlly ? 1f : -1f), 20f, 0f);
+                    var beamGo = Instantiate(beam, spawnPos, Quaternion.identity);
+                    beamGo.GetComponent<Rigidbody>().linearVelocity = Vector3.down * model.Speed;
+
+                    var destroyable = beamGo.GetComponent<Destroyable>();
+                    destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
+                    destroyable.TargetOwner = !_sm.isMultiplayer && isAlly ? 2 :
+                        attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+                    destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
+                    
+                    // Server-only
+                    if (NetworkManager.Singleton.IsServer)
+                        destroyable.OnDamage = target => { target.Damage(model.Damage); };
+                }
+            }
         }
 
         #endregion

@@ -55,7 +55,7 @@ namespace Managers
             // other ages
         };
 
-        private readonly float[] _specialVolumes = { 0.35f, 0.5f, 0.35f, 0.35f, 0.35f };
+        private readonly float[] _specialVolumes = { 0.35f, 0.5f, 0.35f, 0.5f, 0.7f };
 
         #endregion
 

@@ -48,21 +48,18 @@ namespace Prefabs
                 {
                     yield return new WaitForSeconds(1f / model.Rate);
                     // Check allowed drop zone
-                    if (Mathf.Abs(transform.position.x) > _sm.fieldLenght / 2 - dropMarginFromBase) continue;
+                    if (Mathf.Abs(bombSpawnPoint.position.x) > _sm.fieldLenght / 2 - dropMarginFromBase) continue;
 
                     var bombGo = Instantiate(bomb, bombSpawnPoint.position, Quaternion.identity);
                     var destroyable = bombGo.GetComponent<Destroyable>();
                     destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
                     destroyable.TargetOwner = !_sm.isMultiplayer && isLeft ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+                    destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
 
                     // Server-only
                     if (NetworkManager.Singleton.IsServer)
-                        destroyable.OnDestroyCallback = target =>
-                        {
-                            target.Damage(model.Damage);
-                            _sm.musicManager.PlayHitSpecial(model.Age);
-                        };
+                        destroyable.OnDamage = target => { target.Damage(model.Damage); };
                 }
             }
         }

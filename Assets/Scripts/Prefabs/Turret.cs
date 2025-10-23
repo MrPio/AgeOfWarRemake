@@ -220,7 +220,7 @@ namespace Prefabs
                     IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
 
                 if (IsServer)
-                    destroyable.OnDestroyCallback = target =>
+                    destroyable.OnDamage = target =>
                         target.Damage(Model.Value.Damage);
 
                 // Cluster explosion effect

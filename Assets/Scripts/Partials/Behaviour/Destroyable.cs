@@ -12,7 +12,8 @@ namespace Partials.Behaviour
         [SerializeField] private bool onStart, onTrigger;
         [SerializeField] private GameObject spawnOnDestroy;
         [SerializeField] private float lifespan = 30, destroyDelay = 0.06f;
-        [NonSerialized] public Action<IDamageable> OnDestroyCallback;
+        [NonSerialized] public Action<IDamageable> OnDamage;
+        [NonSerialized] public Action OnDestroy;
         [SerializeField] public List<string> AllowedTags;
         [NonSerialized] public GameObject Target;
         [NonSerialized] public ulong? TargetOwner; // Used when there is not a precise Target
@@ -46,7 +47,7 @@ namespace Partials.Behaviour
             if (other.transform.parent && other.transform.parent.TryGetComponent<IDamageable>(out var damageable))
             {
                 if (TargetOwner is not null && damageable.Owner != TargetOwner) return; // Includes !IsOwner check
-                OnDestroyCallback?.Invoke(damageable);
+                OnDamage?.Invoke(damageable);
             }
 
             Destroy(delay: other.CompareTag("Ground") ? 0f : destroyDelay);
@@ -72,7 +73,14 @@ namespace Partials.Behaviour
             void DestroyHelper()
             {
                 if (spawnOnDestroy)
-                    Instantiate(spawnOnDestroy, transform.position, Quaternion.identity);
+                {
+                    var spawnPos = transform.position;
+                    if (spawnPos.y < 0)
+                        spawnPos.y = 0;
+                    Instantiate(spawnOnDestroy, spawnPos, Quaternion.identity);
+                }
+
+                OnDestroy?.Invoke();
                 Destroy(gameObject);
             }
         }

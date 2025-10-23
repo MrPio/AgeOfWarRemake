@@ -70,7 +70,7 @@ namespace Prefabs
                 destroyable.TargetOwner = 2;
 
             if (Unit.IsServer)
-                destroyable.OnDestroyCallback = damageable =>
+                destroyable.OnDamage = damageable =>
                     damageable.Damage(Unit.Model.Value.ShootDamage);
         }
     }

@@ -40,7 +40,7 @@ namespace Partials
                     var destroyable = go.GetComponent<Destroyable>();
                     destroyable.TargetOwner = _targetOwner;
                     if (NetworkManager.Singleton.IsServer)
-                        destroyable.OnDestroyCallback = target =>
+                        destroyable.OnDamage = target =>
                             target.Damage(_damage.Value);
                 }
             }

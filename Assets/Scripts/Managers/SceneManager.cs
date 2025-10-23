@@ -39,16 +39,13 @@ namespace Managers
             SpecialAttackManager = Instantiate(specialAttackManager).GetComponent<SpecialAttackManager>();
             SpecialAttackManager.gameObject.name = "SpecialAttackManager";
             waitForClientScreen.SetActive(true);
-            statsMenu.gameObject.SetActive(false);
-            unitLoadingMenu.gameObject.SetActive(false);
-            actionMenu.gameObject.SetActive(false);
+            actionMenu.transform.parent.gameObject.SetActive(false);
         }
 
         public void StartGame()
         {
             waitForClientScreen.SetActive(false);
-            statsMenu.gameObject.SetActive(true);
-            unitLoadingMenu.gameObject.SetActive(true); actionMenu.gameObject.SetActive(true);
+            actionMenu.transform.parent.gameObject.SetActive(true);
 
             musicManager.StartLevel();
             cam.GetComponent<CameraZoom>().Initialize();
@@ -58,7 +55,7 @@ namespace Managers
             if (NetworkManager.Singleton.IsServer)
             {
                 // Spawn ally base
-                var allyBase=Instantiate(basePrefab);
+                var allyBase = Instantiate(basePrefab);
                 allyBase.name = "Base (Ally)";
                 allyBase.GetComponent<NetworkObject>().SpawnWithOwnership(GameManager.HostId);
 

@@ -73,3 +73,4 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   halo: {fileID: 6464855336574621685, guid: 2b04ea54dd3476f469d9169b0d136067, type: 3}
   plane: {fileID: 2061172937196581824, guid: 3bca0860b34f7f34aaf298ab4901e983, type: 3}
+  beam: {fileID: 3290138878504429176, guid: 22bfc472a6dc2a94fab429a760519e93, type: 3}

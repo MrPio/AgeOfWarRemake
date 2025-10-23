@@ -26,8 +26,8 @@ namespace Model.Bases
                 explosionPrefab: "ground_damage", type: SpecialType.Scan));
 
         public static Base Ship() => new(name: "Ship", maxHp: 5_000, evolveExpRequired: 0, level: 5,
-            special: new SpecialAttack(age: 5, damage: 1_500, rate: 2.5f, range: 0.5f, name: "Satellite", prefab: "special_5",
-                explosionPrefab: "ground_damage", type: SpecialType.Scan));
+            special: new SpecialAttack(age: 5, damage: 1_500, rate: 5f, range: 0f, speed: 25f, duration: 4f,
+                name: "Satellite", prefab: "special_5", explosionPrefab: "ground_damage", type: SpecialType.Scan));
 
         public static readonly List<Func<Base>> Bases = new() { Cave, Castle, Church, Camp, Ship };
         public static readonly List<int> ExpansionCosts = new() { 1_000, 3_000, 7_500 };
