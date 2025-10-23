@@ -72,6 +72,15 @@ namespace Managers
                         RunSatelliteRpc(model, attackerId);
                     break;
             }
+
+            StartCoroutine(DelayedSetIsAttacking());
+            return;
+
+            IEnumerator DelayedSetIsAttacking()
+            {
+                yield return new WaitForSeconds(model.Duration);
+                IsAttacking = false;
+            }
         }
 
         private void RainSpecial(SpecialAttack model, ulong attackerId)
@@ -89,8 +98,6 @@ namespace Managers
                     SpawnBulletRpc(attackerId, spawnX, angle);
                     yield return new WaitForSeconds(1 / model.Rate);
                 }
-
-                IsAttacking = false;
             }
         }
 

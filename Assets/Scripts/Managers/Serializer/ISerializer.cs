@@ -7,6 +7,6 @@
 
         public void Serialize(object obj, string dir, string filename);
 
-        public T Deserialize<T>(string filePath, T ifNotExist);
+        public T Deserialize<T>(string dir, string filename, T ifNotExist);
     }
 }

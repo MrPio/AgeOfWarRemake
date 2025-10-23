@@ -42,7 +42,7 @@ namespace Partials.Behaviour
             _musicManager.PlayUI("hover");
             if (_image != null) _image.color = hoverColor;
             if (_text != null) _text.color = hoverColor;
-            toShow?.SetActive(true);
+            if (_text != null) toShow?.SetActive(true);
             OnHover?.Invoke();
         }
 
@@ -50,7 +50,7 @@ namespace Partials.Behaviour
         {
             if (_image != null) _image.color = _startColor;
             if (_text != null) _text.color = _startColor;
-            toShow?.SetActive(false);
+            if (_text != null) toShow?.SetActive(false);
             OnExit?.Invoke();
         }
 

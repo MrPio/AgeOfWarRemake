@@ -5,7 +5,6 @@ using Prefabs;
 using Unity.Netcode;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
-using UnityEngine;
 using LogType = UI.LogType;
 
 namespace Managers
@@ -53,7 +52,7 @@ namespace Managers
             // Start Host or Client depending on isMultiplayer bool
             if (_sm.IsMultiplayer)
             {
-                _isHost = _serializer.Deserialize($"{ISerializer.DebugDir}/NeedHost", true);
+                _isHost = _serializer.Deserialize(ISerializer.DebugDir, "NeedHost", true);
                 _serializer.Serialize(!_isHost, $"{ISerializer.DebugDir}", "NeedHost");
                 _sm.logger.Log($"Starting as {(_isHost ? "Host" : "Client")}");
 

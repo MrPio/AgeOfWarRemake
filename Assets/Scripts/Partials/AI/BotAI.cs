@@ -20,18 +20,25 @@ namespace Partials.AI
 
     public class BotAI : MonoBehaviour
     {
+        public const float BotIncomeMultiplier = 1.75f;
+
         [SerializeField]
         private float[] phaseDurations = { 60f, 60f }; // [0]=melee, [1]=melee+range, [2]=melee+range+tank
 
-        [SerializeField] private float initialAgeInterval = 180f;
-        [SerializeField] private float initialTurretInterval = 10f;
+        private readonly Dictionary<Phase, List<float>> _turretWeights = new()
+        {
+            { Phase.Melee, new List<float> { 1f, 0.33f, 0f } },
+            { Phase.Range, new List<float> { 1f, 0.75f, 0.5f } },
+            { Phase.Tank, new List<float> { 1f, 1f, 1f } }
+        };
+
+        [SerializeField] private float[] initialAgeIntervals = { 120f, 200f, 220f, 240f };
+        [SerializeField] private float initialTurretInterval = 30f;
         private Base _base;
         private SceneManager _sm;
 
-        public event Action<int> OnAgeChanged;
-
-        private int age = 0;
-        private Phase phase = Phase.Melee;
+        private int _age;
+        private Phase _phase = Phase.Melee;
 
         private void Awake()
         {
@@ -54,21 +61,33 @@ namespace Partials.AI
             {
                 if (_sm.GameManager.IsGameOver) yield break;
                 var ran = Random.value;
-                _base.BuyUnitServerRpc((byte)(phase switch
+                var unitIdx = _phase switch
                 {
                     Phase.Melee => 0,
                     Phase.Range => ran < .5f ? 0 : 1,
-                    Phase.Tank => ran < .3f ? 0
-                        : ran < .7f ? 1
+                    Phase.Tank => ran < .25f ? 0
+                        : ran < .5f ? 1
                         : 2,
                     _ => 0
-                }));
-                var delay = phase switch
+                };
+                _base.BuyUnitServerRpc((byte)unitIdx);
+                var delay = _phase switch
                 {
-                    Phase.Melee => Random.Range(2f, 6f),
-                    Phase.Range => Random.Range(2f, 6f),
-                    Phase.Tank => Random.Range(2f, 6f),
-                    _ => Random.Range(2f, 7f)
+                    Phase.Melee => Random.Range(2f, 8f),
+                    Phase.Range => unitIdx switch
+                    {
+                        0 => Random.Range(2f, 6f),
+                        1 => Random.Range(3f, 6f),
+                        _ => throw new ArgumentOutOfRangeException()
+                    },
+                    Phase.Tank => unitIdx switch
+                    {
+                        0 => Random.Range(2f, 4f),
+                        1 => Random.Range(2f, 4f),
+                        2 => Random.Range(4f, 6f),
+                        _ => throw new ArgumentOutOfRangeException()
+                    },
+                    _ => throw new ArgumentOutOfRangeException()
                 };
                 yield return new WaitForSeconds(delay);
             }
@@ -79,27 +98,25 @@ namespace Partials.AI
             while (true)
             {
                 if (_sm.GameManager.IsGameOver) yield break;
-                phase = Phase.Melee;
+                _phase = Phase.Melee;
                 yield return new WaitForSeconds(phaseDurations[0]);
-                phase = Phase.Range;
+                _phase = Phase.Range;
                 yield return new WaitForSeconds(phaseDurations[1]);
-                phase = Phase.Tank;
+                _phase = Phase.Tank;
                 // now stay in Tank until age resets it
-                yield return new WaitUntil(() => phase != Phase.Tank);
+                yield return new WaitUntil(() => _phase != Phase.Tank);
             }
         }
 
         private IEnumerator AgeLoop()
         {
-            var interval = initialAgeInterval;
-            while (age < BaseFactory.Bases.Count - 1)
+            while (_age < BaseFactory.Bases.Count - 1)
             {
-                yield return new WaitForSeconds(interval);
+                yield return new WaitForSeconds(initialAgeIntervals[_age]);
                 if (_sm.GameManager.IsGameOver) yield break;
-                age++;
+                _age++;
                 _base.EvolveServerRpc();
-                interval += 20f;
-                phase = Phase.Melee; // reset phase immediately
+                _phase = Phase.Melee; // reset phase immediately
             }
         }
 
@@ -118,6 +135,10 @@ namespace Partials.AI
                     .ToList();
                 var baseModel = _base.Model.Value;
 
+                // # 1 add turret -> Will only add a turret if space is available
+                // # 2 upgrade turret -> Will only upgrade turrets if it's current Age is greater than the age of the turret. Upgrading a turret will not go above the age of the turret
+                // # 3 add a turret spot
+                // # 4 sell a turret that is of previous age.
                 switch (Random.Range(0, 3))
                 {
                     // Upgrade a turret
@@ -143,7 +164,7 @@ namespace Partials.AI
                     // Buy a turret on an empty slot
                     case 1 when validTurrets.Count < 4:
                         var spot = currentTurrets.FindIndex(turret => !turret.HasValue);
-                        var choice = new List<int> { 0, 1, 2 }.RandomWeighted(new List<float> { 1f, 0.75f, 0.5f });
+                        var choice = new List<int> { 0, 1, 2 }.RandomWeighted(_turretWeights[_phase]);
                         if (baseModel.UnlockedExpansions - 1 < spot)
                             _base.BuyExpansionServerRpc();
                         _base.BuyTurretServerRpc((byte)spot, (byte)choice);

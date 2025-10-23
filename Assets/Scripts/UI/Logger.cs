@@ -1,4 +1,6 @@
 using System;
+using Managers;
+using Managers.Serializer;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -20,10 +22,16 @@ namespace UI
         [SerializeField] private GameObject logTextPrefab;
         [SerializeField] private ushort logLineLength = 30;
         private CanvasGroup _canvasGroup;
-        private Color[] _typesColors = { Color.white, Color.red, Color.blue, Color.green, Color.yellow, Color.gray };
+
+        private readonly Color[] _typesColors =
+            { Color.white, Color.red, Color.blue, Color.green, Color.yellow, Color.gray };
+
+        private string _history = "", _logFileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+        private ISerializer _serializer = BinarySerializer.Instance;
 
         private void Start()
         {
+            Log($"Playing {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")}");
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0;
         }
@@ -40,6 +48,8 @@ namespace UI
                     message.Substring(i * logLineLength,
                         math.min(message.Length - i * logLineLength, logLineLength));
                 text.color = color;
+                _history += $"(type={type}) {message}\n";
+                _serializer.Serialize(_history, ISerializer.DebugDir, _logFileName);
             }
 
             if (alsoConsole) UnityEngine.Debug.Log(message);

@@ -1,4 +1,6 @@
-﻿namespace Partials.State.Unit
+﻿using Partials.AI;
+
+namespace Partials.State.Unit
 {
     public class DieState : IState
     {
@@ -15,7 +17,10 @@
 
             // Add money to the enemy
             var enemyBaseModel = unit.EnemyBase.Model.Value;
-            enemyBaseModel.Money += unit.Model.Value.Revenue;
+            if (unit.EnemyBase.IsBot.Value)
+                enemyBaseModel.Money += (int)(unit.Model.Value.Revenue * BotAI.BotIncomeMultiplier);
+            else
+                enemyBaseModel.Money += unit.Model.Value.Revenue;
             enemyBaseModel.Exp += unit.Model.Value.Revenue * 2;
             unit.EnemyBase.Model.Value = enemyBaseModel;
 

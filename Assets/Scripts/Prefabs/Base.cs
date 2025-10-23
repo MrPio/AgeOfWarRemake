@@ -49,6 +49,7 @@ namespace Prefabs
 
         #region Data
 
+        private const bool IsCheating = true;
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
         private bool _isLeft;
@@ -108,6 +109,8 @@ namespace Prefabs
 
             if (_isLeft)
                 _sm.statsMenu.UpdateUI(Model.Value.Money, Model.Value.Exp);
+            else if (IsBot.Value)
+                _sm.logger.Log($"[BOT Status] Money={Model.Value.Money}, Exp={Model.Value.Exp}.");
         }
 
         #endregion
@@ -130,17 +133,27 @@ namespace Prefabs
         public override void OnNetworkSpawn()
         {
             _isLeft = IsOwner && !IsBot.Value;
-            if (IsBot.Value) gameObject.AddComponent<BotAI>();
 
             if (_isLeft) _sm.GameManager.BaseAlly = this;
             else _sm.GameManager.BaseEnemy = this;
 
-            // Add infinite money to bot
             if (IsBot.Value)
             {
-                var oldModel = Model.Value;
-                oldModel.Money = int.MaxValue;
-                Model.Value = oldModel;
+                gameObject.AddComponent<BotAI>();
+
+                // Add infinite exp to bot
+                var newModel = Model.Value;
+                // newModel.Money = (int)(newModel.Money * BotAI.BotIncomeMultiplier); // 9_999_999;
+                newModel.Exp = 9_999_999;
+                Model.Value = newModel;
+            }
+            else if (_isLeft && IsCheating)
+            {
+                // Add infinite money and exp
+                var newModel = Model.Value;
+                newModel.Money = 9_999_999;
+                newModel.Exp = 9_999_999;
+                Model.Value = newModel;
             }
 
             Model.OnValueChanged += OnModelChanged;
@@ -150,54 +163,20 @@ namespace Prefabs
             if (_isLeft)
             {
                 transform.position = new Vector3(-_sm.fieldLenght / 2, transform.position.y, transform.position.z);
-                transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale =
+                    new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
             }
             else
             {
                 transform.position = new Vector3(_sm.fieldLenght / 2, transform.position.y, transform.position.z);
-                transform.localScale = new Vector3(-1, 1, 1);
+                transform.localScale =
+                    new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
             }
         }
 
         public override void OnNetworkDespawn()
         {
             Model.OnValueChanged -= OnModelChanged;
-        }
-
-        private void Update()
-        {
-            // Player Input is always owner-only
-            // This is for debug purpose only.
-            if (_isLeft)
-            {
-                // Units
-                /*if (Input.GetKeyDown(KeyCode.Space))
-                    BuyUnitServerRpc(0);
-                if (Input.GetKeyDown(KeyCode.LeftShift))
-                    BuyUnitServerRpc(1);
-                if (Input.GetKeyDown(KeyCode.Tab))
-                    BuyUnitServerRpc(2);
-
-                if (Input.GetKeyDown(KeyCode.RightAlt))
-                    EvolveServerRpc();
-
-                // Turrets
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                    BuyTurretServerRpc(0, 0);
-                if (Input.GetKeyDown(KeyCode.Alpha2))
-                    BuyTurretServerRpc(0, 1);
-                if (Input.GetKeyDown(KeyCode.Alpha3))
-                    BuyTurretServerRpc(0, 2);
-                if (Input.GetKeyDown(KeyCode.Alpha4))
-                    BuyExpansionServerRpc();
-                if (Input.GetKeyDown(KeyCode.Alpha0))
-                {
-                    SellTurretServerRpc(0);
-                    SellTurretServerRpc(1);
-                    SellTurretServerRpc(2);
-                    SellTurretServerRpc(3);
-                }*/
-            }
         }
 
         #endregion
