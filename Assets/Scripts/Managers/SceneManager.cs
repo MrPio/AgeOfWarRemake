@@ -14,8 +14,9 @@ namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
-        public bool IsMultiplayer => DataManager.IsMultiplayer;
+        public bool IsMultiplayer => forceMultiplayer || DataManager.IsMultiplayer;
         [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
+        [SerializeField] private bool forceMultiplayer = false;
 
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical, floatingText;
         [SerializeField] private GameObject gameManagerPrefab, specialAttackManager, basePrefab;

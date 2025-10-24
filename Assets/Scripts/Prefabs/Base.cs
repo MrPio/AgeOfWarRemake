@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Interfaces;
 using Managers;
@@ -133,6 +134,7 @@ namespace Prefabs
         public override void OnNetworkSpawn()
         {
             _isLeft = IsOwner && !IsBot.Value;
+            _sm.logger.Log($"Spawning {name}, IsOwner={IsOwner},  IsBot={IsBot.Value}, _isLeft={_isLeft}");
 
             if (_isLeft) _sm.GameManager.BaseAlly = this;
             else _sm.GameManager.BaseEnemy = this;
@@ -147,14 +149,14 @@ namespace Prefabs
                 newModel.Exp = 9_999_999;
                 Model.Value = newModel;
             }
-            else if (_isLeft && IsCheating)
-            {
-                // Add infinite money and exp
-                var newModel = Model.Value;
-                newModel.Money = 9_999_999;
-                newModel.Exp = 9_999_999;
-                Model.Value = newModel;
-            }
+            // else if (_isLeft && IsCheating && IsHost)
+            // {
+            //     // Add infinite money and exp
+            //     var newModel = Model.Value;
+            //     newModel.Money = 9_999_999;
+            //     newModel.Exp = 9_999_999;
+            //     Model.Value = newModel;
+            // }
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
@@ -163,14 +165,12 @@ namespace Prefabs
             if (_isLeft)
             {
                 transform.position = new Vector3(-_sm.fieldLenght / 2, transform.position.y, transform.position.z);
-                transform.localScale =
-                    new Vector3(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
                 transform.position = new Vector3(_sm.fieldLenght / 2, transform.position.y, transform.position.z);
-                transform.localScale =
-                    new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+                transform.localScale = new Vector3(-1, 1, 1);
             }
         }
 
@@ -196,14 +196,13 @@ namespace Prefabs
                 return;
             model.Money -= unitModel.Cost;
             Model.Value = model;
-
-            if (_isLeft)
-                _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, SpawnUnit);
-            else SpawnUnit();
+            
+            StartCoroutine(DelayedSpawnUnit());
             return;
 
-            void SpawnUnit()
+            IEnumerator DelayedSpawnUnit()
             {
+                yield return new WaitForSeconds(unitModel.SpawnTime);
                 var unit = Instantiate(
                     unitPrefab,
                     new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),

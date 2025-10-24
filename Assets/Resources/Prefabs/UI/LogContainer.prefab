@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2035414786790344758}
   - component: {fileID: 2718589817940452789}
   - component: {fileID: 4753803699134751158}
-  - component: {fileID: 7343179613693628406}
   - component: {fileID: 2115994620109650221}
+  - component: {fileID: 3122993366167667863}
   m_Layer: 5
   m_Name: LogContainer
   m_TagString: LogContainer
@@ -53,8 +53,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 30
+    m_Right: 30
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 7
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.9019608}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -104,20 +104,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7343179613693628406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1174158204653789279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 295c06770ccd31640bd926934cbead0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  logTextPrefab: {fileID: 7752415046905487927, guid: 7a5679e79cf817a46a247d054c85ec59, type: 3}
-  logLineLength: 60
 --- !u!225 &2115994620109650221
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -126,7 +112,21 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1174158204653789279}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &3122993366167667863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1174158204653789279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a4d0c9fb2f242f7b2bcbf9744e96ffb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Logger
+  logTextPrefab: {fileID: 7752415046905487927, guid: 9c8e7616842fdc448b9b98a7d81f006a, type: 3}
+  logLineLength: 30

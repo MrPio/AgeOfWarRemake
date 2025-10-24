@@ -3,6 +3,7 @@ using Managers;
 using Managers.Serializer;
 using TMPro;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace UI
@@ -26,12 +27,16 @@ namespace UI
         private readonly Color[] _typesColors =
             { Color.white, Color.red, Color.blue, Color.green, Color.yellow, Color.gray };
 
-        private string _history = "", _logFileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-        private ISerializer _serializer = BinarySerializer.Instance;
+        private string _history = "", _logFileName = "";
+
+        private readonly ISerializer _serializer = BinarySerializer.Instance;
 
         private void Start()
         {
-            Log($"Playing {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")}");
+            _logFileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") +
+                           $" {(NetworkManager.Singleton.IsServer ? "Host" : "Client")}";
+            Log(
+                $"[{_logFileName}] (DataManager) Playing {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")}");
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0;
         }
@@ -48,9 +53,11 @@ namespace UI
                     message.Substring(i * logLineLength,
                         math.min(message.Length - i * logLineLength, logLineLength));
                 text.color = color;
-                _history += $"(type={type}) {message}\n";
-                _serializer.Serialize(_history, ISerializer.DebugDir, _logFileName);
             }
+
+            _history += $"(type={type}) {message}\n";
+            if (_logFileName.Length > 0)
+                _serializer.Serialize(_history, ISerializer.DebugDir, _logFileName);
 
             if (alsoConsole) UnityEngine.Debug.Log(message);
         }
@@ -63,7 +70,7 @@ namespace UI
 
         private void Update()
         {
-            if (!Application.isEditor) return;
+            // if (!Application.isEditor) return;
             if (Input.GetKeyDown(KeyCode.BackQuote) || Input.GetKeyDown(KeyCode.KeypadMinus))
                 _canvasGroup.alpha = 1 - _canvasGroup.alpha;
         }

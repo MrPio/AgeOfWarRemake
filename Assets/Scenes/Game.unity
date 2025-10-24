@@ -381,26 +381,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LogContainer
       objectReference: {fileID: 0}
-    - target: {fileID: 1174158204653789279, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2035414786790344758, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      propertyPath: m_Padding.m_Left
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2035414786790344758, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      propertyPath: m_Padding.m_Right
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115994620109650221, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      propertyPath: m_Alpha
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2115994620109650221, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      propertyPath: m_BlocksRaycasts
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -431,7 +411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 999999
+      value: 99999
       objectReference: {fileID: 0}
     - target: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -481,43 +461,27 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4753803699134751158, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      propertyPath: m_RaycastTarget
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7343179613693628406, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1174158204653789279, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 101408697}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
 --- !u!224 &101408695 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
   m_PrefabInstance: {fileID: 101408694}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &101408696 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1174158204653789279, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
+--- !u!114 &101408702 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3122993366167667863, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
   m_PrefabInstance: {fileID: 101408694}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &101408697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101408696}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a4d0c9fb2f242f7b2bcbf9744e96ffb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  logTextPrefab: {fileID: 7752415046905487927, guid: 9c8e7616842fdc448b9b98a7d81f006a, type: 3}
-  logLineLength: 60
+  m_EditorClassIdentifier: Assembly-CSharp::UI.Logger
 --- !u!1 &124972364
 GameObject:
   m_ObjectHideFlags: 0
@@ -6465,6 +6429,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fieldLenght: 23
+  forceMultiplayer: 1
   hpBarHorizontal: {fileID: 5319533488982568307, guid: 6c842d3db0c83e241b74020aadfa3cd1, type: 3}
   hpBarVertical: {fileID: 5319533488982568307, guid: bab97e2e710181049b68b1e27a5595e7, type: 3}
   floatingText: {fileID: 4782190510778225800, guid: 52366de1db3659c4baef15f10b2fef22, type: 3}
@@ -6473,7 +6438,7 @@ MonoBehaviour:
   basePrefab: {fileID: 1702143473709605719, guid: 53349070c32fd644ca251e3d50ca80d8, type: 3}
   cam: {fileID: 658877796}
   canvas: {fileID: 621523086}
-  logger: {fileID: 101408697}
+  logger: {fileID: 101408702}
   musicManager: {fileID: 1185476586}
   statisticsScreen: {fileID: 7094558}
   waitForClientScreen: {fileID: 1635586299}

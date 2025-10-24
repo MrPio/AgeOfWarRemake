@@ -84,7 +84,7 @@ namespace Prefabs
             _base.Turrets[i] = this;
             transform.position = _base.BasePrefab.turretsPos[i].transform.position;
             transform.localScale = new Vector3(
-                x: transform.localScale.x * (_isLeft ? 1 : -1),
+                x: math.abs(transform.localScale.x) * (_isLeft ? 1 : -1),
                 y: transform.localScale.y,
                 z: transform.localScale.z
             );

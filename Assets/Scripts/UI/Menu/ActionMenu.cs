@@ -122,8 +122,12 @@ namespace UI.Menu
 
         #region Unit
 
-        private void BuyUnit(int type) =>
+        private void BuyUnit(int type)
+        {
+            var unitModel = UnitFactory.Units[BaseModel.Level - 1][type]();
+            _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, () => { });
             _sm.GameManager.BaseAlly.BuyUnitServerRpc((byte)type);
+        }
 
         private void HoverUnit(int type)
         {

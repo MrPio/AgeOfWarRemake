@@ -169,24 +169,26 @@ namespace Prefabs
         public override void OnNetworkSpawn()
         {
             IsLeft = IsOwner && !IsBot.Value;
+
             _spawnTime = Time.time;
             AllyBase = IsLeft ? Sm.GameManager.BaseAlly : Sm.GameManager.BaseEnemy;
             EnemyBase = IsLeft ? Sm.GameManager.BaseEnemy : Sm.GameManager.BaseAlly;
-            var allyUnits = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
 
             // Observer pattern on unity spawn
-            (IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Add(this);
-            foreach (var action in IsLeft ? Sm.GameManager.OnAllySpawn : Sm.GameManager.OnEnemySpawn)
+            var allyUnits = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
+            var listeners = IsLeft ? Sm.GameManager.OnAllySpawn : Sm.GameManager.OnEnemySpawn;
+            allyUnits.Add(this);
+            foreach (var action in listeners)
                 action.Invoke(this);
 
             transform.localScale = new Vector3(
-                x: transform.localScale.x * (IsLeft ? 1 : -1),
+                x: math.abs(transform.localScale.x) * (IsLeft ? 1 : -1),
                 y: transform.localScale.y,
                 z: transform.localScale.z
             ); // Rendering concern
-            gameObject.name =
+            name =
                 $"Unit {AllyBase.Model.Value.Level}-{Model.Value.Level} ({allyUnits.Count})";
-
+            Sm.logger.Log($"Spawning {name}, IsOwner={IsOwner},  IsBot={IsBot.Value}, _isLeft={IsLeft}");
 
             # region NetVars listening
 
@@ -380,10 +382,11 @@ namespace Prefabs
 
             if (IsServer)
             {
+                Sm.logger.Log($"Registering Animation OnAttack events for {name}");
                 _animationNotify.OnAttack = () =>
                 {
                     // If not dying
-                    if ((IsBot.Value ? Sm.GameManager.UnitsEnemy : Sm.GameManager.UnitsAlly).Contains(this))
+                    if ((IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Contains(this))
                         _target.Damage(Model.Value.Damage);
                     Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: false);
                 };

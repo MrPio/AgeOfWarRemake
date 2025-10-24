@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Managers;
 using Model.Bases;
 using Partials.Behaviour;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace Prefabs
                 z: spawnPosition.z
             );
             transform.localScale = new Vector3(
-                x: transform.localScale.x * (isLeft ? 1 : -1),
+                x: math.abs(transform.localScale.x) * (isLeft ? 1 : -1),
                 y: transform.localScale.y,
                 z: transform.localScale.z
             );
