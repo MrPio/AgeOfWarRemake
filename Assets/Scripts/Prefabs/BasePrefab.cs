@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Managers;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,20 +11,24 @@ namespace Prefabs
     /// </summary>
     public class BasePrefab : MonoBehaviour
     {
+        private static SceneManager _sm;
         [SerializeField] public Transform unitSpawnPointX;
         [SerializeField] public List<GameObject> expansions, turretsPos;
         [NonSerialized] private Base _base;
 
         private void Awake()
         {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             _base = transform.parent.GetComponent<Base>();
             UpdateTurretConfiguration(0, new Model.Turrets.Turret[] { default, default, default, default });
         }
 
         // Host & Client
         // Update the state of the base. If the state is unchanged, nothing is done (lazy).
-        public void UpdateTurretConfiguration(int numExpansions, Model.Turrets.Turret[] newTurrets)
+        public void UpdateTurretConfiguration(int numExpansions, Model.Turrets.Turret[] newTurrets, bool force = false)
         {
+            _sm.logger.Log(
+                $"Requested turret configuration update. (force={force}, NetworkManager.Singleton.IsServer={NetworkManager.Singleton.IsServer})");
             // Checking one expansion slot at a time
             for (var i = 0; i < 4; i++)
             {
@@ -31,10 +36,10 @@ namespace Prefabs
                 expansions[i].SetActive(i < numExpansions);
 
                 // Remove invalid turrets (Server-only)
-                if (_base.IsServer)
+                if (NetworkManager.Singleton.IsServer)
                 {
                     var newTurret = newTurrets[i];
-                    if (!_base.Turrets[i] || _base.Turrets[i]!.Model.Value != newTurret)
+                    if (force || !_base.Turrets[i] || _base.Turrets[i]!.Model.Value != newTurret)
                     {
                         _base.Turrets[i]?.GetComponent<NetworkObject>().Despawn(destroy: true);
 

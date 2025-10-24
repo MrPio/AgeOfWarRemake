@@ -187,7 +187,7 @@ namespace Prefabs
                 z: transform.localScale.z
             ); // Rendering concern
             name =
-                $"Unit {AllyBase.Model.Value.Level}-{Model.Value.Level} ({allyUnits.Count})";
+                $"Unit {AllyBase.Model.Value.Age}-{Model.Value.Level} ({allyUnits.Count})";
             Sm.logger.Log($"Spawning {name}, IsOwner={IsOwner},  IsBot={IsBot.Value}, _isLeft={IsLeft}");
 
             # region NetVars listening
@@ -388,7 +388,7 @@ namespace Prefabs
                     // If not dying
                     if ((IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Contains(this))
                         _target.Damage(Model.Value.Damage);
-                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: false);
+                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: false);
                 };
             }
 
@@ -400,7 +400,7 @@ namespace Prefabs
                 if (_target?.PrefabTransform is not null)
                 {
                     _unitPrefab.SpawnBullet(_target.PrefabTransform);
-                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Level, Model.Value.Level, isRanged: true);
+                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: true);
                 }
             };
 

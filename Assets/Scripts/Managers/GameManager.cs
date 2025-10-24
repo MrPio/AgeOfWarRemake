@@ -14,7 +14,7 @@ namespace Managers
         private SceneManager _sm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
-        private bool _isHost;
+        [NonSerialized] public bool PlayAsHost;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly, BaseEnemy;
@@ -52,11 +52,13 @@ namespace Managers
             // Start Host or Client depending on isMultiplayer bool
             if (_sm.IsMultiplayer)
             {
-                _isHost = _serializer.Deserialize(ISerializer.DebugDir, "NeedHost", true);
-                _serializer.Serialize(!_isHost, $"{ISerializer.DebugDir}", "NeedHost");
-                _sm.logger.Log($"Starting as {(_isHost ? "Host" : "Client")}");
+                PlayAsHost = _serializer.Deserialize(ISerializer.DebugDir, "NeedHost", true);
+                _sm.logger.LOGFileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") +
+                                         $" {(PlayAsHost ? "Host" : "Client")}";
+                _serializer.Serialize(!PlayAsHost, $"{ISerializer.DebugDir}", "NeedHost");
+                _sm.logger.Log($"Starting as {(PlayAsHost ? "Host" : "Client")}");
 
-                if (_isHost)
+                if (PlayAsHost)
                     NetworkManager.Singleton.StartHost();
                 else
                     NetworkManager.Singleton.StartClient();
@@ -139,8 +141,8 @@ namespace Managers
             // Store IDs of the 2 players
             foreach (var id in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                if ((_isHost && id == NetworkManager.Singleton.LocalClientId) ||
-                    (!_isHost && id != NetworkManager.Singleton.LocalClientId))
+                if ((PlayAsHost && id == NetworkManager.Singleton.LocalClientId) ||
+                    (!PlayAsHost && id != NetworkManager.Singleton.LocalClientId))
                 {
                     HostId = id;
                     _sm.logger.Log($"{id} is the Host!", LogType.ReadingStatus);

@@ -190,8 +190,8 @@ namespace Prefabs
                 {
                     if (!IsServer) return;
                     foreach (var enemy in _sm.GameManager.UnitsEnemy)
-                        if (Mathf.Abs(bullet.transform.position.x - enemy.transform.position.x) -
-                            enemy.ColliderWidth / 2 < 1)
+                        if (Mathf.Abs(bullet.transform.position.x - enemy.transform.position.x) <
+                            enemy.ColliderWidth / 2f + 1f)
                             enemy.Damage(Model.Value.Damage / rate);
                 });
             }

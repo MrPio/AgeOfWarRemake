@@ -124,14 +124,14 @@ namespace UI.Menu
 
         private void BuyUnit(int type)
         {
-            var unitModel = UnitFactory.Units[BaseModel.Level - 1][type]();
+            var unitModel = UnitFactory.Units[BaseModel.Age - 1][type]();
             _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, () => { });
             _sm.GameManager.BaseAlly.BuyUnitServerRpc((byte)type);
         }
 
         private void HoverUnit(int type)
         {
-            var model = UnitFactory.Units[BaseModel.Level - 1][type]();
+            var model = UnitFactory.Units[BaseModel.Age - 1][type]();
             descriptor.text = $"{model.DisplayName.Message.Value} - ${model.Cost:N0}";
         }
 
@@ -142,7 +142,7 @@ namespace UI.Menu
         private void BuyTurret(int type)
         {
             var baseAlly = _sm.GameManager.BaseAlly;
-            var turretModel = TurretFactory.Turrets[BaseModel.Level - 1][type]();
+            var turretModel = TurretFactory.Turrets[BaseModel.Age - 1][type]();
 
             // Money check
             if (BaseModel.Money < turretModel.Cost) return;
@@ -168,7 +168,7 @@ namespace UI.Menu
         private void HoverTurret(int type)
         {
             var baseModel = _sm.GameManager.BaseAlly.Model.Value;
-            var model = TurretFactory.Turrets[baseModel.Level - 1][type]();
+            var model = TurretFactory.Turrets[baseModel.Age - 1][type]();
             descriptor.text = $"{model.DisplayName.Message.Value} - ${model.Cost:N0}";
         }
 
@@ -234,7 +234,7 @@ namespace UI.Menu
 
         private void HoverEvolution()
         {
-            descriptor.text = BaseModel.Level < BaseFactory.Bases.Count
+            descriptor.text = BaseModel.Age < BaseFactory.Bases.Count
                 ? $"Evolve for {BaseModel.EvolveExpRequired} EXP"
                 : "Can't evolve any more";
         }

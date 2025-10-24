@@ -27,16 +27,15 @@ namespace UI
         private readonly Color[] _typesColors =
             { Color.white, Color.red, Color.blue, Color.green, Color.yellow, Color.gray };
 
-        private string _history = "", _logFileName = "";
+        private string _history = "";
+        [NonSerialized] public string LOGFileName = "";
 
         private readonly ISerializer _serializer = BinarySerializer.Instance;
 
         private void Start()
         {
-            _logFileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") +
-                           $" {(NetworkManager.Singleton.IsServer ? "Host" : "Client")}";
             Log(
-                $"[{_logFileName}] (DataManager) Playing {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")}");
+                $"[{LOGFileName}] (DataManager) Playing {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")}");
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0;
         }
@@ -56,8 +55,8 @@ namespace UI
             }
 
             _history += $"(type={type}) {message}\n";
-            if (_logFileName.Length > 0)
-                _serializer.Serialize(_history, ISerializer.DebugDir, _logFileName);
+            if (LOGFileName.Length > 0)
+                _serializer.Serialize(_history, ISerializer.LogsDir, LOGFileName);
 
             if (alsoConsole) UnityEngine.Debug.Log(message);
         }

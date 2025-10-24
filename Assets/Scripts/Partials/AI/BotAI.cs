@@ -143,7 +143,7 @@ namespace Partials.AI
                 {
                     // Upgrade a turret
                     case 0 when validTurrets.Count > 0:
-                        var toUpgrades = validTurrets.Where(turret => turret.Age < baseModel.Level || turret.Level < 3)
+                        var toUpgrades = validTurrets.Where(turret => turret.Age < baseModel.Age || turret.Level < 3)
                             .ToList();
                         if (toUpgrades.Count > 0)
                         {
@@ -152,7 +152,7 @@ namespace Partials.AI
                             _base.SellTurretServerRpc(toUpgradePos);
 
                             // The new turret is a lower or same level if changing age, else the next level of the same age
-                            var upgradedChoice = toUpgrade.Age < baseModel.Level
+                            var upgradedChoice = toUpgrade.Age < baseModel.Age
                                 ? Random.Range(0, toUpgrade.Level)
                                 : toUpgrade.Level;
                             _base.BuyTurretServerRpc(toUpgradePos, (byte)upgradedChoice);

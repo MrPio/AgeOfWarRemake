@@ -106,7 +106,9 @@ namespace Prefabs
             }
 
             // Update the turret configuration (lazy)
-            BasePrefab?.UpdateTurretConfiguration(newValue.UnlockedExpansions, newValue.Turrets);
+            // Eager only when evolving
+            BasePrefab?.UpdateTurretConfiguration(newValue.UnlockedExpansions, newValue.Turrets,
+                force: value.Age != newValue.Age);
 
             if (_isLeft)
                 _sm.statsMenu.UpdateUI(Model.Value.Money, Model.Value.Exp);
@@ -149,14 +151,16 @@ namespace Prefabs
                 newModel.Exp = 9_999_999;
                 Model.Value = newModel;
             }
-            // else if (_isLeft && IsCheating && IsHost)
-            // {
-            //     // Add infinite money and exp
-            //     var newModel = Model.Value;
-            //     newModel.Money = 9_999_999;
-            //     newModel.Exp = 9_999_999;
-            //     Model.Value = newModel;
-            // }
+
+            // Add cheats to both players
+            if (IsCheating && IsHost && !IsBot.Value)
+            {
+                // Add infinite money and exp
+                var newModel = Model.Value;
+                newModel.Money = 9_999_999;
+                newModel.Exp = 9_999_999;
+                Model.Value = newModel;
+            }
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);
@@ -189,14 +193,14 @@ namespace Prefabs
         {
             var senderClientId = rpcParams.Receive.SenderClientId;
             var model = Model.Value;
-            var unitModel = UnitFactory.Units[Model.Value.Level - 1][unitIndex]();
+            var unitModel = UnitFactory.Units[Model.Value.Age - 1][unitIndex]();
 
             // Money check
             if (model.Money < unitModel.Cost)
                 return;
             model.Money -= unitModel.Cost;
             Model.Value = model;
-            
+
             StartCoroutine(DelayedSpawnUnit());
             return;
 
@@ -221,7 +225,7 @@ namespace Prefabs
         public void BuyTurretServerRpc(byte expansionIndex, byte turretIndex)
         {
             var model = Model.Value;
-            var turretModel = TurretFactory.Turrets[Model.Value.Level - 1][turretIndex]();
+            var turretModel = TurretFactory.Turrets[Model.Value.Age - 1][turretIndex]();
 
             // The requested expansion has not been bought or the spot is already occupied
             if (model.UnlockedExpansions - 1 < expansionIndex || model.Turrets[expansionIndex].HasValue) return;
@@ -275,12 +279,12 @@ namespace Prefabs
         [ServerRpc]
         public void EvolveServerRpc()
         {
-            if (Model.Value.Exp < Model.Value.EvolveExpRequired || Model.Value.Level >= BaseFactory.Bases.Count) return;
+            if (Model.Value.Exp < Model.Value.EvolveExpRequired || Model.Value.Age >= BaseFactory.Bases.Count) return;
 
             // No more ages
-            if (BaseFactory.Bases.Count <= Model.Value.Level) return;
+            if (BaseFactory.Bases.Count <= Model.Value.Age) return;
 
-            var newModel = BaseFactory.Bases[Model.Value.Level]();
+            var newModel = BaseFactory.Bases[Model.Value.Age]();
             newModel.Hp = Mathf.Min(newModel.MaxHp, Model.Value.Hp + (newModel.MaxHp - Model.Value.MaxHp));
             newModel.Money = Model.Value.Money;
             newModel.Exp = Model.Value.Exp;
@@ -288,9 +292,13 @@ namespace Prefabs
             newModel.Turrets = Model.Value.Turrets;
             Model.Value = newModel;
 
-            if (_isLeft)
-                _sm.actionMenu.Initialize(newModel.Level - 1);
+            if (!IsBot.Value)
+                InitializeActionMenuRpc(newModel.Age - 1);
         }
+
+        [Rpc(SendTo.Owner)]
+        private void InitializeActionMenuRpc(int age) =>
+            _sm.actionMenu.Initialize(age);
 
         #endregion
 
@@ -302,6 +310,13 @@ namespace Prefabs
             if (BasePrefab is not null)
                 Destroy(BasePrefab.gameObject);
             BasePrefab = Instantiate(Resources.Load<GameObject>(prefab), transform).GetComponent<BasePrefab>();
+            for (var i = 0; i < Turrets.Count; i++)
+                if (Turrets[i] is not null)
+                {
+                    _sm.logger.Log(
+                        $"Setting Pos for turret {i}. From={Turrets[i].transform.position}, to={BasePrefab.turretsPos[i].transform.position}");
+                    Turrets[i].transform.position = BasePrefab.turretsPos[i].transform.position;
+                }
         }
 
         #endregion
