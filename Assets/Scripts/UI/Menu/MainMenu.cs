@@ -57,10 +57,19 @@ namespace UI.Menu
             usernameInput.onEndEdit.AddListener(SaveUsername);
             multiplayerHost.OnClick = () =>
             {
+                DataManager.IsHost = true;
                 SceneManager.UnloadSceneAsync("MainMenu");
                 SceneManager.LoadScene("Game");
             };
             joinLobbyCodeInput.onEndEdit.AddListener(code => DataManager.LobbyCode = code);
+            multiplayerJoin.OnClick = () =>
+            {
+                // TODO: verify here the code, before changing scene.
+                // GameManager, and NetworkManager should remain when changing scene
+                DataManager.IsHost = false;
+                SceneManager.UnloadSceneAsync("MainMenu");
+                SceneManager.LoadScene("Game");
+            };
         }
 
         private void SaveUsername(string username)

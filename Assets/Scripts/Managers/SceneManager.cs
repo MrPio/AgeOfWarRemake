@@ -25,28 +25,36 @@ namespace Managers
         public Canvas canvas;
         public Logger logger;
         [NonSerialized] public GameManager GameManager;
+        [NonSerialized] public RelayManager RelayManager;
         [NonSerialized] public SpecialAttackManager SpecialAttackManager;
         public MusicManager musicManager;
-        [SerializeField] private GameObject statisticsScreen, waitForClientScreen;
+        [SerializeField] private GameObject statisticsScreen;
         [SerializeField] public StatsMenu statsMenu;
         [SerializeField] public UnitLoadingMenu unitLoadingMenu;
+        [SerializeField] public LoadingMenu loadingMenu;
         [SerializeField] public RechargeBar specialAttackRechargeBar;
         [SerializeField] public ActionMenu actionMenu;
 
         private void Start()
         {
             GameManager = Instantiate(gameManagerPrefab).GetComponent<GameManager>();
+            RelayManager = GameManager.GetComponent<RelayManager>();
             GameManager.gameObject.name = "GameManager";
             SpecialAttackManager = Instantiate(specialAttackManager).GetComponent<SpecialAttackManager>();
             SpecialAttackManager.gameObject.name = "SpecialAttackManager";
-            waitForClientScreen.SetActive(true);
+            loadingMenu.gameObject.SetActive(true);
+                loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost);
             actionMenu.transform.parent.gameObject.SetActive(false);
+            cam.GetComponent<CameraZoom>().enabled = false;
+            cam.GetComponent<CameraEdgePan>().enabled = false;
         }
 
         public void StartGame()
         {
-            waitForClientScreen.SetActive(false);
+            loadingMenu.gameObject.SetActive(false);
             actionMenu.transform.parent.gameObject.SetActive(true);
+            cam.GetComponent<CameraZoom>().enabled = true;
+            cam.GetComponent<CameraEdgePan>().enabled = true;
 
             musicManager.StartLevel();
             cam.GetComponent<CameraZoom>().Initialize();

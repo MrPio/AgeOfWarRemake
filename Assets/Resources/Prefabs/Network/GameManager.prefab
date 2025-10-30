@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5917156225703355680}
   - component: {fileID: 1430883540662466940}
   - component: {fileID: 8769102013366633185}
+  - component: {fileID: 6967589223703147235}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -71,4 +72,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  isMultiplayer: 0
+--- !u!114 &6967589223703147235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 456718131753668840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384dec5bbfe34bb1b6b4d644f2d5b5f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.RelayManager
+  connectionType: wss
