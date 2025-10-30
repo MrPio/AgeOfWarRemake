@@ -27,10 +27,13 @@ namespace Partials.Behaviour
         [SerializeField] private GameObject toShow = null;
 
         [NonSerialized] public Action OnClick, OnHover, OnExit;
+        [NonSerialized] private Texture2D _cursorArrow, _cursorClick;
 
 
         private void Start()
         {
+            _cursorArrow = Resources.Load<Texture2D>("Textures/Cursors/CursorArrow");
+            _cursorClick = Resources.Load<Texture2D>("Textures/Cursors/CursorClick");
             _musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
             _image = GetComponent<Image>();
             _text = GetComponent<TextMeshProUGUI>();
@@ -43,6 +46,7 @@ namespace Partials.Behaviour
             if (_image != null) _image.color = hoverColor;
             if (_text != null) _text.color = hoverColor;
             if (_text != null) toShow?.SetActive(true);
+            Cursor.SetCursor(_cursorClick, new Vector2(264f, 0f), CursorMode.Auto);
             OnHover?.Invoke();
         }
 
@@ -51,6 +55,7 @@ namespace Partials.Behaviour
             if (_image != null) _image.color = _startColor;
             if (_text != null) _text.color = _startColor;
             if (_text != null) toShow?.SetActive(false);
+            Cursor.SetCursor(_cursorArrow, Vector2.zero, CursorMode.Auto);
             OnExit?.Invoke();
         }
 

@@ -1,3 +1,14 @@
-﻿fileFormatVersion: 2
+fileFormatVersion: 2
 guid: 8ec0083155f34f56a6f4e0808504ec92
-timeCreated: 1752527720
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - toShow: {instanceID: 0}
+  - cursorArrow: {fileID: 2800000, guid: 90688b1541cf44f48a186c4162935ff4, type: 3}
+  - cursorClick: {fileID: 2800000, guid: 4e563c7e52c009e44b668282e6d6debc, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
