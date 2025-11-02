@@ -12,6 +12,7 @@ namespace UI
         [SerializeField] private TextMeshProUGUI text;
         private SceneManager _sm;
         [NonSerialized] public Transform Target;
+        private bool _destroyed = false;
 
         private void Awake()
         {
@@ -20,9 +21,11 @@ namespace UI
 
         public void SetValue(float hp, float maxHp, bool alsoText)
         {
+            if (_destroyed)
+                return;
             hp = Mathf.Clamp(hp, 0, maxHp);
             var value = hp / maxHp;
-            if (value <= 0)
+            if (value <= 0 && !_destroyed)
             {
                 Destroy(gameObject);
                 value = 0;

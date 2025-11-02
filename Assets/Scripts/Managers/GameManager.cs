@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Managers.Serializer;
 using Model.Bases;
 using Model.Utils;
-using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Services.Authentication;
@@ -21,7 +20,6 @@ namespace Managers
         private SceneManager _sm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
-        [NonSerialized] public bool PlayAsHost;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
@@ -34,7 +32,7 @@ namespace Managers
         #region NetVars
 
         private readonly NetworkVariable<bool> _gameStarted = new();
-        public readonly NetworkVariable<NetString> Username = new(writePerm: NetworkVariableWritePermission.Owner);
+        public readonly NetworkVariable<NetString> UsernameHost = new(), UsernameClient = new();
 
         #region Listeners
 
@@ -44,8 +42,8 @@ namespace Managers
             // Store IDs of the 2 players
             foreach (var id in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                if ((PlayAsHost && id == NetworkManager.Singleton.LocalClientId) ||
-                    (!PlayAsHost && id != NetworkManager.Singleton.LocalClientId))
+                if ((DataManager.IsHost && id == NetworkManager.Singleton.LocalClientId) ||
+                    (!DataManager.IsHost && id != NetworkManager.Singleton.LocalClientId))
                 {
                     HostId = id;
                     _sm.logger.Log($"{id} is the Host!", LogType.ReadingStatus);
@@ -70,6 +68,16 @@ namespace Managers
                 _sm.logger.Log("Game Ended!", LogType.HostClientConnection);
                 // Show end screen
             }
+        }
+
+        // Server
+        [ServerRpc(RequireOwnership = false)]
+        private void SetUsernameServerRpc(NetString username, ServerRpcParams rpcParams = default)
+        {
+            if (rpcParams.Receive.SenderClientId == HostId)
+                UsernameHost.Value = username;
+            else
+                UsernameClient.Value = username;
         }
 
         #endregion
@@ -142,7 +150,7 @@ namespace Managers
             }
 
             _gameStarted.OnValueChanged += OnGameStartedChanged;
-            Username.Value = DataManager.Username;
+            SetUsernameServerRpc(DataManager.Username);
         }
 
         public override void OnDestroy()
@@ -187,7 +195,7 @@ namespace Managers
                     {
                         // Add money based on the age
                         var newModel = basePrefab.Model.Value;
-                        newModel.Money += BaseFactory.MoneyPerSecond[newModel.Age];
+                        newModel.Money += BaseFactory.MoneyPerSecond[newModel.Age-1];
                         basePrefab.Model.Value = newModel;
                     }
                 }

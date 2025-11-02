@@ -189,10 +189,16 @@ namespace Prefabs
                 bullet.AddComponent<Tickable>().Initialize(tickLength: 1f / rate, startDelay: 0.5f, onTick: () =>
                 {
                     if (!IsServer) return;
-                    foreach (var enemy in _sm.GameManager.UnitsEnemy)
+                    for (var i = 0; i < _sm.GameManager.UnitsEnemy.Count; i++)
+                    {
+                        var enemy = _sm.GameManager.UnitsEnemy[i];
                         if (Mathf.Abs(bullet.transform.position.x - enemy.transform.position.x) <
                             enemy.ColliderWidth / 2f + 1f)
+                        {
                             enemy.Damage(Model.Value.Damage / rate);
+                            break; // damage only the first unit
+                        }
+                    }
                 });
             }
             else
@@ -218,6 +224,9 @@ namespace Prefabs
                 destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
                 destroyable.TargetOwner = !DataManager.IsMultiplayer && !IsBot.Value ? 2 :
                     IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
+
+                _sm.logger.Log(
+                    $"Launch bullet. (TargetOwner={destroyable.TargetOwner})");
 
                 if (IsServer)
                     destroyable.OnDamage = target => target.Damage(Model.Value.Damage);

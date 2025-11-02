@@ -197,7 +197,18 @@ namespace UI.Menu
 
                 var expansionIdx = (byte)i;
                 button.GetComponent<Clickable>().OnClick +=
-                    () => { _sm.GameManager.BaseAlly.SellTurretServerRpc(expansionIdx); };
+                    () =>
+                    {
+                        // Spawn floating text
+                        var turretModel = _sm.GameManager.BaseAlly.Model.Value.Turrets[expansionIdx];
+                        var go = Instantiate(_sm.floatingText, _sm.canvas.transform);
+                        var trgt = _sm.GameManager.BaseAlly.BasePrefab.turretsPos[expansionIdx].transform;
+                        go.transform.position = _sm.cam.WorldToScreenPoint(trgt.position + Vector3.up * 0.25f);
+                        var floatingText = go.GetComponent<FloatingText>();
+                        floatingText.Initialize($"+ {turretModel.SellPrice:N0}");
+                        
+                        _sm.GameManager.BaseAlly.SellTurretServerRpc(expansionIdx);
+                    };
                 _buttons.Add(button);
             }
         }

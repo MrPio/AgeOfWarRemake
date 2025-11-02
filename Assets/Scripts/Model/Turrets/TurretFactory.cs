@@ -26,7 +26,7 @@ namespace Model.Turrets
         private static Turret FireCatapult() => new(damage: 45, range: 4.75f, cost: 750,
             displayName: "Fire Catapult", "turret_2_2", bulletSpeed: 5.5f, clusterDamage: 15, level: 2, age: 2);
 
-        private static Turret Oil() => new(damage: 60, range: 2.75f, cost: 1000,
+        private static Turret Oil() => new(damage: 60, range: 3.25f, cost: 1000,
             displayName: "Oil", "turret_2_3", isFluid: true, level: 3, age: 2);
 
         // === Renaissance age =================================================================

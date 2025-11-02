@@ -27,8 +27,6 @@ namespace Prefabs
         // Update the state of the base. If the state is unchanged, nothing is done (lazy).
         public void UpdateTurretConfiguration(int numExpansions, Model.Turrets.Turret[] newTurrets, bool force = false)
         {
-            _sm.logger.Log(
-                $"Requested turret configuration update. (force={force}, NetworkManager.Singleton.IsServer={NetworkManager.Singleton.IsServer})");
             // Checking one expansion slot at a time
             for (var i = 0; i < 4; i++)
             {

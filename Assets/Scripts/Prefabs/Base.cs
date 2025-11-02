@@ -248,13 +248,6 @@ namespace Prefabs
             model.Turrets = (Model.Turrets.Turret[])model.Turrets.Clone(); // Force trigger the change
             model.Money += turretModel.SellPrice;
             Model.Value = model;
-
-            // Spawn floating text
-            var go = Instantiate(_sm.floatingText, _sm.canvas.transform);
-            var target = BasePrefab.turretsPos[expansionIndex].transform;
-            go.transform.position = _sm.cam.WorldToScreenPoint(target.position + Vector3.up * 0.25f);
-            var floatingText = go.GetComponent<FloatingText>();
-            floatingText.Initialize($"+ {turretModel.SellPrice:N0}");
         }
 
         [ServerRpc]
