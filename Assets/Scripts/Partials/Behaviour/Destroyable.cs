@@ -46,6 +46,7 @@ namespace Partials.Behaviour
 
             if (other.transform.parent && other.transform.parent.TryGetComponent<IDamageable>(out var damageable))
             {
+                print($"{damageable.Owner} --- {TargetOwner}");
                 if (TargetOwner is not null && damageable.Owner != TargetOwner) return; // Includes !IsOwner check
                 OnDamage?.Invoke(damageable);
             }

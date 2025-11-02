@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
-using Partials;
 using Partials.Camera;
 using Prefabs;
 using UI;
@@ -14,10 +13,7 @@ namespace Managers
 {
     public class SceneManager : MonoBehaviour
     {
-        public bool IsMultiplayer => forceMultiplayer || DataManager.IsMultiplayer;
         [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
-        [SerializeField] private bool forceMultiplayer = false;
-
         [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical, floatingText;
         [SerializeField] private GameObject gameManagerPrefab, specialAttackManager, basePrefab;
 
@@ -43,7 +39,7 @@ namespace Managers
             SpecialAttackManager = Instantiate(specialAttackManager).GetComponent<SpecialAttackManager>();
             SpecialAttackManager.gameObject.name = "SpecialAttackManager";
             loadingMenu.gameObject.SetActive(true);
-                loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost);
+            loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost);
             actionMenu.transform.parent.gameObject.SetActive(false);
             cam.GetComponent<CameraZoom>().enabled = false;
             cam.GetComponent<CameraEdgePan>().enabled = false;
@@ -71,7 +67,7 @@ namespace Managers
                 // Spawn enemy base
                 var enemyBase = Instantiate(basePrefab).GetComponent<NetworkObject>();
                 enemyBase.name = "Base (Enemy)";
-                enemyBase.GetComponent<Base>().IsBot.Value = !IsMultiplayer;
+                enemyBase.GetComponent<Base>().IsBot.Value = !DataManager.IsMultiplayer;
                 enemyBase.SpawnWithOwnership(GameManager.ClientId);
             }
         }
@@ -86,7 +82,7 @@ namespace Managers
             {
                 yield return new WaitForSeconds(1f);
 
-                if (IsMultiplayer)
+                if (DataManager.IsMultiplayer)
                     GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
                         ? GameManager.BaseEnemy.OwnerClientId
                         : GameManager.BaseAlly.OwnerClientId;

@@ -29,5 +29,6 @@ namespace Model.Bases
 
         public static readonly List<Func<Base>> Bases = new() { Cave, Castle, Church, Camp, Ship };
         public static readonly List<int> ExpansionCosts = new() { 1_000, 3_000, 7_500 };
+        public static readonly List<int> MoneyPerSecond = new() { 2, 5, 20, 150, 500 }; // Only multiplayer
     }
 }

@@ -54,7 +54,7 @@ namespace Prefabs
                     var bombGo = Instantiate(bomb, bombSpawnPoint.position, Quaternion.identity);
                     var destroyable = bombGo.GetComponent<Destroyable>();
                     destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
-                    destroyable.TargetOwner = !_sm.IsMultiplayer && isLeft ? 2 :
+                    destroyable.TargetOwner = !DataManager.IsMultiplayer && isLeft ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
                     destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
 

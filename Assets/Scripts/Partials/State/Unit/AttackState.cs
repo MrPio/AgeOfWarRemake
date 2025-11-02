@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
 
 namespace Partials.State.Unit
 {
@@ -13,7 +14,7 @@ namespace Partials.State.Unit
         {
             var model = unit.Model.Value;
             unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
-            if (unit.Sm.IsMultiplayer)
+            if (DataManager.IsMultiplayer)
             {
                 var toWait = (float)new System.Random().NextDouble() * 2f;
                 LastAttack = Time.time - model.AttackDuration + toWait;

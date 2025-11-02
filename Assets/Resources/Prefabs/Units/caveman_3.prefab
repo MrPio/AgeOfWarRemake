@@ -514,6 +514,7 @@ MonoBehaviour:
   bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}
   bulletSpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 0}
+  shootEffectPrefab: {fileID: 0}
 --- !u!65 &7728267042386125385
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -533,8 +534,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8888301, y: 1.3344111, z: 1}
-  m_Center: {x: 0.1364047, y: 0.6072203, z: 0}
+  m_Size: {x: 1.7785094, y: 1.3344111, z: 1}
+  m_Center: {x: 0.086040765, y: 0.6072203, z: 0}
 --- !u!54 &1937069694310097297
 Rigidbody:
   m_ObjectHideFlags: 0

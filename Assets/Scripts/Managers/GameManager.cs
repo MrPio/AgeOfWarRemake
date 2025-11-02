@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using Managers.Serializer;
+using Model.Bases;
 using Model.Utils;
-using Prefabs;
 using Unity.Collections;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.VisualScripting;
+using UnityEngine;
+using Base = Prefabs.Base;
 using LogType = UI.LogType;
 using Unit = Prefabs.Unit;
 
@@ -22,9 +24,10 @@ namespace Managers
         [NonSerialized] public bool PlayAsHost;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
-        [NonSerialized] public Base BaseAlly, BaseEnemy;
+        [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
         [NonSerialized] public ulong? Winner;
         [NonSerialized] public bool IsGameOver;
+        private float _gameStart, _lastMoneyPerSecond;
         public readonly List<Action<Unit>> OnAllySpawn = new();
         public readonly List<Action<Unit>> OnEnemySpawn = new();
 
@@ -54,8 +57,8 @@ namespace Managers
                 }
             }
 
-            if (!_sm.IsMultiplayer)
-                ClientId = HostId;
+            if (!DataManager.IsMultiplayer)
+                ClientId = HostId; // the bot is the same machine as the host
 
             if (newValue)
             {
@@ -101,7 +104,7 @@ namespace Managers
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
             // Start Host or Client depending on isMultiplayer bool
-            if (_sm.IsMultiplayer)
+            if (DataManager.IsMultiplayer)
             {
                 _sm.logger.Log($"Starting as {(DataManager.IsHost ? "Host" : "Client")}");
                 /*PlayAsHost = _serializer.Deserialize(ISerializer.DebugDir, "NeedHost", true);
@@ -114,7 +117,7 @@ namespace Managers
                 if (DataManager.IsHost)
                 {
                     DataManager.LobbyCode = await _sm.RelayManager.CreateRelay();
-                    _sm.loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost,DataManager.LobbyCode);
+                    _sm.loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost, DataManager.LobbyCode);
                 }
                 else
                     await _sm.RelayManager.JoinRelay(DataManager.LobbyCode);
@@ -158,6 +161,38 @@ namespace Managers
                 _gameStarted.OnValueChanged -= OnGameStartedChanged;
         }
 
+        private void Update()
+        {
+            // Fullscreen management
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+            if (Input.GetKeyDown(KeyCode.Escape))
+                Screen.fullScreen = false;
+
+            var f11Pressed = Input.GetKeyDown(KeyCode.F11);
+            var altEnterPressed = (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) &&
+                                  Input.GetKeyDown(KeyCode.Return);
+            if (f11Pressed || altEnterPressed)
+                Screen.fullScreen = true;
+#endif
+
+
+            if (!_gameStarted.Value) return;
+
+            // Add money per second if multiplayer (Server-only)
+            if (IsServer && BaseAlly is not null && BaseEnemy is not null && DataManager.IsMultiplayer)
+                if (Time.time - _lastMoneyPerSecond > 1)
+                {
+                    _lastMoneyPerSecond = Time.time;
+                    foreach (var basePrefab in new List<Base> { BaseAlly, BaseEnemy })
+                    {
+                        // Add money based on the age
+                        var newModel = basePrefab.Model.Value;
+                        newModel.Money += BaseFactory.MoneyPerSecond[newModel.Age];
+                        basePrefab.Model.Value = newModel;
+                    }
+                }
+        }
+
         #endregion
 
         // Host-only
@@ -179,10 +214,12 @@ namespace Managers
         private void TryStartGame()
         {
             if (NetworkManager.Singleton.ConnectedClients.Count ==
-                (_sm.IsMultiplayer ? 2 : 1)) // This includes the host
+                (DataManager.IsMultiplayer ? 2 : 1)) // This includes the host
             {
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
                 _gameStarted.Value = true;
+                _gameStart = Time.time;
+                _lastMoneyPerSecond = Time.time + 5;
             }
             else
                 _sm.logger.Log($"Waiting for the {(IsServer ? "Client" : "Host")}...", LogType.WaitingFor);

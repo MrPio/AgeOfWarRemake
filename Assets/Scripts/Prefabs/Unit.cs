@@ -29,7 +29,7 @@ namespace Prefabs
                 Sm.GameManager.IsGameOver) return;
 
             // Bot resistance
-            if (!Sm.IsMultiplayer && IsBot.Value)
+            if (!DataManager.IsMultiplayer && IsBot.Value)
                 damage *= 0.9f;
 
             var newModel = Model.Value;
