@@ -8,6 +8,7 @@ namespace UI.Menu
 {
     public class LoadingMenu : MonoBehaviour
     {
+        private static ToastManager _tm;
         [SerializeField] private TextMeshProUGUI text, lobbyCodeText;
 
         [SerializeField]
@@ -16,12 +17,21 @@ namespace UI.Menu
         [SerializeField] private GameObject lobbyCodeContainer;
         [SerializeField] private Clickable lobbyCodeCopyButton;
 
+        private void Awake()
+        {
+            _tm = GameObject.FindWithTag("ToastManager").GetComponent<ToastManager>();
+        }
+
         public void Initialize(bool isMultiplayer, bool isHost, string lobbyCode = null)
         {
             text.text = isMultiplayer ? multiplayerText : singleplayerText;
             lobbyCodeContainer.SetActive(isMultiplayer && lobbyCode is not null);
             lobbyCodeCopyButton.gameObject.SetActive(isHost);
-            lobbyCodeCopyButton.OnClick = () => { GUIUtility.systemCopyBuffer = lobbyCode; };
+            lobbyCodeCopyButton.OnClick = () =>
+            {
+                GUIUtility.systemCopyBuffer = lobbyCode;
+                _tm.MakeToast("Copied to clipboard!", ToastColor.Green);
+            };
             lobbyCodeText.text = lobbyCode;
         }
     }

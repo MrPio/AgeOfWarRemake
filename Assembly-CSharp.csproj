@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Triggerable.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ToastManager.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Followable.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\Base.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Plane.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Assets\Scripts\Partials\Behaviour\Destroyable.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Clickable.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\VectorExtensions.cs" />
+    <Compile Include="Assets\Scripts\UI\Toast.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Explodable.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />

@@ -24,7 +24,7 @@ namespace Partials.Behaviour
         [SerializeField] private Color hoverColor = new Color(0.75f, 0.75f, 0.75f, 1f),
             downColor = new Color(0.9f, 0.9f, 0.9f, 0.75f);
 
-        [SerializeField] private GameObject toShow = null;
+        [SerializeField] private GameObject toShow;
 
         [NonSerialized] public Action OnClick, OnHover, OnExit;
         [NonSerialized] private Texture2D _cursorArrow, _cursorClick;

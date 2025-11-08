@@ -830,6 +830,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296838499}
   m_CullTransparentMesh: 1
+--- !u!1 &406627219
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 406627221}
+  - component: {fileID: 406627220}
+  m_Layer: 0
+  m_Name: ToastManager
+  m_TagString: ToastManager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &406627220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406627219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96bd1112104b43ff982b186f08419dad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Managers.ToastManager
+  toastPrefab: {fileID: 4379457285820158309, guid: 8d76b239148fcbc4398ac5dff5ea0e70, type: 3}
+--- !u!4 &406627221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406627219}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1540.4874, y: 74.58993, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,37 +1705,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1105503591
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1105503592}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1105503592
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1105503591}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1458.902, y: 460.1278, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1118991646
 GameObject:
   m_ObjectHideFlags: 0
@@ -2053,7 +2067,7 @@ Transform:
   m_GameObject: {fileID: 1185476582}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.75475335, y: 1.608857, z: -0.20693064}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2307,8 +2321,6 @@ MonoBehaviour:
   hoverColor: {r: 0.9447344, g: 1, b: 0.1415093, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
   toShow: {fileID: 1270714164}
-  cursorArrow: {fileID: 0}
-  cursorClick: {fileID: 0}
 --- !u!114 &1289980098
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3109,8 +3121,6 @@ MonoBehaviour:
   hoverColor: {r: 1, g: 0.4763333, b: 0.2295596, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
   toShow: {fileID: 1965671638}
-  cursorArrow: {fileID: 0}
-  cursorClick: {fileID: 0}
 --- !u!114 &1470790451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3303,8 +3313,6 @@ MonoBehaviour:
   hoverColor: {r: 0.94509804, g: 1, b: 0.14117648, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
   toShow: {fileID: 2003444278}
-  cursorArrow: {fileID: 0}
-  cursorClick: {fileID: 0}
 --- !u!114 &1529639995
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3459,8 +3467,6 @@ MonoBehaviour:
   hoverColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
   toShow: {fileID: 0}
-  cursorArrow: {fileID: 0}
-  cursorClick: {fileID: 0}
 --- !u!114 &1537559354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3628,8 +3634,6 @@ MonoBehaviour:
   hoverColor: {r: 0.9447344, g: 1, b: 0.1415093, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
   toShow: {fileID: 1612190975}
-  cursorArrow: {fileID: 0}
-  cursorClick: {fileID: 0}
 --- !u!114 &1685028922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4525,8 +4529,6 @@ MonoBehaviour:
   hoverColor: {r: 0.9447344, g: 1, b: 0.1415093, a: 1}
   downColor: {r: 0.9, g: 0.9, b: 0.9, a: 0.75}
   toShow: {fileID: 234353102}
-  cursorArrow: {fileID: 0}
-  cursorClick: {fileID: 0}
 --- !u!114 &2076843695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4882,6 +4884,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1185476585}
+  - {fileID: 406627221}
   - {fileID: 658877797}
   - {fileID: 574776232}
   - {fileID: 832575519}
@@ -4890,4 +4893,3 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 6165757086746871716}
   - {fileID: 718470843}
-  - {fileID: 1105503592}

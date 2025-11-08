@@ -18,6 +18,7 @@ namespace Managers
     public class GameManager : NetworkBehaviour
     {
         private SceneManager _sm;
+        private ToastManager _tm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
         [NonSerialized] public ulong HostId, ClientId;
@@ -96,6 +97,7 @@ namespace Managers
 
             _instance = this;
             _sm = FindFirstObjectByType<SceneManager>();
+            _tm = GameObject.FindWithTag("ToastManager").GetComponent<ToastManager>();
         }
 
         private async void Start()
@@ -124,6 +126,7 @@ namespace Managers
                     NetworkManager.Singleton.StartClient();*/
                 if (DataManager.IsHost)
                 {
+                    _tm.MakeToast("Creating lobby...", ToastColor.Cyan);
                     DataManager.LobbyCode = await _sm.RelayManager.CreateRelay();
                     _sm.loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost, DataManager.LobbyCode);
                 }
@@ -195,7 +198,7 @@ namespace Managers
                     {
                         // Add money based on the age
                         var newModel = basePrefab.Model.Value;
-                        newModel.Money += BaseFactory.MoneyPerSecond[newModel.Age-1];
+                        newModel.Money += BaseFactory.MoneyPerSecond[newModel.Age - 1];
                         basePrefab.Model.Value = newModel;
                     }
                 }
