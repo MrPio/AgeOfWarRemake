@@ -16,11 +16,12 @@ namespace Partials.State.Unit
             unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
             if (DataManager.IsMultiplayer)
             {
-                var toWait = (float)new System.Random().NextDouble() * 2f;
+                // Add up to 2 seconds of delay
+                var toWait = (float)new System.Random().NextDouble() * 1.5f;
                 LastAttack = Time.time - model.AttackDuration + toWait;
             }
             else
-                LastAttack = 1;
+                LastAttack = 0;
         }
 
         public void Update(Prefabs.Unit unit)

@@ -204,8 +204,6 @@ namespace Managers
                 }
         }
 
-        #endregion
-
         // Host-only
         private void OnClientConnected(ulong clientId)
         {
@@ -220,6 +218,8 @@ namespace Managers
             if (_gameStarted.Value)
                 EndGame();
         }
+
+        #endregion
 
         // Host-only
         private void TryStartGame()

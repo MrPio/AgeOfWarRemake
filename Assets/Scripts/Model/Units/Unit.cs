@@ -19,15 +19,17 @@ namespace Model.Units
         public float ShootRate;
         public int Cost, Revenue;
         public float SpawnTime;
-        public int Level;
+        public int Level, Age;
         public NetString Prefab;
         public NetString DisplayName;
         public float MaxShootingDistance;
         public bool HasValue => !DisplayName.Message.IsEmpty;
 
         public Unit(
-            NetString displayName, NetString prefabName, float maxHp, float damage, int cost, int revenue, float spawnTime,
-            int level, float maxShootingDistance = 0, float moveSpeed = 2.625f /** 0.625f*/, float attackDuration = 1f,
+            NetString displayName, NetString prefabName, float maxHp, float damage, int cost, int revenue,
+            float spawnTime,
+            int level, int age, float maxShootingDistance = 0, float moveSpeed = 2.625f /** 0.625f*/,
+            float attackDuration = 1f,
             float armor = 0f, float maxArmor = 0f, float shootDamage = 0f, float shootRate = 1f)
         {
             DisplayName = displayName;
@@ -43,6 +45,7 @@ namespace Model.Units
             Revenue = revenue;
             SpawnTime = spawnTime;
             Level = level;
+            Age = age;
             MaxShootingDistance = maxShootingDistance;
             ShootDamage = shootDamage;
             ShootRate = shootRate;
@@ -63,6 +66,7 @@ namespace Model.Units
             serializer.SerializeValue(ref Revenue);
             serializer.SerializeValue(ref SpawnTime);
             serializer.SerializeValue(ref Level);
+            serializer.SerializeValue(ref Age);
             serializer.SerializeValue(ref MaxShootingDistance);
             serializer.SerializeValue(ref Prefab);
             serializer.SerializeValue(ref DisplayName);

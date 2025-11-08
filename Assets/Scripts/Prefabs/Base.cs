@@ -83,6 +83,11 @@ namespace Prefabs
                     go.transform.position = Vector3.down * 100;
                     _hpBar = go.GetComponent<HpBar>();
                     _hpBar.Target = hpBarPoint;
+                    _hpBar.Initialize(!DataManager.IsMultiplayer
+                        ? null
+                        : (OwnerClientId == _sm.GameManager.HostId
+                            ? _sm.GameManager.UsernameHost
+                            : _sm.GameManager.UsernameClient).Value);
                 }
 
                 _hpBar.SetValue(newValue.Hp, newValue.MaxHp, alsoText: true);

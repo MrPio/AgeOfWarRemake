@@ -25,7 +25,7 @@ namespace Prefabs
         // Sever-only
         public void Damage(float damage)
         {
-            if (!IsServer /*|| damage <= 0*/ || !Model.Value.HasValue || _state is DieState || _isDestroyed ||
+            if (!IsServer /*|| damage <= 0*/ || !Model.Value.HasValue || State is DieState || _isDestroyed ||
                 Sm.GameManager.IsGameOver) return;
 
             // Bot resistance
@@ -67,7 +67,8 @@ namespace Prefabs
         private Animator _animator;
         private Transform _hpBarPoint;
         private HpBar _hpBar;
-        private IState _state;
+        [NonSerialized] public IState State;
+        [NonSerialized] public float StateChangedTime;
         private IDamageable _target;
         [NonSerialized] public UnitMovement Movement;
         private UnitPrefab _unitPrefab;
@@ -114,6 +115,7 @@ namespace Prefabs
                     go.transform.position = Vector3.down * 999f;
                     _hpBar = go.GetComponent<HpBar>();
                     _hpBar.Target = _hpBarPoint;
+                    _hpBar.Initialize();
                 }
 
                 _hpBar.SetValue(newValue.Hp, newValue.MaxHp, alsoText: false);
@@ -226,7 +228,7 @@ namespace Prefabs
         private void Update()
         {
             if (IsServer && !Sm.GameManager.IsGameOver)
-                _state?.Update(this);
+                State?.Update(this);
         }
 
         // Server-only
@@ -246,29 +248,37 @@ namespace Prefabs
             if (!IsServer) return;
 
             // Prevent re-assigning the same state
-            if (_state?.Equals(newState) == true) return;
+            if (State?.Equals(newState) == true) return;
 
             if (OwnerClientId == 0)
                 Sm.logger.Log($"Set state of {name} to {newState}");
 
             // State Design Pattern
-            _state?.Exit(this);
+            State?.Exit(this);
             newState?.Enter(this);
 
             // Remove shooting lag between 2 shooting states
-            var wasShooting = _state is IdleState { Shooting: true } or WalkState { Shooting: true };
+            var wasShooting = State is IdleState { Shooting: true } or WalkState { Shooting: true };
             var isShooting = newState is IdleState { Shooting: true } or WalkState { Shooting: true };
             if (wasShooting && isShooting)
-                if (newState is WalkState walkState && _state is IdleState idleStateOld)
+                if (newState is WalkState walkState && State is IdleState idleStateOld)
                     walkState.LastShoot = idleStateOld.LastShoot;
-                else if (newState is IdleState idleState && _state is WalkState walkStateOld)
+                else if (newState is IdleState idleState && State is WalkState walkStateOld)
                     idleState.LastShoot = walkStateOld.LastShoot;
 
-            // Remove attack wait if the attacking unit is different from this
-            if (newState is AttackState attackState && _target.Name != Name)
-                attackState.LastAttack = Time.time - Model.Value.AttackDuration / 2;
+            // Remove attack wait if the attacking unit is different from this or if it is already in the attacking loop
+            if (newState is AttackState attackState && _target is Unit targetUnit)
+            {
+                var isSameType = Model.Value.Age == targetUnit.Model.Value.Age &&
+                                 Model.Value.Level == targetUnit.Model.Value.Level;
+                var isTargetAlreadyAttacking =
+                    targetUnit.State is AttackState && Time.time - targetUnit.StateChangedTime > 2f;
+                if (!isSameType || isTargetAlreadyAttacking)
+                    attackState.LastAttack = Time.time - Model.Value.AttackDuration / 1.35f;
+            }
 
-            _state = newState;
+            State = newState;
+            StateChangedTime = Time.time;
         }
 
         // Server-only
@@ -278,7 +288,7 @@ namespace Prefabs
         private void CheckCollision()
         {
             // TODO, when shooting to a base, the range unit must switch to new spawn enemy unit
-            if (!IsServer || _unitPrefab is null || _state is DieState) return;
+            if (!IsServer || _unitPrefab is null || State is DieState) return;
 
             // The units are stored like a FIFO list in GameManager: [unit_0, unit_1 (this), unit_2]
             var allies = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
