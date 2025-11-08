@@ -15,7 +15,9 @@ namespace UI.Menu
             quitButton,
             multiplayerBack,
             multiplayerHost,
-            multiplayerJoin;
+            multiplayerJoin,
+            multiplayerLobbyCodePaste;
+
 
         [SerializeField] private TMP_InputField usernameInput, joinLobbyCodeInput;
         [SerializeField] private GameObject mainMenu, multiplayerMenu;
@@ -62,6 +64,11 @@ namespace UI.Menu
                 SceneManager.LoadScene("Game");
             };
             joinLobbyCodeInput.onEndEdit.AddListener(code => DataManager.LobbyCode = code);
+            multiplayerLobbyCodePaste.OnClick = () =>
+            {
+                joinLobbyCodeInput.text = (GUIUtility.systemCopyBuffer ?? string.Empty).Trim();
+                if (joinLobbyCodeInput.text.Length > 16) joinLobbyCodeInput.text = joinLobbyCodeInput.text[..16];
+            };
             multiplayerJoin.OnClick = () =>
             {
                 // TODO: verify here the code, before changing scene.
