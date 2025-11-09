@@ -4334,6 +4334,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 999508059341960, guid: 17d0c5887edfd0b4999fd5699400d259, type: 3}
+      propertyPath: RunInBackground
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 999508059341960, guid: 17d0c5887edfd0b4999fd5699400d259, type: 3}
+      propertyPath: NetworkConfig.TickRate
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 5678835074249473872, guid: 17d0c5887edfd0b4999fd5699400d259, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

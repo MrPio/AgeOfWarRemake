@@ -45,7 +45,7 @@ namespace Prefabs
         private const float SpawnWalkDelay = 0.25f;
         private const float DeadDelay = 10.0f;
         private const float MinUnitsDistance = 0.2f;
-        private const float MinDistanceFromEnemyBase = 1.5f;
+        private const float MinDistanceFromEnemyBase = 1.2f;
         [NonSerialized] public float ColliderWidth;
 
         // Animation trigger hashes
