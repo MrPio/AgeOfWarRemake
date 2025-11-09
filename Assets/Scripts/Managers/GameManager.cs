@@ -9,6 +9,7 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Base = Prefabs.Base;
 using LogType = UI.LogType;
 using Unit = Prefabs.Unit;
@@ -89,13 +90,13 @@ namespace Managers
 
         private void Awake()
         {
-            if (_instance is not null && _instance != this)
-            {
-                Destroy(this);
-                return;
-            }
-
-            _instance = this;
+            // if (_instance is not null && _instance != this)
+            // {
+            //     Destroy(this);
+            //     return;
+            // }
+            //
+            // _instance = this;
             _sm = FindFirstObjectByType<SceneManager>();
             _tm = GameObject.FindWithTag("ToastManager").GetComponent<ToastManager>();
         }
@@ -131,7 +132,14 @@ namespace Managers
                     _sm.loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost, DataManager.LobbyCode);
                 }
                 else
-                    await _sm.RelayManager.JoinRelay(DataManager.LobbyCode);
+                    try
+                    {
+                        await _sm.RelayManager.JoinRelay(DataManager.LobbyCode);
+                    }
+                    catch
+                    {
+                        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+                    }
             }
             else
             {
@@ -149,7 +157,14 @@ namespace Managers
             if (IsServer) // Host runs this
             {
                 NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-                NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+                NetworkManager.Singleton.OnClientDisconnectCallback += EndGameHost;
+            }
+            else if (!IsServer) // Client runs this
+            {
+                NetworkManager.Singleton.OnClientDisconnectCallback += EndGameClient;
+                if (NetworkManager.Singleton.ConnectedClients.Count !=
+                    (DataManager.IsMultiplayer ? 2 : 1))
+                    EndGameClient(0);
             }
 
             _gameStarted.OnValueChanged += OnGameStartedChanged;
@@ -160,12 +175,17 @@ namespace Managers
         {
             if (IsServer)
             {
-                _serializer.Serialize(true, $"{ISerializer.DebugDir}", "NeedHost");
+                // _serializer.Serialize(true, $"{ISerializer.DebugDir}", "NeedHost");
                 if (NetworkManager.Singleton)
                 {
                     NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-                    NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+                    NetworkManager.Singleton.OnClientDisconnectCallback -= EndGameHost;
                 }
+            }
+            else if (!IsServer)
+            {
+                if (NetworkManager.Singleton)
+                    NetworkManager.Singleton.OnClientDisconnectCallback -= EndGameClient;
             }
 
             if (_gameStarted != null)
@@ -175,7 +195,7 @@ namespace Managers
         private void Update()
         {
             // Fullscreen management
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+#if UNITY_STANDALONE || UNITY_EDITOR_WIN
             if (Input.GetKeyDown(KeyCode.Escape))
                 Screen.fullScreen = false;
 
@@ -211,14 +231,6 @@ namespace Managers
             TryStartGame();
         }
 
-        // Host-only
-        private void OnClientDisconnected(ulong clientId)
-        {
-            _sm.logger.Log($"Player {clientId} disconnected.", LogType.HostClientConnection);
-            if (_gameStarted.Value)
-                EndGame();
-        }
-
         #endregion
 
         // Host-only
@@ -237,12 +249,20 @@ namespace Managers
         }
 
         // Host-only
-        private void EndGame()
+        private void EndGameHost(ulong clientId)
         {
+            _sm.logger.Log($"Player {clientId} disconnected.", LogType.HostClientConnection);
             _sm.logger.Log("Ending game...", LogType.HostClientConnection);
             _gameStarted.Value = false;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+        }
 
-            // Trigger a UI message, return to menu, etc.
+        // Client-only
+        private void EndGameClient(ulong clientId)
+        {
+            _sm.logger.Log($"Player {clientId} disconnected.", LogType.HostClientConnection);
+            _sm.logger.Log("Ending game...", LogType.HostClientConnection);
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
         }
     }
 }

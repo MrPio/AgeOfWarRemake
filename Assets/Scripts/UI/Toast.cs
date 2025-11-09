@@ -26,7 +26,7 @@ namespace UI
 
         public void Initialize(string text, Color color)
         {
-            panel.color = color.WithAlpha(0.7f);
+            panel.color = color;
             message.text = text;
             _animator.SetTrigger(ShowTrigger);
 

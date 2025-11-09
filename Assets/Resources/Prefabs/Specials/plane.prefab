@@ -213,8 +213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40ca3ab64147fbe459315ebfd345477b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  spawnPosition: {x: -20, y: 7.25, z: 0}
-  deltaX: 40
+  spawnPosition: {x: -16, y: 7.25, z: 0}
+  deltaX: 36
   dropMarginFromBase: 1.75
   bomb: {fileID: 3698832557998590662, guid: 2107ff0931894f74e8466f9cf4e34a66, type: 3}
   bombSpawnPoint: {fileID: 4421200872146118521}

@@ -144,8 +144,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.32731637, y: 0.28836894, z: 0.37084714}
-  m_Center: {x: -0.029761638, y: -0.0026879087, z: 0.0031501611}
+  m_Size: {x: 0.32731637, y: 0.3644995, z: 0.425393}
+  m_Center: {x: -0.029761638, y: -0.019297794, z: 0.0047537494}
 --- !u!114 &3019646214671618681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Partials.Behaviour.Destroyable
   onStart: 0
   onTrigger: 1
-  spawnOnDestroy: {fileID: 1060015339853634, guid: 861a6af5c8c307f439b766b7e7b3ac0f, type: 3}
+  spawnOnDestroy: {fileID: 1060015339853634, guid: 5933070c641cc5743a7d2b8680d3bf7e, type: 3}
   lifespan: 10
   destroyDelay: 0.06
   AllowedTags: []

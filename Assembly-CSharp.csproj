@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\BoolExtensions.cs" />
+    <Compile Include="Assets\Scripts\Managers\NetworkManagerGuard.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\WalkState.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\TurretFactory.cs" />
     <Compile Include="Assets\Scripts\Model\Units\Unit.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Assets\Scripts\UI\Toast.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\JsonSerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Explodable.cs" />
+    <Compile Include="Assets\Scripts\Managers\Initializer.cs" />
     <Compile Include="Assets\Scripts\UI\Logger.cs" />
     <Compile Include="Assets\Scripts\Model\Turrets\Turret.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\ByteExtensions.cs" />

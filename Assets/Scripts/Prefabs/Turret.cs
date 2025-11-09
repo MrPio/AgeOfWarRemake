@@ -240,6 +240,7 @@ namespace Prefabs
             }
         }
 
+        // Host & Client (Animation event)
         private void PlaySound() =>
             _sm.musicManager.PlayTurret(Model.Value.Age, Model.Value.Level);
 

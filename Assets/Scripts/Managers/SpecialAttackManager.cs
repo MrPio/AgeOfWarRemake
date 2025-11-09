@@ -218,10 +218,23 @@ namespace Managers
                     destroyable.TargetOwner = !DataManager.IsMultiplayer && isAlly ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
                     destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
-                    
+
                     // Server-only
                     if (NetworkManager.Singleton.IsServer)
-                        destroyable.OnDamage = target => { target.Damage(model.Damage); };
+                        destroyable.OnDamage = target =>
+                        {
+                            // This avoids hitting just one enemy unit
+                            var enemies = attackerId == _sm.GameManager.HostId
+                                ? _sm.GameManager.UnitsEnemy
+                                : _sm.GameManager.UnitsAlly;
+                            for (var j = 0; j < enemies.Count; j++)
+                            {
+                                var maxDistance = enemies[j].ColliderWidth / 2 + model.Range;
+                                if (Mathf.Abs(enemies[j].transform.position.x - beamGo.transform.position.x) <
+                                    maxDistance)
+                                    enemies[j].Damage(model.Damage);
+                            }
+                        };
                 }
             }
         }

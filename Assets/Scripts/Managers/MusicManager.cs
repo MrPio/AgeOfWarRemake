@@ -67,6 +67,24 @@ namespace Managers
 
         #endregion
 
+        #region Events
+
+        private static MusicManager _instance;
+
+        private void Awake()
+        {
+            if (_instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        #endregion
+
         #region API
 
         public void PlayDie(int age = 0, int unitType = 0)
@@ -118,7 +136,7 @@ namespace Managers
 
         public void StartLevel()
         {
-            // backgroundAudioSource.Play(); TODO
+            backgroundAudioSource.Play();
         }
 
         #endregion

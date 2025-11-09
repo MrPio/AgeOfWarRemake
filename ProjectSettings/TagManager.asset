@@ -13,6 +13,7 @@ TagManager:
   - Ground
   - MusicManager
   - ToastManager
+  - NetworkManager
   layers:
   - Default
   - TransparentFX

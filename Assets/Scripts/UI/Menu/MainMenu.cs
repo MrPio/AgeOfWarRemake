@@ -3,6 +3,7 @@ using Managers;
 using Managers.Serializer;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Clickable = Partials.Behaviour.Clickable;
 using SceneManager = UnityEngine.SceneManagement.SceneManager;
 
@@ -42,8 +43,7 @@ namespace UI.Menu
             singleplayerButton.OnClick = () =>
             {
                 DataManager.IsMultiplayer = false;
-                SceneManager.UnloadSceneAsync("MainMenu");
-                SceneManager.LoadScene("Game");
+                SceneManager.LoadScene("Game", LoadSceneMode.Single);
             };
             multiplayerButton.OnClick = () =>
             {
@@ -60,22 +60,22 @@ namespace UI.Menu
             multiplayerHost.OnClick = () =>
             {
                 DataManager.IsHost = true;
-                SceneManager.UnloadSceneAsync("MainMenu");
-                SceneManager.LoadScene("Game");
+                SceneManager.LoadScene("Game", LoadSceneMode.Single);
             };
             joinLobbyCodeInput.onEndEdit.AddListener(code => DataManager.LobbyCode = code);
             multiplayerLobbyCodePaste.OnClick = () =>
             {
                 joinLobbyCodeInput.text = (GUIUtility.systemCopyBuffer ?? string.Empty).Trim();
                 if (joinLobbyCodeInput.text.Length > 16) joinLobbyCodeInput.text = joinLobbyCodeInput.text[..16];
+                DataManager.LobbyCode = joinLobbyCodeInput.text;
             };
             multiplayerJoin.OnClick = () =>
             {
-                // TODO: verify here the code, before changing scene.
-                // GameManager, and NetworkManager should remain when changing scene
+                print(DataManager.LobbyCode);
+                if (DataManager.LobbyCode is null || DataManager.LobbyCode.Length < 6 ||
+                    DataManager.LobbyCode.Length > 8) return;
                 DataManager.IsHost = false;
-                SceneManager.UnloadSceneAsync("MainMenu");
-                SceneManager.LoadScene("Game");
+                SceneManager.LoadScene("Game", LoadSceneMode.Single);
             };
         }
 

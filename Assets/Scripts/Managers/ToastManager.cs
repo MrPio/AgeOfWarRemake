@@ -21,8 +21,17 @@ namespace Managers
             { ToastColor.Cyan, new Color(0.5978667f, 0.8816885f, 0.9254902f, 0.75f) }
         };
 
-        private void Start()
+        private static ToastManager _instance;
+
+        private void Awake()
         {
+            if (_instance != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            _instance = this;
             DontDestroyOnLoad(gameObject);
         }
 

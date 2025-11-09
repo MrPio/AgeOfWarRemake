@@ -7,6 +7,7 @@ using UI;
 using UI.Menu;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Logger = UI.Logger;
 
 namespace Managers
@@ -23,13 +24,18 @@ namespace Managers
         [NonSerialized] public GameManager GameManager;
         [NonSerialized] public RelayManager RelayManager;
         [NonSerialized] public SpecialAttackManager SpecialAttackManager;
-        public MusicManager musicManager;
+        [NonSerialized] public MusicManager musicManager;
         [SerializeField] private GameObject statisticsScreen;
         [SerializeField] public StatsMenu statsMenu;
         [SerializeField] public UnitLoadingMenu unitLoadingMenu;
         [SerializeField] public LoadingMenu loadingMenu;
         [SerializeField] public RechargeBar specialAttackRechargeBar;
         [SerializeField] public ActionMenu actionMenu;
+
+        private void Awake()
+        {
+            musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
+        }
 
         private void Start()
         {
@@ -98,11 +104,9 @@ namespace Managers
 
         public async Task QuitLobby()
         {
-            NetworkManager.Singleton.Shutdown();
-            Application.Quit();
-            // await lobbyManager.LeaveLobby();
-            // UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager
-            // .GetActiveScene().buildIndex);
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+            // NetworkManager.Singleton.Shutdown();
+            // Application.Quit();
         }
     }
 }

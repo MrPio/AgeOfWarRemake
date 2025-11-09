@@ -357,7 +357,6 @@ namespace Prefabs
             if (_target is not null && oldTarget != _target)
                 _targetRef.Value = new NetworkObjectReference(_target.PrefabTransform.parent.gameObject);
 
-            // Server-only
             ChangeState(newState);
         }
 
@@ -398,7 +397,7 @@ namespace Prefabs
                     // If not dying
                     if ((IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy).Contains(this))
                         _target.Damage(Model.Value.Damage);
-                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: false);
+                    PlaySoundRpc(0, isRanged: false);
                 };
             }
 
@@ -407,10 +406,12 @@ namespace Prefabs
             // which is taken care of by the server.
             _animationNotify.OnShoot = () =>
             {
+                // Host & Client
                 if (_target?.PrefabTransform is not null)
                 {
                     _unitPrefab.SpawnBullet(_target.PrefabTransform);
-                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: true);
+                    if (IsServer)
+                        PlaySoundRpc(0, isRanged: true);
                 }
             };
 
@@ -432,5 +433,21 @@ namespace Prefabs
         }
 
         #endregion
+
+        // Host & Client
+        [Rpc(SendTo.Everyone)]
+        public void PlaySoundRpc(byte soundType, bool isRanged = false)
+        {
+            var model = Model.Value;
+            switch (soundType)
+            {
+                case 0:
+                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: false);
+                    break;
+                case 1:
+                    Sm.musicManager.PlayDie(model.Age, model.Level);
+                    break;
+            }
+        }
     }
 }
