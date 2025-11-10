@@ -58,7 +58,7 @@ namespace Managers
             }
 
             if (!DataManager.IsMultiplayer)
-                ClientId = HostId; // the bot is the same machine as the host
+                ClientId = HostId; // the bot is the same machine as the host TODO: client is not 2, check ownerships in bullets collisions
 
             if (newValue)
             {
@@ -143,12 +143,18 @@ namespace Managers
             }
             else
             {
-                // Change unity transport from Relay to default
-                NetworkManager.Singleton.NetworkConfig.NetworkTransport =
-                    NetworkManager.Singleton.AddComponent<UnityTransport>();
-
+#if UNITY_WEBGL
                 // There's no client on singleplayer
                 NetworkManager.Singleton.StartHost();
+#else
+                // Change unity transport from Relay to default
+                var transport = NetworkManager.Singleton.AddComponent<UnityTransport>();
+                transport.UseWebSockets = true;
+                NetworkManager.Singleton.NetworkConfig.NetworkTransport = transport;
+#endif
+
+
+                await _sm.RelayManager.CreateRelay();
             }
         }
 

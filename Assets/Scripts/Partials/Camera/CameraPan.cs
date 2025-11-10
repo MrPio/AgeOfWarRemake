@@ -31,9 +31,7 @@ namespace Partials.Camera
             _boundX = new Vector2(-_sm.fieldLenght / 2 + marginFromBase, _sm.fieldLenght / 2 - marginFromBase);
             var actualXBound = _boundX / (((float)Screen.width / Screen.height) / (16f / 9f));
             cam.transform.position = new Vector3(actualXBound.x, cam.transform.position.y, cam.transform.position.z);
-#if !UNITY_EDITOR_LINUX && !UNITY_STANDALONE_LINUX
-            Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
-#endif
+            Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.ForceSoftware);
         }
 
         private void LateUpdate()
@@ -42,16 +40,12 @@ namespace Partials.Camera
             {
                 _isDragging = true;
                 _lastMouseX = Input.mousePosition.x;
-#if !UNITY_EDITOR_LINUX && !UNITY_STANDALONE_LINUX
-                Cursor.SetCursor(cursorHand, Vector2.zero, CursorMode.Auto);
-#endif
+                Cursor.SetCursor(cursorHand, Vector2.zero, CursorMode.ForceSoftware);
             }
             else if (Input.GetMouseButtonUp(0))
             {
                 _isDragging = false;
-#if !UNITY_EDITOR_LINUX && !UNITY_STANDALONE_LINUX
-                Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.Auto);
-#endif
+                Cursor.SetCursor(cursorArrow, Vector2.zero, CursorMode.ForceSoftware);
             }
 
             _boundX = new Vector2(-_sm.fieldLenght / 2 + marginFromBase, _sm.fieldLenght / 2 - marginFromBase);

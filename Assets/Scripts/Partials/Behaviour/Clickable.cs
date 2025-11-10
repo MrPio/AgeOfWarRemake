@@ -47,9 +47,7 @@ namespace Partials.Behaviour
             if (_image != null) _image.color = hoverColor;
             if (_text != null) _text.color = hoverColor;
             if (_text != null) toShow?.SetActive(true);
-#if !UNITY_EDITOR_LINUX && !UNITY_STANDALONE_LINUX
-            Cursor.SetCursor(_cursorClick, new Vector2(264f, 0f), CursorMode.Auto);
-#endif
+            Cursor.SetCursor(_cursorClick, new Vector2(33f, 0f), CursorMode.ForceSoftware);
             OnHover?.Invoke();
         }
 
@@ -58,9 +56,7 @@ namespace Partials.Behaviour
             if (_image != null) _image.color = _startColor;
             if (_text != null) _text.color = _startColor;
             if (_text != null) toShow?.SetActive(false);
-            #if !UNITY_EDITOR_LINUX && !UNITY_STANDALONE_LINUX
-            Cursor.SetCursor(_cursorArrow, Vector2.zero, CursorMode.Auto);
-            #endif
+            Cursor.SetCursor(_cursorArrow, Vector2.zero, CursorMode.ForceSoftware);
             OnExit?.Invoke();
         }
 
