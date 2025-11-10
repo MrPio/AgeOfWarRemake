@@ -4,8 +4,9 @@
 
 And one day I thought, why not add *multiplayer* to Age of War? Imagine what great fights you could experience instead of the same static AI!
 
-> [!NOTE]
-> This project is on hold. I really don't have enough time between exams. If you are interested, please contact me!
+## [🌍 Play it on the web!](https://play.unity.com/en/games/8855a17f-c0de-4228-b5c1-584523992a17/age-of-war-remake)
+
+## ⬇️ Download it [HERE](https://github.com/MrPio/AgeOfWarRemake/releases/tag/Stable)
 
 These are some of the models I've already made in Blender:
 
