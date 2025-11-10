@@ -162,7 +162,7 @@ namespace Prefabs
             {
                 // Add infinite money and exp
                 var newModel = Model.Value;
-                // newModel.Money = 9_999_999;
+                newModel.Money = 9_999_999;
                 // newModel.Exp = 9_999_999; 
                 Model.Value = newModel;
             }

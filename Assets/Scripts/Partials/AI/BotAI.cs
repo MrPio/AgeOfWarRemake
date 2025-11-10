@@ -5,6 +5,7 @@ using System.Linq;
 using ExtensionFunctions;
 using Managers;
 using Model.Bases;
+using Unity.Netcode;
 using UnityEngine;
 using Base = Prefabs.Base;
 using Random = UnityEngine.Random;
@@ -32,7 +33,7 @@ namespace Partials.AI
             { Phase.Tank, new List<float> { 1f, 1f, 1f } }
         };
 
-        [SerializeField] private float[] initialAgeIntervals = { 120f, 200f, 220f, 240f };
+        [SerializeField] private float[] initialAgeIntervals = { 360f, 380f, 400f, 420f };
         [SerializeField] private float initialTurretInterval = 30f;
         private Base _base;
         private SceneManager _sm;
@@ -70,7 +71,8 @@ namespace Partials.AI
                         : 2,
                     _ => 0
                 };
-                _base.BuyUnitServerRpc((byte)unitIdx);
+                var fakeSenderParams = new ServerRpcParams() { Receive = new ServerRpcReceiveParams() { SenderClientId = 2 } };
+                _base.BuyUnitServerRpc((byte)unitIdx, fakeSenderParams);
                 var delay = _phase switch
                 {
                     Phase.Melee => Random.Range(2f, 8f),
