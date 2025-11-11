@@ -68,5 +68,18 @@ namespace UI.Menu
                 SetSlots(_durationQueue.Count);
             }
         }
+
+        public float GetRemainingTime()
+        {
+            float t = 0f;
+
+            if (_currentSpawnTime.HasValue)
+                t += Mathf.Max(0f, _currentSpawnTime.Value - _acc);
+
+            foreach (var d in _durationQueue)
+                t += d;
+
+            return t;
+        }
     }
 }

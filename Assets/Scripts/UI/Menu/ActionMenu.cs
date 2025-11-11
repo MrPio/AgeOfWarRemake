@@ -16,10 +16,12 @@ namespace UI.Menu
     {
         private SceneManager _sm;
 
-        [Header("References")] [SerializeField]
+        [Header("References")]
+        [SerializeField]
         private TextMeshProUGUI descriptor;
 
-        [SerializeField] private Clickable unitMelee,
+        [SerializeField]
+        private Clickable unitMelee,
             unitRange,
             unitTank,
             unitSpecial,
@@ -36,7 +38,7 @@ namespace UI.Menu
             special;
 
         [SerializeField] private GameObject unitMenu, turretMenu, mainMenu;
-        [Header("Prefabs")] [SerializeField] private GameObject positiveButtonPrefab;
+        [Header("Prefabs")][SerializeField] private GameObject positiveButtonPrefab;
         [SerializeField] private GameObject negativeButtonPrefab;
 
         private readonly List<GameObject> _buttons = new();
@@ -125,8 +127,9 @@ namespace UI.Menu
         private void BuyUnit(int type)
         {
             var unitModel = UnitFactory.Units[BaseModel.Age - 1][type]();
+            var delay = _sm.unitLoadingMenu.GetRemainingTime();
             _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, () => { });
-            _sm.GameManager.BaseAlly.BuyUnitServerRpc((byte)type);
+            _sm.GameManager.BaseAlly.BuyUnitServerRpc((byte)type, delay: delay);
         }
 
         private void HoverUnit(int type)
@@ -206,7 +209,7 @@ namespace UI.Menu
                         go.transform.position = _sm.cam.WorldToScreenPoint(trgt.position + Vector3.up * 0.25f);
                         var floatingText = go.GetComponent<FloatingText>();
                         floatingText.Initialize($"+ {turretModel.SellPrice:N0}");
-                        
+
                         _sm.GameManager.BaseAlly.SellTurretServerRpc(expansionIdx);
                     };
                 _buttons.Add(button);

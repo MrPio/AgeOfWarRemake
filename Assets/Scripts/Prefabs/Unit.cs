@@ -22,6 +22,8 @@ namespace Prefabs
         public string Name => Model.Value.DisplayName;
         public ulong Owner => IsBot.Value ? 2 : OwnerClientId;
 
+        public bool IsDead => State is DieState;
+
         // Sever-only
         public void Damage(float damage)
         {

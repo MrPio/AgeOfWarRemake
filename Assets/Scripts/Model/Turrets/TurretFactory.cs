@@ -10,13 +10,13 @@ namespace Model.Turrets
             ExpansionsRangeMultiplier = { 1.15f, 1.1f, 1.05f, 1.0f }; // Penalize higher places
 
         // === Primitive age =================================================================
-        private static Turret Rock() => new(damage: 10, range: 6.75f, cost: 100,
+        private static Turret Rock() => new(damage: 10, range: 5.75f, cost: 100,
             displayName: "Rock Slingshot", "turret_1_1", bulletSpeed: 6f, level: 1, age: 1);
 
-        private static Turret Chicken() => new(damage: 2.5f, range: 6.25f, cost: 200,
+        private static Turret Chicken() => new(damage: 2.5f, range: 5.75f, cost: 200,
             displayName: "Egg Automatic", "turret_1_2", bulletSpeed: 4f, level: 2, age: 1);
 
-        private static Turret Catapult() => new(damage: 30, range: 8f, cost: 500,
+        private static Turret Catapult() => new(damage: 30, range: 7f, cost: 500,
             displayName: "Primitive Catapult", "turret_1_3", bulletSpeed: 12f, level: 3, age: 1);
 
         // === Medieval age =================================================================

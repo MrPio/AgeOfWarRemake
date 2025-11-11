@@ -18,5 +18,7 @@ namespace Interfaces
         ulong Owner { get; }
 
         public void Damage(float damage);
+        
+        public bool IsDead { get; }
     }
 }

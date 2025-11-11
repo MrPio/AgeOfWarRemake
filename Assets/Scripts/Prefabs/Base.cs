@@ -9,6 +9,7 @@ using Model.Units;
 using Partials.AI;
 using UI;
 using Unity.Mathematics;
+using Unity.Multiplayer.Tools.NetStatsMonitor;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace Prefabs
         public Transform PrefabTransform => _isDestroyed ? null : BasePrefab?.transform;
         public string Name => Model.Value.Name;
         public ulong Owner => IsBot.Value ? 2 : OwnerClientId;
+
+        public bool IsDead => Model.Value.Hp <= 0;
 
         // Server-only
         public void Damage(float damage)
@@ -194,7 +197,7 @@ namespace Prefabs
 
         [ServerRpc]
         // unitIndex is 0-based
-        public void BuyUnitServerRpc(byte unitIndex, ServerRpcParams rpcParams = default)
+        public void BuyUnitServerRpc(byte unitIndex, float delay=0, ServerRpcParams rpcParams = default)
         {
             var senderClientId = rpcParams.Receive.SenderClientId;
             var model = Model.Value;
@@ -211,7 +214,7 @@ namespace Prefabs
 
             IEnumerator DelayedSpawnUnit()
             {
-                yield return new WaitForSeconds(unitModel.SpawnTime);
+                yield return new WaitForSeconds(unitModel.SpawnTime+delay);
                 var unit = Instantiate(
                     unitPrefab,
                     new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),
