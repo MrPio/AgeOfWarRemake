@@ -8,7 +8,7 @@ namespace Partials.Camera
         private Vector3 _originalPos;
         private Coroutine _shakeCoroutine;
 
-        public void Shake(float duration, float strength = 0.075f)
+        public void Shake(float duration, float strength = 0.05f)
         {
             if (_shakeCoroutine != null)
                 return;
