@@ -167,7 +167,7 @@ namespace Managers
 
             // Add initial force
             var rb = bullet.GetComponentInChildren<Rigidbody>();
-            rb.AddForce(-bullet.transform.up * model.Speed);
+            rb.linearVelocity = -bullet.transform.up * model.Speed;
             var pausableRb = rb.gameObject.AddComponent<PausableRigidbody>();
             _bulletRBs.Add(pausableRb);
             if (_sm.GameManager.IsGamePaused)

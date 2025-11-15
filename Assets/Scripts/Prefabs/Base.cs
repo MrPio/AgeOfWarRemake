@@ -167,8 +167,10 @@ namespace Prefabs
             {
                 // Add infinite money and exp
                 var newModel = Model.Value;
-                // newModel.Money = 9_999_999;
-                // newModel.Exp = 9_999_999; 
+#if UNITY_EDITOR
+                newModel.Money = 9_999_999;
+                newModel.Exp = 9_999_999;
+#endif
                 Model.Value = newModel;
             }
 
@@ -199,7 +201,7 @@ namespace Prefabs
 
         [ServerRpc]
         // unitIndex is 0-based
-        public void BuyUnitServerRpc(byte unitIndex, float delay=0, ServerRpcParams rpcParams = default)
+        public void BuyUnitServerRpc(byte unitIndex, float delay = 0, ServerRpcParams rpcParams = default)
         {
             if (_sm.GameManager.UnitsAlly.Count + _sm.GameManager.UnitsEnemy.Count >= MaxInGameUnits)
                 return;
@@ -221,7 +223,7 @@ namespace Prefabs
 
             IEnumerator DelayedSpawnUnit()
             {
-                yield return new WaitForSeconds(unitModel.SpawnTime+delay);
+                yield return new WaitForSeconds(unitModel.SpawnTime + delay);
                 var unit = Instantiate(
                     unitPrefab,
                     new Vector3(BasePrefab.unitSpawnPointX.position.x, 0, 0),

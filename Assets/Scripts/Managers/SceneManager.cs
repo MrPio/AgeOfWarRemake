@@ -106,7 +106,7 @@ namespace Managers
 
         public async Task QuitLobby()
         {
-            musicManager.StartLevel();
+            musicManager.EndLevel();
             GameManager.IsGameOver = false;
             UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
 

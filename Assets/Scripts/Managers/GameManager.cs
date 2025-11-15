@@ -158,16 +158,16 @@ namespace Managers
             {
 #if UNITY_WEBGL
                 // There's no client on singleplayer
-                NetworkManager.Singleton.StartHost();
+                await _sm.RelayManager.CreateRelay();
 #else
                 // Change unity transport from Relay to default
                 var transport = NetworkManager.Singleton.AddComponent<UnityTransport>();
                 transport.UseWebSockets = true;
                 NetworkManager.Singleton.NetworkConfig.NetworkTransport = transport;
+                NetworkManager.Singleton.StartHost();
 #endif
 
 
-                await _sm.RelayManager.CreateRelay();
             }
         }
 

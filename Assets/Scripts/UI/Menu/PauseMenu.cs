@@ -11,11 +11,12 @@ namespace UI.Menu
     {
         private SceneManager _sm;
         [SerializeField] private TextMeshProUGUI timerText;
-        [SerializeField] private Clickable exitButton;
+        [SerializeField] private Clickable resumeButton, exitButton;
 
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+            resumeButton.OnClick = () => gameObject.SetActive(false);
             exitButton.OnClick = () => _ = QuitLobby();
         }
 
