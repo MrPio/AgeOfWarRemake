@@ -83,19 +83,8 @@ namespace Prefabs
             {
                 // If it's the first time, spawn the Hp bar.
                 if (_hpBar is null)
-                {
-                    var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
-                    go.transform.position = Vector3.down * 100;
-                    _hpBar = go.GetComponent<HpBar>();
-                    _hpBar.Target = hpBarPoint;
-                    _hpBar.Initialize(!DataManager.IsMultiplayer
-                        ? null
-                        : (OwnerClientId == _sm.GameManager.HostId
-                            ? _sm.GameManager.UsernameHost
-                            : _sm.GameManager.UsernameClient).Value);
-                }
-
-                _hpBar.SetValue(newValue.Hp, newValue.MaxHp, alsoText: true);
+                    LoadHpBar();
+                _hpBar?.SetValue(newValue.Hp, newValue.MaxHp, alsoText: true);
             }
 
             // Only the host can despawn the destroyed base. _sm.EndGame() is called in OnNetworkDespawn()
@@ -111,7 +100,7 @@ namespace Prefabs
                 _sm.EndGame();
 
                 // Hide base and hpBar
-                _hpBar.gameObject.SetActive(false);
+                _hpBar?.gameObject.SetActive(false);
                 gameObject.SetActive(false);
             }
 
@@ -135,12 +124,16 @@ namespace Prefabs
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
 
+        private void Start()
+        {
             // Spawn HP bar
-            // var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
-            // go.transform.position = Vector3.down * 100;
-            // _hpBar = go.GetComponent<HpBar>();
-            // _hpBar.Target = hpBarPoint;
+            if (DataManager.IsMultiplayer)
+            {
+                LoadHpBar();
+                _hpBar.SetValue(BaseFactory.Cave().MaxHp, BaseFactory.Cave().MaxHp, alsoText: true);
+            }
         }
 
         public override void OnNetworkSpawn()
@@ -313,6 +306,20 @@ namespace Prefabs
         #endregion
 
         #region Methods
+
+        // Host & Client
+        private void LoadHpBar()
+        {
+            var go = Instantiate(_sm.hpBarVertical, _sm.canvas.transform);
+            go.transform.position = Vector3.down * 100;
+            _hpBar = go.GetComponent<HpBar>();
+            _hpBar.Target = hpBarPoint;
+            _hpBar.Initialize(username: !DataManager.IsMultiplayer
+                ? null
+                : (OwnerClientId == _sm.GameManager.HostId
+                    ? _sm.GameManager.UsernameHost
+                    : _sm.GameManager.UsernameClient).Value.ToString());
+        }
 
         // Host & Client
         private void LoadPrefab(string prefab)

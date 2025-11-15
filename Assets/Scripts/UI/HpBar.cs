@@ -38,7 +38,7 @@ namespace UI
             }
 
             slider.value = value;
-            hpText.gameObject.SetActive(alsoText && value < 1);
+            hpText.gameObject.SetActive(alsoText);
             if (alsoText)
                 hpText.text = hp.ToString("N0") + " HP";
         }
