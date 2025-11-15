@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Managers;
+using Managers.Statics;
 using Model.Bases;
 using Partials.Behaviour;
 using Unity.Mathematics;
@@ -24,7 +26,8 @@ namespace Prefabs
         }
 
         // Host&Client
-        public void Initialize(SpecialAttack model, bool isLeft, ulong attackerId)
+        public void Initialize(SpecialAttack model, bool isLeft, ulong attackerId, Action<GameObject> onBombSpawn,
+                               Action<GameObject> onBombExplode)
         {
             // Set dynamics
             transform.position = new Vector3(
@@ -53,11 +56,16 @@ namespace Prefabs
                     if (Mathf.Abs(bombSpawnPoint.position.x) > _sm.fieldLenght / 2 - dropMarginFromBase) continue;
 
                     var bombGo = Instantiate(bomb, bombSpawnPoint.position, Quaternion.identity);
+                    onBombSpawn?.Invoke(bombGo);
                     var destroyable = bombGo.GetComponent<Destroyable>();
                     destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
                     destroyable.TargetOwner = !DataManager.IsMultiplayer && isLeft ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
-                    destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
+                    destroyable.OnDestroy = () =>
+                    {
+                        onBombExplode?.Invoke(bombGo);
+                        _sm.musicManager.PlayHitSpecial(model.Age);
+                    };
 
                     // Server-only
                     if (NetworkManager.Singleton.IsServer)
@@ -70,7 +78,8 @@ namespace Prefabs
                             for (var j = 0; j < enemies.Count; j++)
                             {
                                 var maxDistance = enemies[j].ColliderWidth / 2 + model.Range;
-                                if (Mathf.Abs(enemies[j].transform.position.x - bombGo.transform.position.x) < maxDistance)
+                                if (Mathf.Abs(enemies[j].transform.position.x - bombGo.transform.position.x) <
+                                    maxDistance)
                                     enemies[j].Damage(model.Damage);
                             }
                         };

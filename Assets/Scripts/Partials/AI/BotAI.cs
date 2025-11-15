@@ -58,9 +58,12 @@ namespace Partials.AI
         private IEnumerator SpawnLoop()
         {
             yield return new WaitForSeconds(3f);
+            
             while (true)
             {
                 if (_sm.GameManager.IsGameOver) yield break;
+                yield return new WaitUntil( () => !_sm.GameManager.IsGamePaused );
+                
                 var ran = Random.value;
                 var unitIdx = _phase switch
                 {
@@ -100,6 +103,8 @@ namespace Partials.AI
             while (true)
             {
                 if (_sm.GameManager.IsGameOver) yield break;
+                yield return new WaitUntil( () => !_sm.GameManager.IsGamePaused );
+
                 _phase = Phase.Melee;
                 yield return new WaitForSeconds(phaseDurations[0]);
                 _phase = Phase.Range;
@@ -114,6 +119,7 @@ namespace Partials.AI
         {
             while (_age < BaseFactory.Bases.Count - 1)
             {
+                yield return new WaitUntil( () => !_sm.GameManager.IsGamePaused );
                 yield return new WaitForSeconds(initialAgeIntervals[_age]);
                 if (_sm.GameManager.IsGameOver) yield break;
                 _age++;
@@ -127,6 +133,7 @@ namespace Partials.AI
             var interval = initialTurretInterval;
             while (true)
             {
+                yield return new WaitUntil( () => !_sm.GameManager.IsGamePaused );
                 yield return new WaitForSeconds(interval);
                 interval = initialTurretInterval;
 

@@ -40,11 +40,11 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collections": {
-      "version": "2.6.2",
+      "version": "2.5.7",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.23",
+        "com.unity.burst": "1.8.19",
         "com.unity.mathematics": "1.3.2",
         "com.unity.test-framework": "1.4.6",
         "com.unity.nuget.mono-cecil": "1.11.5",
@@ -392,13 +392,13 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.transport": {
-      "version": "2.6.0",
+      "version": "2.5.3",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.burst": "1.8.24",
+        "com.unity.burst": "1.8.12",
         "com.unity.collections": "2.2.1",
-        "com.unity.mathematics": "1.3.2"
+        "com.unity.mathematics": "1.3.1"
       },
       "url": "https://packages.unity.com"
     },

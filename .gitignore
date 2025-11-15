@@ -2,6 +2,8 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+.idea/
+.vscode/
 .utmp/
 /[Ll]ibrary/
 /[Tt]emp/

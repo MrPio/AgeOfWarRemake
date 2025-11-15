@@ -33,6 +33,7 @@ namespace Partials.State.Unit
         {
             var model = unit.Model.Value;
             if (!model.HasValue) return;
+            if (unit.Sm.GameManager.IsGamePaused) return;
 
             #region Walking
 

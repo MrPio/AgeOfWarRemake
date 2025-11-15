@@ -1,5 +1,6 @@
 using System;
 using Managers;
+using Managers.Singletons;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;

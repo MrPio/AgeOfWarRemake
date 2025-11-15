@@ -36,3 +36,8 @@ While a trigger input can often easily relay on a `ServerRPC` to deliver the sta
 the continuous inputs may require a more complex handling.
 
 > By combining **client prediction**, **server reconciliation**, and **buffered interpolation**, you’ll get smooth, responsive movement even under high ping or packet loss—without giving clients unchecked authority.
+
+
+## Singleton
+Don't fear static fields in Unity! They preserve old values only when serialized and when are not initialized.
+Look at the Singleton abstract class in this project. It is should be used for all the managers, it's much easier.

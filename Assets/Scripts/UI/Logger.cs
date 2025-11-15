@@ -1,6 +1,7 @@
 using System;
 using Managers;
 using Managers.Serializer;
+using Managers.Statics;
 using TMPro;
 using Unity.Mathematics;
 using Unity.Netcode;

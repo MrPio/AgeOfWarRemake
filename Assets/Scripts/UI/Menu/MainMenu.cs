@@ -1,6 +1,4 @@
-using System;
-using Managers;
-using Managers.Serializer;
+using Managers.Statics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,14 +20,9 @@ namespace UI.Menu
 
         [SerializeField] private TMP_InputField usernameInput, joinLobbyCodeInput;
         [SerializeField] private GameObject mainMenu, multiplayerMenu;
-        private ISerializer _serializer;
 
         private void Awake()
         {
-            _serializer = BinarySerializer.Instance;
-
-            // Load stored username
-            DataManager.Username = _serializer.Deserialize<string>(ISerializer.ConfigsDir, "username", null);
             usernameInput.text = DataManager.Username;
         }
 
@@ -56,7 +49,7 @@ namespace UI.Menu
                 mainMenu.SetActive(true);
                 multiplayerMenu.SetActive(false);
             };
-            usernameInput.onEndEdit.AddListener(SaveUsername);
+            usernameInput.onEndEdit.AddListener(username => DataManager.Username = username);
             multiplayerHost.OnClick = () =>
             {
                 DataManager.IsHost = true;
@@ -77,15 +70,6 @@ namespace UI.Menu
                 DataManager.IsHost = false;
                 SceneManager.LoadScene("Game", LoadSceneMode.Single);
             };
-        }
-
-        private void SaveUsername(string username)
-        {
-            if (username.Length < 1)
-                return;
-
-            DataManager.Username = username;
-            _serializer.Serialize(username, ISerializer.ConfigsDir, "username");
         }
     }
 }

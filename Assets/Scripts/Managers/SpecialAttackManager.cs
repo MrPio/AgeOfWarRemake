@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Managers.Statics;
 using Model.Bases;
 using Partials.Behaviour;
 using Partials.Camera;
@@ -29,6 +30,8 @@ namespace Managers
         private readonly Dictionary<ulong, float> _lastAttacks = new();
         private SpecialAttack _currentSpecialModel;
         [SerializeField] private GameObject halo, plane, beam;
+        private readonly List<PausableRigidbody> _bulletRBs = new();
+        private bool _isStopped;
 
         private void Start()
         {
@@ -36,6 +39,35 @@ namespace Managers
             IsAttacking = false;
             _spawnX1 = -(_sm.fieldLenght / 2 - SpawnXMargin);
             _spawnX2 = _sm.fieldLenght / 2 - SpawnXMargin;
+        }
+
+        private void FixedUpdate()
+        {
+            // Handling pause (singleplayer-only)
+            if (_sm.GameManager.IsGamePaused)
+            {
+                // Extend cooldown (in singleplayer the player is the host 0)
+                if (_lastAttacks.ContainsKey(0))
+                    _lastAttacks[0] += Time.fixedDeltaTime;
+
+                // Stop RBs
+                if (!_isStopped)
+                {
+                    _isStopped = true;
+                    foreach (var rb in _bulletRBs)
+                        rb.Pause();
+                }
+            }
+            else
+            {
+                // Resume RBs
+                if (_isStopped)
+                {
+                    _isStopped = false;
+                    foreach (var rb in _bulletRBs)
+                        rb.Resume();
+                }
+            }
         }
 
         private Base GetBaseModel(ulong attackerId) => attackerId == NetworkManager.Singleton.LocalClientId
@@ -136,6 +168,10 @@ namespace Managers
             // Add initial force
             var rb = bullet.GetComponentInChildren<Rigidbody>();
             rb.AddForce(-bullet.transform.up * model.Speed);
+            var pausableRb = rb.gameObject.AddComponent<PausableRigidbody>();
+            _bulletRBs.Add(pausableRb);
+            if (_sm.GameManager.IsGamePaused)
+                pausableRb.Pause();
 
             // Add explodable behaviour
             var explodable = bullet.GetComponentInChildren<Explodable>();
@@ -148,6 +184,7 @@ namespace Managers
                 explosion: explosionPrefab,
                 onExplode: collisionTag =>
                 {
+                    _bulletRBs.Remove(pausableRb);
                     if (collisionTag == "Unit")
                         _sm.musicManager.PlayHitSpecial(model.Age);
                 },
@@ -182,6 +219,7 @@ namespace Managers
 
             IEnumerator RemoveListener()
             {
+                // TODO: wait for pause (ignore)
                 yield return new WaitForSeconds(model.Duration);
                 (isAlly ? _sm.GameManager.OnAllySpawn : _sm.GameManager.OnEnemySpawn).Remove(AddHalo);
             }
@@ -191,8 +229,21 @@ namespace Managers
         private void SpawnPlaneRpc(SpecialAttack model, ulong attackerId)
         {
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
-            Instantiate(plane, Vector3.up * 999f, Quaternion.identity).GetComponent<Plane>()
-                .Initialize(model: model, isLeft: isAlly, attackerId: attackerId);
+            var planeGo = Instantiate(plane, Vector3.up * 999f, Quaternion.identity).GetComponent<Plane>();
+            planeGo.Initialize(
+                model: model,
+                isLeft: isAlly,
+                attackerId: attackerId,
+                onBombSpawn: bomb =>
+                {
+                    var pausableRb = bomb.GetComponentInChildren<Rigidbody>().gameObject
+                        .AddComponent<PausableRigidbody>();
+                    _bulletRBs.Add(pausableRb);
+                    if (_sm.GameManager.IsGamePaused)
+                        pausableRb.Pause();
+                },
+                onBombExplode: bomb => { _bulletRBs.Remove(bomb.GetComponentInChildren<PausableRigidbody>()); }
+            );
         }
 
         [Rpc(SendTo.Everyone)]
@@ -212,13 +263,22 @@ namespace Managers
                     yield return new WaitForSeconds(1f / model.Rate);
                     var spawnPos = new Vector3(x: (-xMin + i * stepLength) * (isAlly ? 1f : -1f), 20f, 0f);
                     var beamGo = Instantiate(beam, spawnPos, Quaternion.identity);
-                    beamGo.GetComponent<Rigidbody>().linearVelocity = Vector3.down * model.Speed;
+                    var rb = beamGo.GetComponent<Rigidbody>();
+                    rb.linearVelocity = Vector3.down * model.Speed;
+                    var pausableRb = rb.gameObject.AddComponent<PausableRigidbody>();
+                    _bulletRBs.Add(pausableRb);
+                    if (_sm.GameManager.IsGamePaused)
+                        pausableRb.Pause();
 
                     var destroyable = beamGo.GetComponent<Destroyable>();
                     destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
                     destroyable.TargetOwner = !DataManager.IsMultiplayer && isAlly ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
-                    destroyable.OnDestroy = () => { _sm.musicManager.PlayHitSpecial(model.Age); };
+                    destroyable.OnDestroy = () =>
+                    {
+                        _sm.musicManager.PlayHitSpecial(model.Age);
+                        _bulletRBs.Remove(pausableRb);
+                    };
 
                     // Server-only
                     if (NetworkManager.Singleton.IsServer)

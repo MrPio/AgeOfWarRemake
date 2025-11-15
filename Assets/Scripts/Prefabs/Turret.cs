@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Interfaces;
 using Managers;
+using Managers.Statics;
 using Model.Turrets;
 using Partials;
 using Partials.Behaviour;
@@ -180,6 +181,8 @@ namespace Prefabs
         private void SpawnBullet(int idx = 0)
         {
             if (_target is null) return;
+            if (_sm.GameManager.IsGamePaused) return;
+
             var spawnPoint = idx == 0 ? bulletSpawnPoint : bulletSecondarySpawnPoint;
             var bullet = Instantiate(bulletPrefab, spawnPoint.position, Quaternion.identity);
 

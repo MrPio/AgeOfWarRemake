@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Interfaces;
+using Managers;
+using TMPro;
 using UnityEngine;
 
 namespace Partials.Behaviour
 {
     public class Destroyable : MonoBehaviour
     {
+        private SceneManager _sm;
         [SerializeField] private bool onStart, onTrigger;
         [SerializeField] private GameObject spawnOnDestroy;
         [SerializeField] private float lifespan = 30, destroyDelay = 0.06f;
@@ -25,6 +28,11 @@ namespace Partials.Behaviour
             if (lifespan is not null) this.lifespan = lifespan.Value;
         }
 
+        private void Awake()
+        {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
+
         private void Start()
         {
             _spawnTime = Time.time;
@@ -34,6 +42,8 @@ namespace Partials.Behaviour
 
         private void FixedUpdate()
         {
+            if (_sm.GameManager.IsGamePaused)
+                _spawnTime += Time.fixedDeltaTime;
             if (!_destroyed && lifespan > 0 && Time.time - _spawnTime > lifespan)
                 Destroy();
         }

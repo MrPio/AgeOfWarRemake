@@ -1,17 +1,27 @@
 ﻿using System;
+using Managers;
 using UnityEngine;
 
 namespace Partials.Behaviour
 {
     public class Tickable : MonoBehaviour
     {
+        private static SceneManager _sm;
         private float? _tickLength, _duration, _startDelay;
         private float _lastTick;
         private Action _onTick;
 
+        private void Awake()
+        {
+            _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
+
 
         private void FixedUpdate()
         {
+            if (_sm.GameManager.IsGamePaused)
+                _lastTick += Time.fixedDeltaTime;
+
             // Check duration limit
             if (_duration != null && Time.time - _lastTick >= _duration.Value)
                 return;

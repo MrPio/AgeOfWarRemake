@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using ExtensionFunctions;
+using Interfaces;
 using UnityEngine;
 
-namespace Managers
+namespace Managers.Singletons
 {
-    public class MusicManager : MonoBehaviour
+    public class MusicManager : SingletonMonoBehaviour<MusicManager>
     {
         #region Constants
 
@@ -64,24 +65,6 @@ namespace Managers
         [SerializeField] private AudioSource sfxAudioSource, backgroundAudioSource;
         private readonly Dictionary<string, AudioClip> _sfxClips = new();
         private readonly Dictionary<string, float> _lastPlayed = new();
-
-        #endregion
-
-        #region Events
-
-        private static MusicManager _instance;
-
-        private void Awake()
-        {
-            if (_instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
 
         #endregion
 

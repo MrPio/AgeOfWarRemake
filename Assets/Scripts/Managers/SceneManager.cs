@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Managers.Singletons;
+using Managers.Statics;
 using Partials.Camera;
 using Prefabs;
 using UI;
@@ -25,7 +27,7 @@ namespace Managers
         [NonSerialized] public RelayManager RelayManager;
         [NonSerialized] public SpecialAttackManager SpecialAttackManager;
         [NonSerialized] public MusicManager musicManager;
-        [SerializeField] private GameObject statisticsScreen;
+        [SerializeField] public GameObject statisticsScreen, pauseMenu;
         [SerializeField] public StatsMenu statsMenu;
         [SerializeField] public UnitLoadingMenu unitLoadingMenu;
         [SerializeField] public LoadingMenu loadingMenu;

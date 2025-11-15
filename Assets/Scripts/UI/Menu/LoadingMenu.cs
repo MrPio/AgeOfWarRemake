@@ -1,5 +1,4 @@
-using System;
-using Managers;
+using Managers.Singletons;
 using Partials.Behaviour;
 using TMPro;
 using UnityEngine;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Managers.Serializer;
+using Managers.Singletons;
+using Managers.Statics;
 using Model.Bases;
 using Model.Utils;
 using Unity.Netcode;
@@ -27,7 +29,18 @@ namespace Managers
         [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
         [NonSerialized] public ulong? Winner;
         [NonSerialized] public bool IsGameOver;
-        private float _gameStart, _lastMoneyPerSecond;
+        [NonSerialized] public float GameTime;
+        private bool _isGamePaused;
+
+        public bool IsGamePaused
+        {
+            get => _isGamePaused;
+            set => _isGamePaused = !DataManager.IsMultiplayer
+                ? value
+                : throw new InvalidOperationException("Cannot pause in multiplayer mode.");
+        }
+
+        private float _lastMoneyPerSecond;
         public readonly List<Action<Unit>> OnAllySpawn = new();
         public readonly List<Action<Unit>> OnEnemySpawn = new();
 
@@ -200,20 +213,15 @@ namespace Managers
 
         private void Update()
         {
-            // Fullscreen management
-#if UNITY_STANDALONE || UNITY_EDITOR_WIN
-            if (Input.GetKeyDown(KeyCode.Escape))
-                Screen.fullScreen = false;
-
-            var f11Pressed = Input.GetKeyDown(KeyCode.F11);
-            var altEnterPressed = (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) &&
-                                  Input.GetKeyDown(KeyCode.Return);
-            if (f11Pressed || altEnterPressed)
-                Screen.fullScreen = true;
-#endif
-
-
             if (!_gameStarted.Value) return;
+
+            // [P] Pause menu (singleplayer-only)
+            if (!DataManager.IsMultiplayer && Input.GetKeyDown(KeyCode.P))
+                _sm.pauseMenu.SetActive(!_sm.pauseMenu.activeSelf);
+
+            // [Space] Special attack
+            if (Input.GetKeyDown(KeyCode.Space))
+                _sm.SpecialAttackManager.RunSpecialServerRpc();
 
             // Add money per second if multiplayer (Server-only)
             if (IsServer && BaseAlly is not null && BaseEnemy is not null && DataManager.IsMultiplayer)
@@ -228,6 +236,12 @@ namespace Managers
                         basePrefab.Model.Value = newModel;
                     }
                 }
+        }
+
+        private void FixedUpdate()
+        {
+            if (_gameStarted.Value && !_isGamePaused)
+                GameTime += Time.fixedDeltaTime;
         }
 
         // Host-only
@@ -247,7 +261,6 @@ namespace Managers
             {
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
                 _gameStarted.Value = true;
-                _gameStart = Time.time;
                 _lastMoneyPerSecond = Time.time + 5;
             }
             else

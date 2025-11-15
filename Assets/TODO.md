@@ -11,7 +11,7 @@
 - [x] turret 1_1 al contrario in basso per il client
 - [x] special blocks after 1 time
 - [x] limit units in game
-- [~] oil damage myself
+- [~] oil damages myself
 - [x] specials troppo lunghe e rate(1)
 - [x] turret 1_2 80% range
 - [x] base 2 should pay 0 for units and earn for turrets.
