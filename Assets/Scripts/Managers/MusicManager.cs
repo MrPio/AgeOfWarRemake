@@ -110,7 +110,6 @@ namespace Managers
 
         public void PlayAttack(int age, int unitLevel, bool isRanged)
         {
-            // TODO: move caller to handle client&Host
             PlaySfx((isRanged ? _rangeClips : _attackClips)[age - 1][unitLevel - 1]);
         }
 
@@ -136,7 +135,12 @@ namespace Managers
 
         public void StartLevel()
         {
+            backgroundAudioSource.Stop();
             backgroundAudioSource.Play();
+        }
+        public void EndLevel()
+        {
+            backgroundAudioSource.Stop();
         }
 
         #endregion

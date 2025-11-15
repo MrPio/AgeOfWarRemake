@@ -104,8 +104,15 @@ namespace Managers
 
         public async Task QuitLobby()
         {
+            musicManager.StartLevel();
+            GameManager.IsGameOver = false;
             UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
-            // NetworkManager.Singleton.Shutdown();
+
+            NetworkManager.Singleton.Shutdown();
+            Destroy(NetworkManager.Singleton.gameObject);
+            var nmPrefab = Resources.Load<NetworkManager>("Prefabs/Network/NetworkManager");
+            Instantiate(nmPrefab);
+
             // Application.Quit();
         }
     }

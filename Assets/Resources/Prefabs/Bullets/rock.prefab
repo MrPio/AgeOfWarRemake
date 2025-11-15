@@ -108,7 +108,7 @@ MonoBehaviour:
   onTrigger: 1
   spawnOnDestroy: {fileID: 1571455291051028, guid: cc1a4c50bc7d1e449af434304f20e852, type: 3}
   lifespan: 5
-  destroyDelay: 0.07
+  destroyDelay: 0.03
   AllowedTags: []
 --- !u!65 &7698039498242927552
 BoxCollider:

@@ -279,6 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Prefabs.Turret
   ShowTopMostFoldoutHeaderGroup: 1
   bulletSpawnPoint: {fileID: 3389542318770663717}
+  bulletSecondarySpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 275663183365207472, guid: ba4964bcd96247a40a5e4946f87aa9de, type: 3}
 --- !u!1 &6141308524323018762
 GameObject:

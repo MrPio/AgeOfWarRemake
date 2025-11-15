@@ -21,6 +21,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.1764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 2348069477688007558, guid: a6c312d2293519e4e890650220276d58, type: 3}
       propertyPath: InitialModule.startLifetime.minScalar
       value: 1
       objectReference: {fileID: 0}
@@ -113,3 +117,5 @@ MonoBehaviour:
   onTrigger: 0
   spawnOnDestroy: {fileID: 0}
   lifespan: 5
+  destroyDelay: 0.06
+  AllowedTags: []

@@ -15,6 +15,7 @@ namespace Managers
 {
     /// <summary>
     /// Note: Doesn't work if the attacker is the bot.
+    /// But this is not the case in the original game.
     /// </summary>
     public class SpecialAttackManager : NetworkBehaviour
     {
@@ -47,7 +48,6 @@ namespace Managers
         public void RunSpecialServerRpc(ServerRpcParams rpcParams = default)
         {
             if (IsAttacking) return;
-            IsAttacking = true;
             var attackerId = rpcParams.Receive.SenderClientId;
             var model = GetBaseModel(attackerId).Special;
 
@@ -55,6 +55,7 @@ namespace Managers
             if (_lastAttacks.ContainsKey(attackerId) &&
                 Time.time - _lastAttacks[attackerId] < model.Cooldown) return;
             _lastAttacks[attackerId] = Time.time;
+            IsAttacking = true; // Must go after any return
 
             InitializeSpecialAttackRpc(model, attackerId);
             switch (model.Type)

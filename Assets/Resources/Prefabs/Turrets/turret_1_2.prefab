@@ -290,6 +290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   bulletSpawnPoint: {fileID: 7885003673390811878}
+  bulletSecondarySpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 2377013485649617392, guid: e0962afc9da0e5f4991493b107ef17cf, type: 3}
 --- !u!95 &1776674541473159398
 Animator:

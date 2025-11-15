@@ -53,6 +53,7 @@ namespace Prefabs
 
         #region Data
 
+        private const int MaxInGameUnits = 25;
         private const bool IsCheating = true;
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
@@ -199,15 +200,20 @@ namespace Prefabs
         // unitIndex is 0-based
         public void BuyUnitServerRpc(byte unitIndex, float delay=0, ServerRpcParams rpcParams = default)
         {
+            if (_sm.GameManager.UnitsAlly.Count + _sm.GameManager.UnitsEnemy.Count >= MaxInGameUnits)
+                return;
             var senderClientId = rpcParams.Receive.SenderClientId;
             var model = Model.Value;
             var unitModel = UnitFactory.Units[Model.Value.Age - 1][unitIndex]();
 
-            // Money check
-            if (model.Money < unitModel.Cost)
-                return;
-            model.Money -= unitModel.Cost;
-            Model.Value = model;
+            // Money check (only if not bot)
+            if (!IsBot.Value)
+            {
+                if (model.Money < unitModel.Cost)
+                    return;
+                model.Money -= unitModel.Cost;
+                Model.Value = model;
+            }
 
             StartCoroutine(DelayedSpawnUnit());
             return;

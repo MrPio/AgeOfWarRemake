@@ -112,8 +112,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.8722078, y: 1.9139594, z: 1.9554083}
-  m_Center: {x: 0.014222324, y: -0.035681486, z: 0.020999938}
+  m_Size: {x: 2.4393673, y: 2.7544384, z: 3.49}
+  m_Center: {x: -0.02793312, y: -0.004740881, z: 0.020999908}
 --- !u!114 &503726963919180123
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,6 +130,8 @@ MonoBehaviour:
   onTrigger: 1
   spawnOnDestroy: {fileID: 0}
   lifespan: 1.5
+  destroyDelay: 0.06
+  AllowedTags: []
 --- !u!54 &7292578797987950907
 Rigidbody:
   m_ObjectHideFlags: 0

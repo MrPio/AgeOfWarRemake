@@ -444,7 +444,7 @@ namespace Prefabs
             switch (soundType)
             {
                 case 0:
-                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: false);
+                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: isRanged);
                     break;
                 case 1:
                     Sm.musicManager.PlayDie(model.Age, model.Level);

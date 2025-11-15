@@ -11,7 +11,7 @@ namespace Model.Bases
                 prefab: "rock", explosionPrefab: "explosion", type: SpecialType.Rain, maxAngle: 20, speed: 350));
 
         public static Base Castle() => new(name: "Castle", maxHp: 1_200, evolveExpRequired: 14_000, age: 2,
-            special: new SpecialAttack(age: 2, damage: 70, rate: 12, range: 0f, name: "Archers' support",
+            special: new SpecialAttack(age: 2, damage: 70, rate: 10, range: 0f, name: "Archers' support",
                 prefab: "arrow", explosionPrefab: "ground_damage_small", type: SpecialType.Rain, maxAngle: 10,
                 speed: 350));
 

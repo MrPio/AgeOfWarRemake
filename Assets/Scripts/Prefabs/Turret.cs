@@ -189,9 +189,10 @@ namespace Prefabs
                 bullet.AddComponent<Tickable>().Initialize(tickLength: 1f / rate, startDelay: 0.5f, onTick: () =>
                 {
                     if (!IsServer) return;
-                    for (var i = 0; i < _sm.GameManager.UnitsEnemy.Count; i++)
+                    var enemies = _isLeft ? _sm.GameManager.UnitsEnemy : _sm.GameManager.UnitsAlly;
+                    for (var i = 0; i < enemies.Count; i++)
                     {
-                        var enemy = _sm.GameManager.UnitsEnemy[i];
+                        var enemy = enemies[i];
                         if (Mathf.Abs(bullet.transform.position.x - enemy.transform.position.x) <
                             enemy.ColliderWidth / 2f + 1f)
                         {
