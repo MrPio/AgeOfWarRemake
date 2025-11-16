@@ -885,13 +885,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6328436246860100499}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.54545134, y: -0.8282131, z: 0.08549329, w: 0.09610845}
-  m_LocalPosition: {x: -0.00094825856, y: 0.0012294189, z: -0.007673464}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.00041, y: 0.00321, z: -0.00134}
   m_LocalScale: {x: 0.016949162, y: 0.016949158, z: 0.016949147}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 832336314001493825}
-  m_LocalEulerAnglesHint: {x: 101.877014, y: 5.022995, z: 57.347}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6580563434590256381
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,7 +1080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 756293856f6b4ae8beb2acef308feb6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 5
+  bulletSpeed: 4.5
   hpBarPoint: {fileID: 5649256269006499915}
   bloodSpawnPoint: {fileID: 2825098582603443508}
   bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}

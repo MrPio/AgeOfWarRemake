@@ -129,7 +129,7 @@ MonoBehaviour:
   onStart: 0
   onTrigger: 1
   spawnOnDestroy: {fileID: 0}
-  lifespan: 1.5
+  lifespan: 0
   destroyDelay: 0.06
   AllowedTags: []
 --- !u!54 &7292578797987950907

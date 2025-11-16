@@ -115,7 +115,7 @@ namespace UI.Menu
                 turretButtons[i].GetComponent<Image>().sprite =
                     Resources.Load<Sprite>($"Sprites/Buttons/turret_{age + 1}_{i + 1}");
 
-            unitSpecial.enabled = age == 4;
+            unitSpecial.gameObject.SetActive(age == 4);
             special.GetComponent<Image>().sprite =
                 Resources.Load<Sprite>($"Sprites/Specials/{age + 1}");
         }

@@ -817,7 +817,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 756293856f6b4ae8beb2acef308feb6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 8
+  bulletSpeed: 6
   hpBarPoint: {fileID: 5649256269006499915}
   bloodSpawnPoint: {fileID: 2825098582603443508}
   bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}
