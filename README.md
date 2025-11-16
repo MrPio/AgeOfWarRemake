@@ -10,11 +10,6 @@ And one day I thought, why not add *multiplayer* to Age of War? Imagine what gre
 
 
 These are some of the models I've already made in Blender:
-
-<p align="center">
-  <img width= "75%" src="https://github.com/user-attachments/assets/639a8061-57a0-4d86-9b76-2f2eabfe57e4"></img>
-  <img width= "75%" src="https://github.com/user-attachments/assets/79fc7756-92b5-4ebb-915c-918239183b8f"></img>
-</p>
 <p align="center">
   <img width="100%" alt="Base3" src="https://github.com/user-attachments/assets/d250082f-a4a5-4af1-9367-aa43fedace4c" />
 
