@@ -1,7 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Managers;
+using Managers.Singletons;
+using Managers.Statics;
 using Partials.Behaviour;
+using Partials.Camera;
 using TMPro;
 using UnityEngine;
 
@@ -12,6 +15,8 @@ namespace UI.Menu
         private SceneManager _sm;
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private Clickable resumeButton, exitButton;
+        [SerializeField] private CameraEdgePan cameraEdgePan;
+        [SerializeField] private CameraZoom cameraZoom;
 
         private void Awake()
         {
@@ -23,12 +28,18 @@ namespace UI.Menu
         private void OnEnable()
         {
             timerText.text = $"{_sm.GameManager.GameTime / 60f:00}m  {_sm.GameManager.GameTime % 60f:00}s";
-            _sm.GameManager.IsGamePaused = true;
+            cameraEdgePan.enabled = false;
+            cameraZoom.enabled = false;
+            if (!DataManager.IsMultiplayer)
+                _sm.GameManager.IsGamePaused = true;
         }
 
         private void OnDisable()
         {
-            _sm.GameManager.IsGamePaused = false;
+            cameraEdgePan.enabled = true;
+            cameraZoom.enabled = true;
+            if (!DataManager.IsMultiplayer)
+                _sm.GameManager.IsGamePaused = false;
         }
 
         public async Task QuitLobby()

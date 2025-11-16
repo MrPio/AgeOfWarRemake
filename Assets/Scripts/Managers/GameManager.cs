@@ -166,8 +166,6 @@ namespace Managers
                 NetworkManager.Singleton.NetworkConfig.NetworkTransport = transport;
                 NetworkManager.Singleton.StartHost();
 #endif
-
-
             }
         }
 
@@ -216,7 +214,7 @@ namespace Managers
             if (!_gameStarted.Value) return;
 
             // [P] Pause menu (singleplayer-only)
-            if (!DataManager.IsMultiplayer && Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
                 _sm.pauseMenu.SetActive(!_sm.pauseMenu.activeSelf);
 
             // [Space] Special attack

@@ -22,8 +22,7 @@ namespace Partials.Behaviour
         private TextMeshProUGUI _text;
         private Color _startColor;
 
-        [SerializeField]
-        private Color hoverColor = new Color(0.75f, 0.75f, 0.75f, 1f),
+        [SerializeField] private Color hoverColor = new Color(0.75f, 0.75f, 0.75f, 1f),
             downColor = new Color(0.9f, 0.9f, 0.9f, 0.75f);
 
         [SerializeField] private GameObject toShow;
@@ -47,7 +46,7 @@ namespace Partials.Behaviour
             _musicManager.PlayUI("hover");
             if (_image != null) _image.color = hoverColor;
             if (_text != null) _text.color = hoverColor;
-            if (_text != null) toShow?.SetActive(true);
+            if (toShow != null) toShow?.SetActive(true);
             Cursor.SetCursor(_cursorClick, new Vector2(33f, 0f), CursorMode.ForceSoftware);
             OnHover?.Invoke();
         }
@@ -56,7 +55,7 @@ namespace Partials.Behaviour
         {
             if (_image != null) _image.color = _startColor;
             if (_text != null) _text.color = _startColor;
-            if (_text != null) toShow?.SetActive(false);
+            if (toShow != null) toShow?.SetActive(false);
             Cursor.SetCursor(_cursorArrow, Vector2.zero, CursorMode.ForceSoftware);
             OnExit?.Invoke();
         }
@@ -76,6 +75,7 @@ namespace Partials.Behaviour
         public void OnPointerClick(PointerEventData eventData)
         {
             _musicManager.PlayUI("click");
+            if (toShow != null) toShow?.SetActive(false);
             OnClick?.Invoke();
         }
     }

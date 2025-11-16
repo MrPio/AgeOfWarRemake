@@ -62,7 +62,7 @@ namespace Managers.Singletons
 
         #region Data
 
-        [SerializeField] private AudioSource sfxAudioSource, backgroundAudioSource;
+        [SerializeField] public AudioSource sfxAudioSource, backgroundAudioSource;
         private readonly Dictionary<string, AudioClip> _sfxClips = new();
         private readonly Dictionary<string, float> _lastPlayed = new();
 
@@ -121,9 +121,24 @@ namespace Managers.Singletons
             backgroundAudioSource.Stop();
             backgroundAudioSource.Play();
         }
+
         public void EndLevel()
         {
             backgroundAudioSource.Stop();
+        }
+
+        public void SetMusicVolume(int volume)
+        {
+            backgroundAudioSource.volume = volume / 100f;
+            // var dB = Mathf.Log10(Mathf.Clamp(linearVolume, 0.0001f, 1f)) * 20f;
+            // sfxAudioSource.outputAudioMixerGroup.audioMixer.SetFloat("MasterVolume", dB);
+        }
+
+        public void SetEffectsVolume(int volume)
+        {
+            sfxAudioSource.volume = volume / 100f;
+            // var dB = Mathf.Log10(Mathf.Clamp(linearVolume, 0.0001f, 1f)) * 20f;
+            // sfxAudioSource.outputAudioMixerGroup.audioMixer.SetFloat("MasterVolume", dB);
         }
 
         #endregion

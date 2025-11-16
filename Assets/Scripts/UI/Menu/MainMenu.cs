@@ -11,15 +11,17 @@ namespace UI.Menu
     {
         [SerializeField] private Clickable singleplayerButton,
             multiplayerButton,
+            settingsButton,
             quitButton,
             multiplayerBack,
             multiplayerHost,
             multiplayerJoin,
-            multiplayerLobbyCodePaste;
+            multiplayerLobbyCodePaste,
+            settingsBack;
 
 
         [SerializeField] private TMP_InputField usernameInput, joinLobbyCodeInput;
-        [SerializeField] private GameObject mainMenu, multiplayerMenu;
+        [SerializeField] private GameObject mainMenu, multiplayerMenu, settingsMenu;
 
         private void Awake()
         {
@@ -31,6 +33,9 @@ namespace UI.Menu
             // Setup menu
             mainMenu.SetActive(true);
             multiplayerMenu.SetActive(false);
+            settingsMenu.SetActive(false);
+
+            #region MainMenu
 
             quitButton.OnClick = Application.Quit;
             singleplayerButton.OnClick = () =>
@@ -44,6 +49,11 @@ namespace UI.Menu
                 mainMenu.SetActive(false);
                 multiplayerMenu.SetActive(true);
             };
+
+            #endregion
+
+            #region MultiplayerMenu
+
             multiplayerBack.OnClick = () =>
             {
                 mainMenu.SetActive(true);
@@ -70,6 +80,23 @@ namespace UI.Menu
                 DataManager.IsHost = false;
                 SceneManager.LoadScene("Game", LoadSceneMode.Single);
             };
+
+            #endregion
+
+            #region SettingsMenu
+
+            settingsButton.OnClick = () =>
+            {
+                mainMenu.SetActive(false);
+                settingsMenu.SetActive(true);
+            };
+            settingsBack.OnClick = () =>
+            {
+                mainMenu.SetActive(true);
+                settingsMenu.SetActive(false);
+            };
+
+            #endregion
         }
     }
 }

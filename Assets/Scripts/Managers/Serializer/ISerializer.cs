@@ -2,7 +2,7 @@
 {
     public interface ISerializer
     {
-        public const string ConfigsDir = "configs/";
+        public const string SettingsDir = "settings/";
         public const string DebugDir = "debug/";
         public const string LogsDir = "logs/";
 

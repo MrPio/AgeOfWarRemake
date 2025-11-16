@@ -11,8 +11,8 @@ namespace Managers.Singletons
     {
         Fullscreen,
         Username,
-        MusicBackground,
-        MusicEffects
+        MusicVolume,
+        EffectsVolume
     }
 
     #region Internal
@@ -21,11 +21,17 @@ namespace Managers.Singletons
     {
         public SettingType Type { get; }
         public string DisplayName { get; }
+        public int MinValue { get; }
+        public int MaxValue { get; }
+        public int MaxLength { get; }
 
-        protected SettingPropertyBase(SettingType type, string displayName)
+        protected SettingPropertyBase(SettingType type, string displayName, int minValue, int maxValue, int maxLength)
         {
             Type = type;
             DisplayName = displayName;
+            MinValue = minValue;
+            MaxValue = maxValue;
+            MaxLength = maxLength;
         }
 
         public abstract object GetDefaultValue();
@@ -40,8 +46,9 @@ namespace Managers.Singletons
         public T DefaultValue { get; }
         public T Value;
 
-        public SettingProperty(SettingType type, string displayName, T defaultValue)
-            : base(type, displayName)
+        public SettingProperty(SettingType type, string displayName, T defaultValue, int minValue = 0,
+                               int maxValue = 100, int maxLength = 99)
+            : base(type, displayName, minValue, maxValue, maxLength)
         {
             DefaultValue = defaultValue;
             Value = defaultValue;
@@ -69,13 +76,16 @@ namespace Managers.Singletons
 
         private readonly Dictionary<SettingType, SettingPropertyBase> _settings = new()
         {
-            { SettingType.Fullscreen, new SettingProperty<bool>(SettingType.Fullscreen, "Fullscreen Mode", true) },
-            { SettingType.Username, new SettingProperty<string>(SettingType.Username, "Username", "Player") },
+            { SettingType.Fullscreen, new SettingProperty<bool>(SettingType.Fullscreen, "Fullscreen", true) },
             {
-                SettingType.MusicBackground,
-                new SettingProperty<float>(SettingType.MusicBackground, "Music Volume", 0.75f)
+                SettingType.Username,
+                new SettingProperty<string>(SettingType.Username, "Username", "Player", maxLength: 20)
             },
-            { SettingType.MusicEffects, new SettingProperty<float>(SettingType.MusicEffects, "Effects Volume", 1f) },
+            {
+                SettingType.MusicVolume,
+                new SettingProperty<int>(SettingType.MusicVolume, "Music Volume", 75)
+            },
+            { SettingType.EffectsVolume, new SettingProperty<int>(SettingType.EffectsVolume, "Effects Volume", 100) },
         };
 
         #region Events
@@ -89,19 +99,16 @@ namespace Managers.Singletons
 
         private void Start()
         {
+            // Initialize settings
             Screen.fullScreen = Get<bool>(SettingType.Fullscreen);
+            MusicManager.Instance.SetMusicVolume(Get<int>(SettingType.MusicVolume));
+            MusicManager.Instance.SetEffectsVolume(Get<int>(SettingType.EffectsVolume));
         }
 
         private void Update()
         {
             // Fullscreen management
 #if UNITY_STANDALONE || UNITY_EDITOR_WIN
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Screen.fullScreen = false;
-                Set(SettingType.Fullscreen, false);
-            }
-
             var f11Pressed = Input.GetKeyDown(KeyCode.F11);
             var altEnterPressed = (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)) &&
                                   Input.GetKeyDown(KeyCode.Return);
@@ -135,6 +142,10 @@ namespace Managers.Singletons
 
         public string GetDisplayName(SettingType type) => _settings[type].DisplayName;
 
+        public Tuple<int, int> GetMinMaxValues(SettingType type) =>
+            new(_settings[type].MinValue, _settings[type].MaxValue);
+        public int GetMaxLength(SettingType type) => _settings[type].MaxLength;
+
         #endregion
 
         #region Private
@@ -144,7 +155,7 @@ namespace Managers.Singletons
             foreach (var setting in _settings)
                 _serializer.Serialize(
                     obj: setting.Value.GetCurrentValue(),
-                    dir: ISerializer.ConfigsDir,
+                    dir: ISerializer.SettingsDir,
                     filename: setting.Value.FileName
                 );
             print("Saved!");
@@ -154,7 +165,7 @@ namespace Managers.Singletons
         {
             foreach (var setting in _settings)
                 setting.Value.SetCurrentValue(_serializer.Deserialize(
-                    dir: ISerializer.ConfigsDir,
+                    dir: ISerializer.SettingsDir,
                     filename: setting.Value.FileName,
                     ifNotExist: setting.Value.GetDefaultValue()
                 ));
