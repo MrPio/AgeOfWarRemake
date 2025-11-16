@@ -171,12 +171,12 @@ namespace Managers
 
         public override void OnNetworkSpawn()
         {
-            if (IsServer) // Host runs this
+            if (IsServer)
             {
                 NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
                 NetworkManager.Singleton.OnClientDisconnectCallback += EndGameHost;
             }
-            else if (!IsServer) // Client runs this
+            else if (!IsServer)
             {
                 NetworkManager.Singleton.OnClientDisconnectCallback += EndGameClient;
                 if (NetworkManager.Singleton.ConnectedClients.Count !=

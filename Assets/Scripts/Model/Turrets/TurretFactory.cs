@@ -13,7 +13,7 @@ namespace Model.Turrets
         private static Turret Rock() => new(damage: 10, range: 5.75f, cost: 100,
             displayName: "Rock Slingshot", "turret_1_1", bulletSpeed: 6f, level: 1, age: 1);
 
-        private static Turret Chicken() => new(damage: 2.2f, range: 5.75f, cost: 200,
+        private static Turret Chicken() => new(damage: 2.25f, range: 5.75f, cost: 200,
             displayName: "Egg Automatic", "turret_1_2", bulletSpeed: 4f, level: 2, age: 1);
 
         private static Turret Catapult() => new(damage: 30, range: 7f, cost: 500,

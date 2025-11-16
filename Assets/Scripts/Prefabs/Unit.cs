@@ -129,10 +129,10 @@ namespace Prefabs
 
             _hpBar?.gameObject.SetActive(newValue.Hp < newValue.MaxHp);
 
-            // Server-only constraint delegated to method
             if (newValue.Hp <= 0)
             {
-                ChangeState(new DieState());
+                if (IsServer)
+                    ChangeState(new DieState());
 
                 // Spawn floating money
                 if (!IsLeft)

@@ -16,12 +16,10 @@ namespace UI.Menu
     {
         private SceneManager _sm;
 
-        [Header("References")]
-        [SerializeField]
+        [Header("References")] [SerializeField]
         private TextMeshProUGUI descriptor;
 
-        [SerializeField]
-        private Clickable unitMelee,
+        [SerializeField] private Clickable unitMelee,
             unitRange,
             unitTank,
             unitSpecial,
@@ -38,7 +36,7 @@ namespace UI.Menu
             special;
 
         [SerializeField] private GameObject unitMenu, turretMenu, mainMenu;
-        [Header("Prefabs")][SerializeField] private GameObject positiveButtonPrefab;
+        [Header("Prefabs")] [SerializeField] private GameObject positiveButtonPrefab;
         [SerializeField] private GameObject negativeButtonPrefab;
 
         private readonly List<GameObject> _buttons = new();
@@ -126,6 +124,9 @@ namespace UI.Menu
 
         private void BuyUnit(int type)
         {
+            if (_sm.GameManager.UnitsAlly.Count >= Prefabs.Base.MaxInGameUnits)
+                return;
+
             var unitModel = UnitFactory.Units[BaseModel.Age - 1][type]();
             var delay = _sm.unitLoadingMenu.GetRemainingTime();
             _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, () => { });

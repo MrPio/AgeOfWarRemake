@@ -54,7 +54,7 @@ namespace Prefabs
 
         #region Data
 
-        private const int MaxInGameUnits = 25;
+        public static readonly int MaxInGameUnits = 10;
         private const bool IsCheating = true;
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
@@ -196,7 +196,7 @@ namespace Prefabs
         // unitIndex is 0-based
         public void BuyUnitServerRpc(byte unitIndex, float delay = 0, ServerRpcParams rpcParams = default)
         {
-            if (_sm.GameManager.UnitsAlly.Count + _sm.GameManager.UnitsEnemy.Count >= MaxInGameUnits)
+            if ((_isLeft ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy).Count >= MaxInGameUnits)
                 return;
             var senderClientId = rpcParams.Receive.SenderClientId;
             var model = Model.Value;
@@ -316,9 +316,11 @@ namespace Prefabs
             _hpBar.Target = hpBarPoint;
             _hpBar.Initialize(username: !DataManager.IsMultiplayer
                 ? null
-                : (OwnerClientId == _sm.GameManager.HostId
-                    ? _sm.GameManager.UsernameHost
-                    : _sm.GameManager.UsernameClient).Value.ToString());
+                : IsOwner
+                    ? DataManager.Username
+                    : (OwnerClientId == _sm.GameManager.HostId
+                        ? _sm.GameManager.UsernameHost
+                        : _sm.GameManager.UsernameClient).Value);
         }
 
         // Host & Client

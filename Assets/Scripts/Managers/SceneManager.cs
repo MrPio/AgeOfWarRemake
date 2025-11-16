@@ -5,6 +5,7 @@ using Managers.Singletons;
 using Managers.Statics;
 using Partials.Camera;
 using Prefabs;
+using TMPro;
 using UI;
 using UI.Menu;
 using Unity.Netcode;
@@ -33,6 +34,7 @@ namespace Managers
         [SerializeField] public LoadingMenu loadingMenu;
         [SerializeField] public RechargeBar specialAttackRechargeBar;
         [SerializeField] public ActionMenu actionMenu;
+        [SerializeField] public TextMeshProUGUI HostClientBanner;
 
         private void Awake()
         {
@@ -59,6 +61,10 @@ namespace Managers
             actionMenu.transform.parent.gameObject.SetActive(true);
             cam.GetComponent<CameraZoom>().enabled = true;
             cam.GetComponent<CameraEdgePan>().enabled = true;
+            HostClientBanner.gameObject.SetActive(DataManager.IsMultiplayer);
+            if (DataManager.IsMultiplayer)
+                HostClientBanner.text = DataManager.IsHost ? "Host" : "Client";
+
 
             musicManager.StartLevel();
             cam.GetComponent<CameraZoom>().Initialize();
