@@ -162,8 +162,9 @@ namespace Managers
             // Spawn bullet
             var bulletPrefab = Resources.Load<GameObject>(model.Prefab);
             var bullet = Instantiate(bulletPrefab, transform);
-            bullet.transform.localPosition = new Vector3(spawnX, SpawnY, SpawnZ);
-            bullet.transform.localRotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            var factor = NetworkManager.Singleton.LocalClientId == attackerId ? 1 : -1;
+            bullet.transform.localPosition = new Vector3(spawnX * factor, SpawnY, SpawnZ);
+            bullet.transform.localRotation = Quaternion.AngleAxis(angle * factor, Vector3.forward);
 
             // Add initial force
             var rb = bullet.GetComponentInChildren<Rigidbody>();

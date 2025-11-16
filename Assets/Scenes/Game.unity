@@ -384,6 +384,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LogContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 3122993366167667863, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
+      propertyPath: logLineLength
+      value: 60
+      objectReference: {fileID: 0}
     - target: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
       propertyPath: m_Pivot.x
       value: 1
@@ -410,7 +414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 900
+      value: 1100
       objectReference: {fileID: 0}
     - target: {fileID: 3899936763445696651, guid: c4b224d098f5ea14a83f9ed93b0e3df8, type: 3}
       propertyPath: m_SizeDelta.y

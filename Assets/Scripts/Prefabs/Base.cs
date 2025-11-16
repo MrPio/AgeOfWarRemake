@@ -54,7 +54,7 @@ namespace Prefabs
 
         #region Data
 
-        public static readonly int MaxInGameUnits = 10;
+        public static readonly int MaxInGameUnits = 2;
         private const bool IsCheating = true;
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
@@ -196,6 +196,8 @@ namespace Prefabs
         // unitIndex is 0-based
         public void BuyUnitServerRpc(byte unitIndex, float delay = 0, ServerRpcParams rpcParams = default)
         {
+            _sm.logger.Log(
+                $"_isLeft={_isLeft}, Count={_sm.GameManager.UnitsAlly.Count}/{_sm.GameManager.UnitsEnemy.Count}, MaxInGameUnits={MaxInGameUnits}");
             if ((_isLeft ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy).Count >= MaxInGameUnits)
                 return;
             var senderClientId = rpcParams.Receive.SenderClientId;

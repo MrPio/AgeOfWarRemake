@@ -3,11 +3,12 @@
 - [ ] Sound proportional to distance
 
 ## TODO
-
-- [~] oil damages myself in multiplayer/client
+- [ ] Review unit limit. Check in action menu. dedicated UI.
+- [~] Rotate Rocks in according to attacked client perspective.
 
 ## DONE
 
+- [~] oil damages myself in multiplayer/client
 - [x] volume setting
 - [x] Age 2 shoot base but not units
 - [x] pause menu in singleplayer
