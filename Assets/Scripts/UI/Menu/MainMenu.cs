@@ -23,14 +23,10 @@ namespace UI.Menu
         [SerializeField] private TMP_InputField usernameInput, joinLobbyCodeInput;
         [SerializeField] private GameObject mainMenu, multiplayerMenu, settingsMenu;
 
-        private void Awake()
-        {
-            usernameInput.text = DataManager.Username;
-        }
-
         private void Start()
         {
             // Setup menu
+            usernameInput.text = DataManager.Username;
             mainMenu.SetActive(true);
             multiplayerMenu.SetActive(false);
             settingsMenu.SetActive(false);

@@ -21,6 +21,10 @@ namespace UI.Menu
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
+
+        private void Start()
+        {
             resumeButton.OnClick = () => gameObject.SetActive(false);
             exitButton.OnClick = () => _ = QuitLobby();
         }

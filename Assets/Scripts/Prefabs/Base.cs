@@ -161,8 +161,8 @@ namespace Prefabs
                 // Add infinite money and exp
                 var newModel = Model.Value;
 #if UNITY_EDITOR
-                newModel.Money = 9_999_999;
-                newModel.Exp = 9_999_999;
+                // newModel.Money = 9_999_999;
+                // newModel.Exp = 9_999_999;
 #endif
                 Model.Value = newModel;
             }

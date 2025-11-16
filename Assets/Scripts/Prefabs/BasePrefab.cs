@@ -20,6 +20,10 @@ namespace Prefabs
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             _base = transform.parent.GetComponent<Base>();
+        }
+
+        private void Start()
+        {
             UpdateTurretConfiguration(0, new Model.Turrets.Turret[] { default, default, default, default });
         }
 

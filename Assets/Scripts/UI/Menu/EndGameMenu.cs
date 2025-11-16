@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Managers;
 using Partials.Behaviour;
@@ -16,6 +17,10 @@ namespace UI.Menu
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
+        }
+
+        private void Start()
+        {
             continueButton.OnClick = () => _ = QuitLobby();
         }
 

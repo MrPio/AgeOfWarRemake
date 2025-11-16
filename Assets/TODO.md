@@ -4,12 +4,12 @@
 
 ## TODO
 
-- [ ] volume setting
-- [ ] Age 2 shoot base but not units
 - [~] oil damages myself in multiplayer/client
 
 ## DONE
 
+- [x] volume setting
+- [x] Age 2 shoot base but not units
 - [x] pause menu in singleplayer
 - [x] 2nd plays in singleplayer blocks on loading
 - [x] f11 in main menu
