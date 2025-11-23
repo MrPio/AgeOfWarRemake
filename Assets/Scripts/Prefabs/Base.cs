@@ -53,7 +53,7 @@ namespace Prefabs
 
         #region Data
 
-        public static readonly int MaxInGameUnits = 2;
+        public static readonly int MaxInGameUnits = 15;
         private const bool IsCheating = true;
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
