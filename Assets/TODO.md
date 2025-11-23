@@ -5,6 +5,7 @@
 ## TODO
 - [ ] Review unit limit. Check in action menu. dedicated UI.
 - [~] Rotate Rocks in according to attacked client perspective.
+- [ ] Spawn coins/exp to encourage player to deploy units
 
 ## DONE
 

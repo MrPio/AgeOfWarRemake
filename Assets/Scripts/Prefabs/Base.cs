@@ -10,7 +10,6 @@ using Model.Units;
 using Partials.AI;
 using UI;
 using Unity.Mathematics;
-using Unity.Multiplayer.Tools.NetStatsMonitor;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -59,6 +58,7 @@ namespace Prefabs
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
         private bool _isLeft;
+        private Dictionary<ulong, int> unitsWaitingToSpawn = new();
 
         #endregion
 
@@ -194,21 +194,56 @@ namespace Prefabs
 
         [ServerRpc]
         // unitIndex is 0-based
-        public void BuyUnitServerRpc(byte unitIndex, float delay = 0, ServerRpcParams rpcParams = default)
+        public void RequestBuyUnitServerRpc(byte unitIndex)
         {
             _sm.logger.Log(
-                $"_isLeft={_isLeft}, Count={_sm.GameManager.UnitsAlly.Count}/{_sm.GameManager.UnitsEnemy.Count}, MaxInGameUnits={MaxInGameUnits}");
-            if ((_isLeft ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy).Count >= MaxInGameUnits)
+                $"Requesting Buy Unit from ({(_isLeft ? "Left" : "Right")})," +
+                $" Count={_sm.GameManager.UnitsAlly.Count}-{_sm.GameManager.UnitsEnemy.Count} /{MaxInGameUnits}");
+
+            // Check if this base has spawned too many units
+            var allyUnitsCount = (_isLeft ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy).Count;
+            if (unitsWaitingToSpawn.TryGetValue(OwnerClientId, out var unitsSpawning))
+                allyUnitsCount += unitsSpawning;
+            if (allyUnitsCount >= MaxInGameUnits)
                 return;
-            var senderClientId = rpcParams.Receive.SenderClientId;
+
+            var model = Model.Value;
+            var unitModel = UnitFactory.Units[Model.Value.Age - 1][unitIndex]();
+
+            // Money check (only if not bot)
+            if (!IsBot.Value && model.Money < unitModel.Cost)
+                return;
+
+            if (!unitsWaitingToSpawn.TryAdd(OwnerClientId, 1))
+                unitsWaitingToSpawn[OwnerClientId] += 1;
+
+            if (IsBot.Value)
+                // The BOT skips delay and UI bar animation
+                BuyUnitServerRpc(unitIndex, delay: 0);
+            else
+                InitializeBuyUnitRpc(unitIndex);
+        }
+
+        [Rpc(SendTo.Owner)]
+        private void InitializeBuyUnitRpc(byte unitIndex)
+        {
+            var unitModel = UnitFactory.Units[Model.Value.Age - 1][unitIndex]();
+            var delay = _sm.unitLoadingMenu.GetRemainingTime();
+            _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, () => { });
+
+            BuyUnitServerRpc(unitIndex, delay);
+        }
+
+        [ServerRpc]
+        // unitIndex is 0-based
+        public void BuyUnitServerRpc(byte unitIndex, float delay)
+        {
             var model = Model.Value;
             var unitModel = UnitFactory.Units[Model.Value.Age - 1][unitIndex]();
 
             // Money check (only if not bot)
             if (!IsBot.Value)
             {
-                if (model.Money < unitModel.Cost)
-                    return;
                 model.Money -= unitModel.Cost;
                 Model.Value = model;
             }
@@ -229,7 +264,9 @@ namespace Prefabs
                 // ...it works, but is it safe?
                 unit.Model.Value = unitModel;
                 unit.IsBot.Value = IsBot.Value;
-                unit.GetComponent<NetworkObject>().SpawnWithOwnership(senderClientId);
+                unit.GetComponent<NetworkObject>().SpawnWithOwnership(IsBot.Value ? 2 : OwnerClientId);
+
+                unitsWaitingToSpawn[OwnerClientId] -= 1;
             }
         }
 

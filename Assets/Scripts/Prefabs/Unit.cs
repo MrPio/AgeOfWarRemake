@@ -253,8 +253,8 @@ namespace Prefabs
             // Prevent re-assigning the same state
             if (State?.Equals(newState) == true) return;
 
-            if (OwnerClientId == 0)
-                Sm.logger.Log($"Set state of {name} to {newState}");
+            // if (OwnerClientId == 0)
+            //     Sm.logger.Log($"Set state of {name} to {newState}");
 
             // State Design Pattern
             State?.Exit(this);

@@ -124,13 +124,8 @@ namespace UI.Menu
 
         private void BuyUnit(int type)
         {
-            if (_sm.GameManager.UnitsAlly.Count >= Prefabs.Base.MaxInGameUnits)
-                return;
-
-            var unitModel = UnitFactory.Units[BaseModel.Age - 1][type]();
-            var delay = _sm.unitLoadingMenu.GetRemainingTime();
-            _sm.unitLoadingMenu.Enqueue(unitModel.SpawnTime, () => { });
-            _sm.GameManager.BaseAlly.BuyUnitServerRpc((byte)type, delay: delay);
+            // RequestBuyUnitServerRpc (Server) --> InitializeBuyUnitRpc (Owner) --> BuyUnitServerRpc (Server)   
+            _sm.GameManager.BaseAlly.RequestBuyUnitServerRpc((byte)type);
         }
 
         private void HoverUnit(int type)

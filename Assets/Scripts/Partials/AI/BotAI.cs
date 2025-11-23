@@ -74,8 +74,7 @@ namespace Partials.AI
                         : 2,
                     _ => 0
                 };
-                var fakeSenderParams = new ServerRpcParams() { Receive = new ServerRpcReceiveParams() { SenderClientId = 2 } };
-                _base.BuyUnitServerRpc((byte)unitIdx, rpcParams: fakeSenderParams);
+                _base.RequestBuyUnitServerRpc((byte)unitIdx);
                 var delay = _phase switch
                 {
                     Phase.Melee => Random.Range(2f, 8f),
