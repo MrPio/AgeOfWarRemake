@@ -22,9 +22,11 @@ namespace Managers
         [Header("Prefabs")] public GameObject hpBarHorizontal;
         public GameObject hpBarVertical;
         public GameObject floatingText;
-        [SerializeField] private GameObject gameManagerPrefab, specialAttackManager, basePrefab;
 
-        [Header("Managers")] [SerializeField] public PowerupManager powerupManager;
+        [SerializeField]
+        private GameObject gameManagerPrefab, specialAttackManagerPrefab, powerupManagerPrefab, basePrefab;
+
+        [Header("Managers")] [NonSerialized] public PowerupManager PowerupManager;
         [NonSerialized] public GameManager GameManager;
         [NonSerialized] public RelayManager RelayManager;
         [NonSerialized] public SpecialAttackManager SpecialAttackManager;
@@ -52,8 +54,10 @@ namespace Managers
             GameManager = Instantiate(gameManagerPrefab).GetComponent<GameManager>();
             RelayManager = GameManager.GetComponent<RelayManager>();
             GameManager.gameObject.name = "GameManager";
-            SpecialAttackManager = Instantiate(specialAttackManager).GetComponent<SpecialAttackManager>();
+            SpecialAttackManager = Instantiate(specialAttackManagerPrefab).GetComponent<SpecialAttackManager>();
             SpecialAttackManager.gameObject.name = "SpecialAttackManager";
+            PowerupManager = Instantiate(powerupManagerPrefab).GetComponent<PowerupManager>();
+            PowerupManager.gameObject.name = "PowerupManager";
             loadingMenu.gameObject.SetActive(true);
             loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost);
             actionMenu.transform.parent.gameObject.SetActive(false);

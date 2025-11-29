@@ -1,9 +1,6 @@
 using System;
-using ExtensionFunctions;
 using Managers;
-using Managers.Singletons;
 using Managers.Statics;
-using UI;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,14 +12,14 @@ namespace Prefabs
         Exp
     }
 
-    public class Powerup : NetworkBehaviour
+    public class Powerup : MonoBehaviour
     {
         private static SceneManager _sm;
         private static readonly int PopTrigger = Animator.StringToHash("pop");
         private Animator _animator;
-        private PowerupType _powerupType;
+        [NonSerialized] public PowerupType Type;
+        [NonSerialized] public int Value;
         private bool _collected;
-        private int _value;
 
 
         private void Awake()
@@ -37,51 +34,29 @@ namespace Prefabs
             if (!DataManager.IsMultiplayer)
                 throw new Exception("Powerup works only in multiplayer!");
 
-            _powerupType = powerupType;
-            _value = value;
+            Type = powerupType;
+            Value = value;
         }
 
         // Server-only
         private void OnTriggerStay(Collider other)
         {
             if (_collected) return; // Collected
-            if (!NetworkManager.Singleton.IsServer) return; // Server-only
             if (!other.CompareTag("Unit")) return; // Only units can collect
-            var collectorId = other.transform.parent.GetComponent<Unit>().OwnerClientId;
-            DestroyRpc(collectorId);
-            CollectServerRpc(collectorId);
-            _collected = true;
-        }
 
-        // Server & Client
-        [Rpc(SendTo.Everyone)]
-        private void DestroyRpc(ulong collectorId)
-        {
             _animator.SetTrigger(PopTrigger);
-            MusicManager.Instance.PlayCollectPowerup();
+            _collected = true;
 
-            // Floating text for collector
-            if (collectorId == NetworkManager.Singleton.LocalClientId)
+            // Server-only
+            if (NetworkManager.Singleton.IsServer)
             {
-                var go = Instantiate(_sm.floatingText, _sm.canvas.transform);
-                go.transform.position = _sm.cam.WorldToScreenPoint(transform.position + Vector3.up * 0.25f);
-                var floatingText = go.GetComponent<FloatingText>();
-                floatingText.Initialize($"+ {_value.To3Digits()}");
+                var collectorId = other.transform.parent.GetComponent<Unit>().OwnerClientId;
+                _sm.PowerupManager.Collect(this, collectorId);
             }
         }
 
-        // Server-only
-        [ServerRpc(RequireOwnership = false)]
-        private void CollectServerRpc(ulong collectorId)
-        {
-            // Add money/exp to collector's base
-            var collectorBase = _sm.GameManager.OwnerId2Base(collectorId);
-            var newModel = collectorBase.Model.Value;
-            if (_powerupType == PowerupType.Coin)
-                newModel.Money += _value;
-            else if (_powerupType == PowerupType.Exp)
-                newModel.Exp += _value;
-            collectorBase.Model.Value = newModel;
-        }
+
+        // Animation event
+        private void OnPopEnd() => Destroy(gameObject);
     }
 }

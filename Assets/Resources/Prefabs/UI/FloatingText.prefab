@@ -149,7 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textUI: {fileID: 6829980741479391805}
   imageUI: {fileID: 2003328887354472287}
-  animator: {fileID: 2672439021503924427}
+  animator: {fileID: 7678256116475030405}
 --- !u!1 &5603155546248879840
 GameObject:
   m_ObjectHideFlags: 0
@@ -385,3 +385,5 @@ MonoBehaviour:
   onTrigger: 0
   spawnOnDestroy: {fileID: 0}
   lifespan: 5
+  destroyDelay: 0.06
+  AllowedTags: []

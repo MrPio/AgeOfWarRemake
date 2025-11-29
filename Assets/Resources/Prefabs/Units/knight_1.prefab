@@ -643,6 +643,7 @@ MonoBehaviour:
   bloodPrefab: {fileID: 1571455291051028, guid: dd24e95b26d7195468206ae4f3c02a68, type: 3}
   bulletSpawnPoint: {fileID: 0}
   bulletPrefab: {fileID: 0}
+  shootEffectPrefab: {fileID: 0}
 --- !u!114 &2925499693851382915
 MonoBehaviour:
   m_ObjectHideFlags: 0

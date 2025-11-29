@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using ExtensionFunctions;
+using Managers.Singletons;
 using Model.Units;
 using Prefabs;
+using UI;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -13,13 +16,14 @@ namespace Managers
     {
         public PowerupType powerupType;
         public GameObject prefab;
+        public Sprite sprite;
     }
 
     public class PowerupManager : NetworkBehaviour
     {
         private static SceneManager _sm;
         [SerializeField] private List<PowerupPrefab> prefabs;
-        private GameObject spawnPowerup;
+        private readonly List<Powerup> _spawnedPowerups = new();
 
         private void Awake()
         {
@@ -41,7 +45,7 @@ namespace Managers
             var powerupValue = powerupType switch
             {
                 PowerupType.Coin => Random.Range(firstUnitModel.Cost, firstUnitModel.Cost * 4),
-                PowerupType.Exp => (int)Random.Range(maxExp * 0.05f, maxExp * 0.2f),
+                PowerupType.Exp => (int)Random.Range(maxExp * 0.025f, maxExp * 0.1f),
                 _ => throw new ArgumentOutOfRangeException()
             };
             SpawnPowerupRpc(xPos, powerupIdx, powerupValue);
@@ -53,13 +57,53 @@ namespace Managers
         {
             var prefab = prefabs[powerupIdx].prefab;
             var powerupType = prefabs[powerupIdx].powerupType;
-            spawnPowerup = Instantiate(prefab, transform);
-            spawnPowerup.transform.position = new Vector3(
-                x: xPos,
-                y: spawnPowerup.transform.position.y,
-                z: spawnPowerup.transform.position.z
+            var powerupGo = Instantiate(prefab, transform);
+            powerupGo.transform.position = new Vector3(
+                x: IsServer ? xPos : -xPos,
+                y: powerupGo.transform.position.y,
+                z: powerupGo.transform.position.z
             );
-            spawnPowerup.GetComponent<Powerup>().Init(powerupType, powerupValue);
+            var powerup = powerupGo.GetComponentInChildren<Powerup>();
+            _spawnedPowerups.Add(powerup);
+            powerup.Init(powerupType, powerupValue);
+        }
+
+        // Server-only
+        public void Collect(Powerup powerup, ulong collectorId)
+        {
+            if (!IsServer) return;
+            if (!_spawnedPowerups.Contains(powerup)) return;
+            _spawnedPowerups.Remove(powerup);
+
+            // Add money/exp to collector's base
+
+            var collectorBase = _sm.GameManager.OwnerId2Base(collectorId);
+            var newModel = collectorBase.Model.Value;
+            if (powerup.Type == PowerupType.Coin)
+                newModel.Money += powerup.Value;
+            else if (powerup.Type == PowerupType.Exp)
+                newModel.Exp += powerup.Value;
+            collectorBase.Model.Value = newModel;
+            var powerupIdx=prefabs.FindIndex(x => x.powerupType == powerup.Type);
+
+            DestroyPowerupRpc(collectorId, powerup.Value, powerup.transform.position.x,powerupIdx);
+        }
+
+        // Server & Client
+        [Rpc(SendTo.Everyone)]
+        private void DestroyPowerupRpc(ulong collectorId, int value, float posX, int powerupIdx)
+        {
+            var isCollector = collectorId == NetworkManager.Singleton.LocalClientId;
+            MusicManager.Instance.PlayPopPowerup(isCollector);
+
+            // Floating text for collector
+            if (isCollector)
+            {
+                var go = Instantiate(_sm.floatingText, _sm.canvas.transform);
+                go.transform.position = _sm.cam.WorldToScreenPoint(new Vector2(IsServer ? posX : -posX, 1f));
+                var floatingText = go.GetComponent<FloatingText>();
+                floatingText.Initialize($"+ {value.To3Digits()}", prefabs[powerupIdx].sprite);
+            }
         }
     }
 }

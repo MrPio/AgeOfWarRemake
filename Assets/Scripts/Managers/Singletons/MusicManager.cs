@@ -116,9 +116,9 @@ namespace Managers.Singletons
             PlaySfx(type);
         }
 
-        public void PlayCollectPowerup()
+        public void PlayPopPowerup(bool collect)
         {
-            PlaySfx("powerup_collect");
+            PlaySfx(collect ? "powerup_collect" : "powerup_pop");
         }
 
         public void StartLevel()
