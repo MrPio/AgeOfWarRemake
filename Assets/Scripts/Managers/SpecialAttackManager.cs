@@ -151,7 +151,7 @@ namespace Managers
             var cooldown = attackerId == NetworkManager.Singleton.LocalClientId ? model.Cooldown : model.Duration;
             _sm.specialAttackRechargeBar.Recharge(1, 0, cooldown);
 
-            _sm.musicManager.PlayStartSpecial(model.Age);
+            _sm.MusicManager.PlayStartSpecial(model.Age);
         }
 
         [Rpc(SendTo.Everyone)]
@@ -187,7 +187,7 @@ namespace Managers
                 {
                     _bulletRBs.Remove(pausableRb);
                     if (collisionTag == "Unit")
-                        _sm.musicManager.PlayHitSpecial(model.Age);
+                        _sm.MusicManager.PlayHitSpecial(model.Age);
                 },
                 hideOnExplode: _hideOnExplode[model.Age - 1]
             );
@@ -277,7 +277,7 @@ namespace Managers
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
                     destroyable.OnDestroy = () =>
                     {
-                        _sm.musicManager.PlayHitSpecial(model.Age);
+                        _sm.MusicManager.PlayHitSpecial(model.Age);
                         _bulletRBs.Remove(pausableRb);
                     };
 

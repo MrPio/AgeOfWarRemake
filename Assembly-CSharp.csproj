@@ -61,6 +61,7 @@
     <Compile Include="Assets\Scripts\Managers\Statics\DataManager.cs" />
     <Compile Include="Assets\Scripts\Partials\ClusterSpawn.cs" />
     <Compile Include="Assets\Scripts\UI\Menu\ActionMenu.cs" />
+    <Compile Include="Assets\Scripts\ExtensionFunctions\IntExtensions.cs" />
     <Compile Include="Assets\Scripts\Model\Bases\BaseFactory.cs" />
     <Compile Include="Assets\Scripts\Debug\UnitDebug.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Turret.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Assets\Scripts\Partials\AI\BotAI.cs" />
     <Compile Include="Assets\Scripts\ExtensionFunctions\ArrayExtensions.cs" />
     <Compile Include="Assets\Scripts\Prefabs\Unit.cs" />
+    <Compile Include="Assets\Scripts\Prefabs\Powerup.cs" />
     <Compile Include="Assets\Scripts\Managers\Serializer\BinarySerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\State\Unit\DieState.cs" />
     <Compile Include="Assets\Scripts\UI\RechargeBar.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Assets\Scripts\Managers\Serializer\ISerializer.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\PausableRigidbody.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Triggerable.cs" />
+    <Compile Include="Assets\Scripts\Managers\PowerupManager.cs" />
     <Compile Include="Assets\Scripts\Managers\SceneManager.cs" />
     <Compile Include="Assets\Scripts\Partials\Behaviour\Followable.cs" />
     <Compile Include="Assets\Scripts\UI\SettingEntry.cs" />

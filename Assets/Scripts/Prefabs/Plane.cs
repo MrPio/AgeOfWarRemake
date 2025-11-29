@@ -64,7 +64,7 @@ namespace Prefabs
                     destroyable.OnDestroy = () =>
                     {
                         onBombExplode?.Invoke(bombGo);
-                        _sm.musicManager.PlayHitSpecial(model.Age);
+                        _sm.MusicManager.PlayHitSpecial(model.Age);
                     };
 
                     // Server-only

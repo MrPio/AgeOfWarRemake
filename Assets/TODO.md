@@ -3,12 +3,12 @@
 - [ ] Sound proportional to distance
 
 ## TODO
-- [ ] Review unit limit. Check in action menu. dedicated UI.
 - [~] Rotate Rocks in according to attacked client perspective.
 - [ ] Spawn coins/exp to encourage player to deploy units
 
 ## DONE
 
+- [x] Review unit limit. Check in action menu. dedicated UI.
 - [~] oil damages myself in multiplayer/client
 - [x] volume setting
 - [x] Age 2 shoot base but not units

@@ -246,7 +246,7 @@ namespace Prefabs
 
         // Host & Client (Animation event)
         private void PlaySound() =>
-            _sm.musicManager.PlayTurret(Model.Value.Age, Model.Value.Level);
+            _sm.MusicManager.PlayTurret(Model.Value.Age, Model.Value.Level);
 
         #endregion
     }

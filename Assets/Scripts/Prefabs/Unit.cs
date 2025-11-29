@@ -183,6 +183,7 @@ namespace Prefabs
             var allyUnits = IsLeft ? Sm.GameManager.UnitsAlly : Sm.GameManager.UnitsEnemy;
             var listeners = IsLeft ? Sm.GameManager.OnAllySpawn : Sm.GameManager.OnEnemySpawn;
             allyUnits.Add(this);
+            Sm.GameManager.LastSpawnedUnit = Time.time;
             foreach (var action in listeners)
                 action.Invoke(this);
 
@@ -445,10 +446,10 @@ namespace Prefabs
             switch (soundType)
             {
                 case 0:
-                    Sm.musicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: isRanged);
+                    Sm.MusicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: isRanged);
                     break;
                 case 1:
-                    Sm.musicManager.PlayDie(model.Age, model.Level);
+                    Sm.MusicManager.PlayDie(model.Age, model.Level);
                     break;
             }
         }

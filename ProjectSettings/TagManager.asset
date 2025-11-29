@@ -14,6 +14,7 @@ TagManager:
   - MusicManager
   - ToastManager
   - NetworkManager
+  - Powerup
   layers:
   - Default
   - TransparentFX

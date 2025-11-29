@@ -24,6 +24,7 @@ namespace Managers
         private ToastManager _tm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
+        private const float DelayBeforePowerup = 3f, PowerUpDelay = 3f;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
@@ -31,6 +32,10 @@ namespace Managers
         [NonSerialized] public bool IsGameOver;
         [NonSerialized] public float GameTime;
         private bool _isGamePaused;
+
+        public Base OwnerId2Base(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
+            ? _sm.GameManager.BaseAlly
+            : _sm.GameManager.BaseEnemy;
 
         public bool IsGamePaused
         {
@@ -43,6 +48,7 @@ namespace Managers
         private float _lastMoneyPerSecond;
         public readonly List<Action<Unit>> OnAllySpawn = new();
         public readonly List<Action<Unit>> OnEnemySpawn = new();
+        public float LastSpawnedUnit, lastSpawnedPowerup;
 
         #region NetVars
 
@@ -233,6 +239,14 @@ namespace Managers
                         newModel.Money += BaseFactory.MoneyPerSecond[newModel.Age - 1];
                         basePrefab.Model.Value = newModel;
                     }
+                }
+
+            // Spawn Powerup (if multiplayer) (Server-only)
+            if (IsServer && DataManager.IsMultiplayer && Time.time - LastSpawnedUnit > DelayBeforePowerup)
+                if (Time.time - lastSpawnedPowerup > PowerUpDelay)
+                {
+                    lastSpawnedPowerup = Time.time;
+                    _sm.powerupManager.SpawnPowerup();
                 }
         }
 

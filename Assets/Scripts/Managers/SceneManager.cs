@@ -18,16 +18,22 @@ namespace Managers
     public class SceneManager : MonoBehaviour
     {
         [Header("Settings")] [SerializeField] public float fieldLenght = 23f;
-        [Header("Prefabs")] public GameObject hpBarHorizontal, hpBarVertical, floatingText;
+
+        [Header("Prefabs")] public GameObject hpBarHorizontal;
+        public GameObject hpBarVertical;
+        public GameObject floatingText;
         [SerializeField] private GameObject gameManagerPrefab, specialAttackManager, basePrefab;
+
+        [Header("Managers")] [SerializeField] public PowerupManager powerupManager;
+        [NonSerialized] public GameManager GameManager;
+        [NonSerialized] public RelayManager RelayManager;
+        [NonSerialized] public SpecialAttackManager SpecialAttackManager;
+        [NonSerialized] public MusicManager MusicManager;
+
 
         [Header("References")] public Camera cam;
         public Canvas canvas;
         public Logger logger;
-        [NonSerialized] public GameManager GameManager;
-        [NonSerialized] public RelayManager RelayManager;
-        [NonSerialized] public SpecialAttackManager SpecialAttackManager;
-        [NonSerialized] public MusicManager musicManager;
         [SerializeField] public GameObject statisticsScreen, pauseMenu;
         [SerializeField] public StatsMenu statsMenu;
         [SerializeField] public UnitLoadingMenu unitLoadingMenu;
@@ -38,7 +44,7 @@ namespace Managers
 
         private void Awake()
         {
-            musicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
+            MusicManager = GameObject.FindWithTag("MusicManager").GetComponent<MusicManager>();
         }
 
         private void Start()
@@ -66,7 +72,7 @@ namespace Managers
                 HostClientBanner.text = DataManager.IsHost ? "Host" : "Client";
 
 
-            musicManager.StartLevel();
+            MusicManager.StartLevel();
             cam.GetComponent<CameraZoom>().Initialize();
 
 
@@ -112,7 +118,7 @@ namespace Managers
 
         public async Task QuitLobby()
         {
-            musicManager.EndLevel();
+            MusicManager.EndLevel();
             GameManager.IsGameOver = false;
             UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
 

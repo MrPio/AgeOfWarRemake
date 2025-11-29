@@ -116,6 +116,11 @@ namespace Managers.Singletons
             PlaySfx(type);
         }
 
+        public void PlayCollectPowerup()
+        {
+            PlaySfx("powerup_collect");
+        }
+
         public void StartLevel()
         {
             backgroundAudioSource.Stop();
