@@ -197,7 +197,10 @@ namespace Managers
         private void SpawnHaloRpc(SpecialAttack model, ulong attackerId)
         {
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
-            foreach (var unit in isAlly ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy)
+            var units = isAlly ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy;
+            _sm.logger.Log($"Spawning halos, Count: ally={_sm.GameManager.UnitsAlly.Count} enemy={_sm.GameManager.UnitsEnemy.Count} units={units.Count}");
+
+            foreach (var unit in units)
                 AddHalo(unit);
             (isAlly ? _sm.GameManager.OnAllySpawn : _sm.GameManager.OnEnemySpawn).Add(AddHalo);
             StartCoroutine(RemoveListener());

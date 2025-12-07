@@ -19,13 +19,19 @@ namespace Prefabs
         private Animator _animator;
         [NonSerialized] public PowerupType Type;
         [NonSerialized] public int Value;
+        [SerializeField] private float delayBeforeCollision = 3f;
         private bool _collected;
+        private float _spawnTime;
 
 
         private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             _animator = GetComponent<Animator>();
+        }
+        private void Start()
+        {
+            _spawnTime = Time.time;
         }
 
         // Server & Client
@@ -41,6 +47,7 @@ namespace Prefabs
         // Server-only
         private void OnTriggerStay(Collider other)
         {
+            if (Time.time - _spawnTime < delayBeforeCollision) return; // Wait before colliding
             if (_collected) return; // Collected
             if (!other.CompareTag("Unit")) return; // Only units can collect
 

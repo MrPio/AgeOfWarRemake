@@ -24,7 +24,7 @@ namespace Managers
         private ToastManager _tm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
-        private const float DelayBeforePowerup = 30f, PowerUpDelay = 10f;
+        private const float DelayBeforePowerup = 20f, PowerUpDelayWithoutUnits = 2.5f, PowerUpDelayWithUnits = 8.5f;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
@@ -245,12 +245,23 @@ namespace Managers
             if (IsServer && DataManager.IsMultiplayer)
                 if (UnitsAlly.Count > 0 || UnitsEnemy.Count > 0)
                     LastSpawnedUnit += Time.deltaTime;
-                else if (Time.time - LastSpawnedUnit > DelayBeforePowerup)
-                    if (Time.timeSinceLevelLoad - lastSpawnedPowerup > PowerUpDelay)
-                    {
-                        lastSpawnedPowerup = Time.time;
-                        _sm.PowerupManager.SpawnPowerup();
-                    }
+
+            // If no unit is on field for at least [DelayBeforePowerup] seconds
+            if (Time.timeSinceLevelLoad - LastSpawnedUnit > DelayBeforePowerup)
+            {
+                if (Time.timeSinceLevelLoad - lastSpawnedPowerup > PowerUpDelayWithoutUnits)
+                {
+                    lastSpawnedPowerup = Time.time;
+                    _sm.PowerupManager.SpawnPowerup();
+                }
+            }
+            else
+            {
+                if (Time.timeSinceLevelLoad - lastSpawnedPowerup > PowerUpDelayWithUnits)
+                    lastSpawnedPowerup = Time.time;
+                _sm.PowerupManager.SpawnPowerup();
+            }
+
         }
 
         private void FixedUpdate()

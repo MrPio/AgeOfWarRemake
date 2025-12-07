@@ -23,7 +23,9 @@ namespace Managers
     {
         private static SceneManager _sm;
         [SerializeField] private List<PowerupPrefab> prefabs;
+        [SerializeField] private float spawnRange = 10f;
         private readonly List<Powerup> _spawnedPowerups = new();
+
 
         private void Awake()
         {
@@ -35,7 +37,7 @@ namespace Managers
         {
             if (!NetworkManager.Singleton.IsServer)
                 throw new Exception("Only server can spawn powerups!");
-            var xPos = Random.Range(-2f, 2f);
+            var xPos = Random.Range(-spawnRange / 2, spawnRange / 2);
             var currentAge = Math.Max(_sm.GameManager.BaseAlly.Model.Value.Age,
                 _sm.GameManager.BaseEnemy.Model.Value.Age);
             var firstUnitModel = UnitFactory.Units[currentAge - 1][0]();
@@ -44,8 +46,8 @@ namespace Managers
             var powerupType = prefabs[powerupIdx].powerupType;
             var powerupValue = powerupType switch
             {
-                PowerupType.Coin => Random.Range(firstUnitModel.Cost, firstUnitModel.Cost * 4),
-                PowerupType.Exp => (int)Random.Range(maxExp * 0.025f, maxExp * 0.1f),
+                PowerupType.Coin => (int)Random.Range(firstUnitModel.Cost*0.5, firstUnitModel.Cost * 6),
+                PowerupType.Exp => (int)Random.Range(maxExp * 0.0025f, maxExp * 0.03f),
                 _ => throw new ArgumentOutOfRangeException()
             };
             SpawnPowerupRpc(xPos, powerupIdx, powerupValue);
@@ -84,9 +86,9 @@ namespace Managers
             else if (powerup.Type == PowerupType.Exp)
                 newModel.Exp += powerup.Value;
             collectorBase.Model.Value = newModel;
-            var powerupIdx=prefabs.FindIndex(x => x.powerupType == powerup.Type);
+            var powerupIdx = prefabs.FindIndex(x => x.powerupType == powerup.Type);
 
-            DestroyPowerupRpc(collectorId, powerup.Value, powerup.transform.position.x,powerupIdx);
+            DestroyPowerupRpc(collectorId, powerup.Value, powerup.transform.position.x, powerupIdx);
         }
 
         // Server & Client
