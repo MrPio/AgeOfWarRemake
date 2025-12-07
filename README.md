@@ -4,6 +4,13 @@
 
 And one day I thought, why not add *multiplayer* to Age of War? Imagine what great fights you could experience instead of the same static AI!
 
+## Gameplays
+<p align="center">
+  <a href="https://youtu.be/1WMydNrcQlo">
+  	<img style="width: 66%; height: auto;" src="https://github.com/user-attachments/assets/177bda34-cdcd-4b7c-8e8d-1bc40232f1c4" alt="Gameplay">
+  </a>
+</p>
+
 ### ⬇️ Download it [HERE](https://github.com/MrPio/AgeOfWarRemake/releases)
 
 ### [🌍 Play it on the web!](https://play.unity.com/en/games/8855a17f-c0de-4228-b5c1-584523992a17/age-of-war-remake)
