@@ -53,8 +53,8 @@ namespace Prefabs
 
         #region Data
 
-        public static readonly int MaxInGameUnits = 100; // Not working for client?
-        private const bool IsCheating = true;
+        public static readonly int MaxInGameUnits = 17; // Not working for client?
+        private const bool IsCheating = false;
         [NonSerialized] public readonly List<Turret> Turrets = new() { null, null, null, null };
         private bool _isDestroyed;
         private bool _isLeft;
@@ -161,8 +161,8 @@ namespace Prefabs
                 // Add infinite money and exp
                 var newModel = Model.Value;
 #if UNITY_EDITOR
-                // newModel.Money = 9_999_999;
-                // newModel.Exp = 9_999_999;
+                newModel.Money = 9_999_999;
+                newModel.Exp = 9_999_999;
 #endif
                 Model.Value = newModel;
             }

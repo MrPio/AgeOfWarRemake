@@ -24,13 +24,13 @@ namespace Managers
         private ToastManager _tm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
-        private const float DelayBeforePowerup = 20f, PowerUpDelayWithoutUnits = 2.5f, PowerUpDelayWithUnits = 8.5f;
+        private const float DelayBeforePowerup = 5f, PowerUpDelayWithoutUnits = 3f, PowerUpDelayWithUnits = 7.75f;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
         [NonSerialized] public ulong? Winner;
         [NonSerialized] public bool IsGameOver;
-        [NonSerialized] public float GameTime;
+        [NonSerialized] public float GameTime, GameStartTime;
         private bool _isGamePaused;
 
         public Base OwnerId2Base(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
@@ -48,7 +48,8 @@ namespace Managers
         private float _lastMoneyPerSecond;
         public readonly List<Action<Unit>> OnAllySpawn = new();
         public readonly List<Action<Unit>> OnEnemySpawn = new();
-        public float LastSpawnedUnit, lastSpawnedPowerup;
+        [NonSerialized] public float LastSpawnedUnit = 999f;
+        private float lastSpawnedPowerup;
 
         #region NetVars
 
@@ -243,25 +244,28 @@ namespace Managers
 
             // Spawn Powerup (if multiplayer) (Server-only)
             if (IsServer && DataManager.IsMultiplayer)
+            {
                 if (UnitsAlly.Count > 0 || UnitsEnemy.Count > 0)
                     LastSpawnedUnit += Time.deltaTime;
 
-            // If no unit is on field for at least [DelayBeforePowerup] seconds
-            if (Time.timeSinceLevelLoad - LastSpawnedUnit > DelayBeforePowerup)
-            {
-                if (Time.timeSinceLevelLoad - lastSpawnedPowerup > PowerUpDelayWithoutUnits)
+                // If no unit is on field for at least [DelayBeforePowerup] seconds
+                if (Time.time - LastSpawnedUnit > DelayBeforePowerup)
                 {
-                    lastSpawnedPowerup = Time.time;
-                    _sm.PowerupManager.SpawnPowerup();
+                    if (Time.time - lastSpawnedPowerup > PowerUpDelayWithoutUnits)
+                    {
+                        lastSpawnedPowerup = Time.time;
+                        _sm.PowerupManager.SpawnPowerup();
+                    }
+                }
+                else
+                {
+                    if (Time.timeSinceLevelLoad - lastSpawnedPowerup > PowerUpDelayWithUnits)
+                    {
+                        lastSpawnedPowerup = Time.time;
+                        _sm.PowerupManager.SpawnPowerup();
+                    }
                 }
             }
-            else
-            {
-                if (Time.timeSinceLevelLoad - lastSpawnedPowerup > PowerUpDelayWithUnits)
-                    lastSpawnedPowerup = Time.time;
-                _sm.PowerupManager.SpawnPowerup();
-            }
-
         }
 
         private void FixedUpdate()
@@ -288,6 +292,8 @@ namespace Managers
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
                 _gameStarted.Value = true;
                 _lastMoneyPerSecond = Time.time + 5;
+                GameStartTime = Time.time;
+                LastSpawnedUnit = GameStartTime;
             }
             else
                 _sm.logger.Log($"Waiting for the {(IsServer ? "Client" : "Host")}...", LogType.WaitingFor);

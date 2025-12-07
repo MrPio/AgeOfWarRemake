@@ -19,7 +19,7 @@ namespace Prefabs
         private Animator _animator;
         [NonSerialized] public PowerupType Type;
         [NonSerialized] public int Value;
-        [SerializeField] private float delayBeforeCollision = 3f;
+        [SerializeField] private float delayBeforeCollision = 2f;
         private bool _collected;
         private float _spawnTime;
 

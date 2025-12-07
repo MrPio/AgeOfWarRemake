@@ -29,12 +29,14 @@ namespace UI
 
         private IEnumerator SlideRoutine(float duration, float from, float to)
         {
+            var startTime = Time.time;
             var elapsed = 0f;
             slider.value = from;
             while (elapsed < duration)
             {
                 yield return new WaitUntil(() => !_sm.GameManager.IsGamePaused);
-                elapsed += Time.deltaTime;
+                elapsed += Time.time - startTime;
+                startTime = Time.time;
                 _remaining = duration - elapsed;
                 var t = Mathf.Clamp01(elapsed / duration);
                 slider.value = Mathf.Lerp(from, to, t);

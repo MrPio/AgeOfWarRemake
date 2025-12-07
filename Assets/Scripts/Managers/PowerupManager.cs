@@ -46,8 +46,8 @@ namespace Managers
             var powerupType = prefabs[powerupIdx].powerupType;
             var powerupValue = powerupType switch
             {
-                PowerupType.Coin => (int)Random.Range(firstUnitModel.Cost*0.5, firstUnitModel.Cost * 6),
-                PowerupType.Exp => (int)Random.Range(maxExp * 0.0025f, maxExp * 0.03f),
+                PowerupType.Coin => (int)Random.Range(firstUnitModel.Cost * 0.5f, firstUnitModel.Cost * 6f),
+                PowerupType.Exp => (int)Random.Range(maxExp * 0.0025f, maxExp * 0.0325f),
                 _ => throw new ArgumentOutOfRangeException()
             };
             SpawnPowerupRpc(xPos, powerupIdx, powerupValue);

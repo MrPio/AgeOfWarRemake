@@ -83,7 +83,7 @@ namespace Managers.Singletons
             },
             {
                 SettingType.MusicVolume,
-                new SettingProperty<int>(SettingType.MusicVolume, "Music Volume", 75)
+                new SettingProperty<int>(SettingType.MusicVolume, "Music Volume", 50)
             },
             { SettingType.EffectsVolume, new SettingProperty<int>(SettingType.EffectsVolume, "Effects Volume", 100) },
         };
