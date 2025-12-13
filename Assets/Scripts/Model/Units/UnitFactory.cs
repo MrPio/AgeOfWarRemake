@@ -50,7 +50,7 @@ namespace Model.Units
             spawnTime: 3, level: 2, age: 4, maxShootingDistance: 6f);
 
         private static Unit Soldier3() => new(displayName: "Tank", prefabName: "soldier_3", maxHp: 1_200,
-            damage: 300, shootDamage: 250f, shootRate: 0.35f, attackDuration: 1f / 0.35f, maxShootingDistance: 5f,
+            damage: 300, shootDamage: 250f, shootRate: 0.45f, attackDuration: 1f / 0.35f, maxShootingDistance: 5f,
             cost: 7_000, revenue: 9_100, spawnTime: 8, level: 3, age: 4);
 
         // === Future age =================================================================
@@ -62,11 +62,11 @@ namespace Model.Units
             spawnTime: 3, level: 2, maxShootingDistance: 6f, age: 5);
 
         private static Unit Trooper3() => new(displayName: "War Machine", prefabName: "trooper_3", maxHp: 3_000,
-            damage: 600, shootDamage: 500f, shootRate: 0.45f, attackDuration: 1f / 0.45f, maxShootingDistance: 4f,
+            damage: 600, shootDamage: 500f, shootRate: 0.55f, attackDuration: 1f / 0.45f, maxShootingDistance: 4f,
             cost: 20_000, revenue: 26_000, spawnTime: 8, level: 3, age: 5);
 
-        private static Unit Trooper4() => new(displayName: "Super Soldier", prefabName: "trooper_4", maxHp: 4_000,
-            damage: 400, shootDamage: 100f, attackDuration: 1.5f, shootRate: 0.85f, cost: 150_000, revenue: 200_000,
+        private static Unit Trooper4() => new(displayName: "Super Soldier", prefabName: "trooper_4", maxHp: 6_000,
+            damage: 400, shootDamage: 80f, attackDuration: 1.5f, shootRate: 0.85f, cost: 150_000, revenue: 200_000,
             spawnTime: 3, level: 4, maxShootingDistance: 6.5f, age: 5);
 
         public static readonly List<List<Func<Unit>>> Units = new()

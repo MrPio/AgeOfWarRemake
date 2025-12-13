@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ExtensionFunctions;
 using Managers.Singletons;
 using Model.Units;
@@ -17,6 +18,7 @@ namespace Managers
         public PowerupType powerupType;
         public GameObject prefab;
         public Sprite sprite;
+        public int probabilityWeight;
     }
 
     public class PowerupManager : NetworkBehaviour
@@ -32,22 +34,47 @@ namespace Managers
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
         }
 
+        private int RandomPowerupIdx
+        {
+            get
+            {
+                var maxWeight = (float)prefabs.Select(it => it.probabilityWeight).Sum();
+                var rand = Random.Range(0, maxWeight);
+                var cumulative = 0f;
+                for (var i = 0; i < prefabs.Count; i++)
+                {
+                    cumulative += prefabs[i].probabilityWeight;
+                    if (cumulative >= rand)
+                        return i;
+                }
+
+                return prefabs.Count - 1;
+            }
+        }
+
         // Server-only
         public void SpawnPowerup()
         {
             if (!NetworkManager.Singleton.IsServer)
                 throw new Exception("Only server can spawn powerups!");
+
+            // Remove exp powerup at future age
+            if (_sm.GameManager.BaseAlly.Model.Value.Age == 5 && _sm.GameManager.BaseEnemy.Model.Value.Age == 5)
+                prefabs.RemoveAll(prefab => prefab.powerupType == PowerupType.Exp);
+
             var xPos = Random.Range(-spawnRange / 2, spawnRange / 2);
             var currentAge = Math.Max(_sm.GameManager.BaseAlly.Model.Value.Age,
                 _sm.GameManager.BaseEnemy.Model.Value.Age);
             var firstUnitModel = UnitFactory.Units[currentAge - 1][0]();
             var maxExp = (int)(5000f * Math.Pow(3, currentAge - 1));
-            var powerupIdx = Random.Range(0, prefabs.Count);
+
+            var powerupIdx = RandomPowerupIdx;
             var powerupType = prefabs[powerupIdx].powerupType;
             var powerupValue = powerupType switch
             {
-                PowerupType.Coin => (int)Random.Range(firstUnitModel.Cost * 0.5f, firstUnitModel.Cost * 6f),
-                PowerupType.Exp => (int)Random.Range(maxExp * 0.0025f, maxExp * 0.0325f),
+                PowerupType.Coin => (int)Random.Range(firstUnitModel.Cost * 0.5f, firstUnitModel.Cost * 7f),
+                PowerupType.Exp => (int)Random.Range(maxExp * 0.0025f, maxExp * 0.035f),
+                PowerupType.Special => 1,
                 _ => throw new ArgumentOutOfRangeException()
             };
             SpawnPowerupRpc(xPos, powerupIdx, powerupValue);
@@ -78,13 +105,15 @@ namespace Managers
             _spawnedPowerups.Remove(powerup);
 
             // Add money/exp to collector's base
-
             var collectorBase = _sm.GameManager.OwnerId2Base(collectorId);
             var newModel = collectorBase.Model.Value;
             if (powerup.Type == PowerupType.Coin)
                 newModel.Money += powerup.Value;
             else if (powerup.Type == PowerupType.Exp)
                 newModel.Exp += powerup.Value;
+            else if (powerup.Type == PowerupType.Special)
+                _sm.SpecialAttackManager.HasSpecialPowerup[collectorId] = true;
+
             collectorBase.Model.Value = newModel;
             var powerupIdx = prefabs.FindIndex(x => x.powerupType == powerup.Type);
 
@@ -95,6 +124,7 @@ namespace Managers
         [Rpc(SendTo.Everyone)]
         private void DestroyPowerupRpc(ulong collectorId, int value, float posX, int powerupIdx)
         {
+            var prefab = prefabs[powerupIdx];
             var isCollector = collectorId == NetworkManager.Singleton.LocalClientId;
             MusicManager.Instance.PlayPopPowerup(isCollector);
 
@@ -104,7 +134,11 @@ namespace Managers
                 var go = Instantiate(_sm.floatingText, _sm.canvas.transform);
                 go.transform.position = _sm.cam.WorldToScreenPoint(new Vector2(IsServer ? posX : -posX, 1f));
                 var floatingText = go.GetComponent<FloatingText>();
-                floatingText.Initialize($"+ {value.To3Digits()}", prefabs[powerupIdx].sprite);
+                floatingText.Initialize($"+ {value.To3Digits()}", prefab.sprite);
+
+                // Set special powerup UI
+                if (prefab.powerupType == PowerupType.Special)
+                    _sm.actionMenu.SetSpecialPowerup(true);
             }
         }
     }

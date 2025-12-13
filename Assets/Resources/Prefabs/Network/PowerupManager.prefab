@@ -75,6 +75,13 @@ MonoBehaviour:
   - powerupType: 0
     prefab: {fileID: 2417145895366636383, guid: cbb756f8f95fb4f4c8f74684594cf016, type: 3}
     sprite: {fileID: -251265314, guid: c9f28972eb642d44ca994fa2bdc15055, type: 3}
+    probabilityWeight: 10
   - powerupType: 1
     prefab: {fileID: 7711912184056228656, guid: 30205c1326c2cd144949905604500761, type: 3}
     sprite: {fileID: -1597780027, guid: c823051450dfcb44a9a0c79dcfbf8ad7, type: 3}
+    probabilityWeight: 10
+  - powerupType: 2
+    prefab: {fileID: 2417145895366636383, guid: 1cf5258657037e44e9528d223031f77a, type: 3}
+    sprite: {fileID: 21300000, guid: abf8f64c47c37e6498533d0c4ecb760b, type: 3}
+    probabilityWeight: 4
+  spawnRange: 11

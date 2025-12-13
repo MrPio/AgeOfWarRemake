@@ -7,7 +7,7 @@ namespace Model.Turrets
     public static class TurretFactory
     {
         public static readonly float[]
-            ExpansionsRangeMultiplier = { 1.15f, 1.1f, 1.05f, 1.0f }; // Penalize higher places
+            ExpansionsRangeMultiplier = { 1.0f, 1.05f, 1.1f, 1.15f }; // Penalize lower places
 
         // === Primitive age =================================================================
         private static Turret Rock() => new(damage: 10, range: 5.75f, cost: 100,
@@ -33,10 +33,10 @@ namespace Model.Turrets
         private static Turret SmallCannon() => new(damage: 50, range: 6.5f, cost: 1_500,
             displayName: "Small Cannon", "turret_3_1", bulletSpeed: 8f, level: 1, age: 3);
 
-        private static Turret LargeCannon() => new(damage: 65, range: 6.75f, cost: 3_000,
+        private static Turret LargeCannon() => new(damage: 63, range: 6.75f, cost: 3_000,
             displayName: "Large Cannon", "turret_3_2", bulletSpeed: 8f, level: 2, age: 3);
 
-        private static Turret ExplosiveCannon() => new(damage: 80, range: 7.15f, cost: 6_000,
+        private static Turret ExplosiveCannon() => new(damage: 72, range: 7.15f, cost: 6_000,
             displayName: "Explosive Cannon", "turret_3_3", clusterDamage: 15, bulletSpeed: 8f, level: 3, age: 3);
 
         // === Modern age =================================================================
@@ -46,17 +46,17 @@ namespace Model.Turrets
         private static Turret RocketLauncher() => new(damage: 100, range: 8f, cost: 9_000,
             displayName: "Rocket Launcher", "turret_4_2", bulletSpeed: 2.75f, level: 2, age: 4, isFollow: true);
 
-        private static Turret DoubleTurret() => new(damage: 50, range: 6.5f, cost: 14_000,
+        private static Turret DoubleTurret() => new(damage: 40, range: 6.5f, cost: 14_000,
             displayName: "Double Turret", "turret_4_3", bulletSpeed: 8f, level: 3, age: 4); // @
 
         // === Future age =================================================================
-        private static Turret TitaniumShooter() => new(damage: 100, range: 7.5f, cost: 24_000,
+        private static Turret TitaniumShooter() => new(damage: 100, range: 8.5f, cost: 24_000,
             displayName: "Titanium Shooter", "turret_5_1", bulletSpeed: 4f, level: 1, age: 5);
 
-        private static Turret LaserCannon() => new(damage: 60, range: 8.75f, cost: 40_000,
+        private static Turret LaserCannon() => new(damage: 65, range: 10f, cost: 40_000,
             displayName: "Laser Cannon", "turret_5_2", bulletSpeed: 5f, level: 2, age: 5);
 
-        private static Turret IonCannon() => new(damage: 75, range: 10f, cost: 100_000,
+        private static Turret IonCannon() => new(damage: 80, range: 13f, cost: 100_000,
             displayName: "Ion Cannon", "turret_5_3", bulletSpeed: 5f, level: 3, age: 5);
 
         public static readonly List<List<Func<Turret>>> Turrets = new()

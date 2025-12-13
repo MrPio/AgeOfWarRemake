@@ -110,7 +110,7 @@ MonoBehaviour:
   onStart: 0
   onTrigger: 1
   spawnOnDestroy: {fileID: 1060015339853634, guid: 861a6af5c8c307f439b766b7e7b3ac0f, type: 3}
-  lifespan: 5
+  lifespan: 3
   destroyDelay: 0.04
   AllowedTags: []
 --- !u!54 &7292578797987950907

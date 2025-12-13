@@ -35,7 +35,7 @@ namespace UI.Menu
             evolve,
             special;
 
-        [SerializeField] private GameObject unitMenu, turretMenu, mainMenu;
+        [SerializeField] private GameObject unitMenu, turretMenu, mainMenu, specialPowerup;
         [Header("Prefabs")] [SerializeField] private GameObject positiveButtonPrefab;
         [SerializeField] private GameObject negativeButtonPrefab;
 
@@ -257,6 +257,8 @@ namespace UI.Menu
         {
             _sm.SpecialAttackManager.RunSpecialServerRpc();
         }
+
+        public void SetSpecialPowerup(bool value) => specialPowerup.SetActive(value);
 
         #endregion
 

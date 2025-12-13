@@ -9,7 +9,7 @@ namespace Model.Turrets
     {
         private const string PrefabPath = "Prefabs/Turrets/";
         private const float DefaultSellRatio = 0.5f;
-        private const float DamageMultiplier = 0.815f;
+        private const float DamageMultiplier = 0.65f;
 
         // The ROF is given by the animation speed
         public float Damage, ClusterDamage, Range, BulletSpeed;

@@ -51,7 +51,12 @@ namespace Prefabs
             {
                 while (true)
                 {
-                    yield return new WaitForSeconds(1f / model.Rate);
+                    var rate = model.Rate;
+                    if (_sm.SpecialAttackManager.HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) &&
+                        hasSpecialPowerup)
+                        rate *= 1.666f;
+                    
+                    yield return new WaitForSeconds(1f / rate);
                     // Check allowed drop zone
                     if (Mathf.Abs(bombSpawnPoint.position.x) > _sm.fieldLenght / 2 - dropMarginFromBase) continue;
 

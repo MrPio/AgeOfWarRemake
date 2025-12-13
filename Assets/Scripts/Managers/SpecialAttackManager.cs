@@ -28,6 +28,7 @@ namespace Managers
         [NonSerialized] public bool IsAttacking;
         private float _spawnX1, _spawnX2;
         private readonly Dictionary<ulong, float> _lastAttacks = new();
+        public readonly Dictionary<ulong, bool> HasSpecialPowerup = new();
         private SpecialAttack _currentSpecialModel;
         [SerializeField] private GameObject halo, plane, beam;
         private readonly List<PausableRigidbody> _bulletRBs = new();
@@ -113,6 +114,7 @@ namespace Managers
             {
                 yield return new WaitForSeconds(model.Duration);
                 IsAttacking = false;
+                HasSpecialPowerup[attackerId] = false;
             }
         }
 
@@ -123,13 +125,17 @@ namespace Managers
 
             IEnumerator SpawnRandomBullet()
             {
+                var rate = model.Rate;
+                if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
+                    rate *= 1.75f;
+
                 var start = Time.time;
                 while (start + model.Duration > Time.time)
                 {
                     var spawnX = Random.Range(_spawnX1, _spawnX2);
                     var angle = Random.Range(-model.MaxAngle, model.MaxAngle);
                     SpawnBulletRpc(attackerId, spawnX, angle);
-                    yield return new WaitForSeconds(1 / model.Rate);
+                    yield return new WaitForSeconds(1 / rate);
                 }
             }
         }
@@ -152,6 +158,10 @@ namespace Managers
             _sm.specialAttackRechargeBar.Recharge(1, 0, cooldown);
 
             _sm.MusicManager.PlayStartSpecial(model.Age);
+
+            // Disable any special powerups
+            if (NetworkManager.Singleton.LocalClientId == attackerId)
+                _sm.actionMenu.SetSpecialPowerup(false);
         }
 
         [Rpc(SendTo.Everyone)]
@@ -198,7 +208,8 @@ namespace Managers
         {
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
             var units = isAlly ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy;
-            _sm.logger.Log($"Spawning halos, Count: ally={_sm.GameManager.UnitsAlly.Count} enemy={_sm.GameManager.UnitsEnemy.Count} units={units.Count}");
+            _sm.logger.Log(
+                $"Spawning halos, Count: ally={_sm.GameManager.UnitsAlly.Count} enemy={_sm.GameManager.UnitsEnemy.Count} units={units.Count}");
 
             foreach (var unit in units)
                 AddHalo(unit);
@@ -214,11 +225,17 @@ namespace Managers
 
                 // Server-only
                 if (NetworkManager.Singleton.IsServer)
+                {
+                    var rate = model.Rate;
+                    if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
+                        rate *= 1.666f;
+
                     haloGo.AddComponent<Tickable>().Initialize(
-                        tickLength: 1f / model.Rate,
+                        tickLength: 1f / rate,
                         // Note: the damage for special 3 is negative
                         onTick: () => { unit.Damage(model.Damage / model.Rate); }
                     );
+                }
             }
 
             IEnumerator RemoveListener()
@@ -264,7 +281,12 @@ namespace Managers
             {
                 for (var i = 0; i < steps; i++)
                 {
-                    yield return new WaitForSeconds(1f / model.Rate);
+                    var rate = model.Rate;
+                    if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) &&
+                        hasSpecialPowerup)
+                        rate *= 1.666f;
+
+                    yield return new WaitForSeconds(1f / rate);
                     var spawnPos = new Vector3(x: (-xMin + i * stepLength) * (isAlly ? 1f : -1f), 20f, 0f);
                     var beamGo = Instantiate(beam, spawnPos, Quaternion.identity);
                     var rb = beamGo.GetComponent<Rigidbody>();

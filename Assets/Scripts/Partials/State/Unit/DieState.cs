@@ -1,4 +1,5 @@
-﻿using Partials.AI;
+﻿using Managers.Statics;
+using Partials.AI;
 
 namespace Partials.State.Unit
 {
@@ -15,7 +16,7 @@ namespace Partials.State.Unit
             unit.PlaySoundRpc(1);
             unit.DelayedDestroy();
 
-            // Add money to the enemy
+            // Add money/exp to the enemy
             var enemyBaseModel = unit.EnemyBase.Model.Value;
             if (unit.EnemyBase.IsBot.Value)
                 enemyBaseModel.Money += (int)(unit.Model.Value.Revenue * BotAI.BotIncomeMultiplier);
@@ -24,8 +25,9 @@ namespace Partials.State.Unit
             enemyBaseModel.Exp += unit.Model.Value.Revenue * 2;
             unit.EnemyBase.Model.Value = enemyBaseModel;
 
+            // Add exp to the ally
             var allyBaseModel = unit.AllyBase.Model.Value;
-            allyBaseModel.Exp += (int)(unit.Model.Value.Revenue * 0.5);
+            allyBaseModel.Exp += (int)(unit.Model.Value.Revenue * (DataManager.IsMultiplayer ? 1f : 0.5f));
             unit.AllyBase.Model.Value = allyBaseModel;
         }
 

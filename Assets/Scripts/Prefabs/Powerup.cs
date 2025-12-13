@@ -9,7 +9,8 @@ namespace Prefabs
     public enum PowerupType
     {
         Coin,
-        Exp
+        Exp,
+        Special
     }
 
     public class Powerup : MonoBehaviour
