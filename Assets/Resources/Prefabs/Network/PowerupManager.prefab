@@ -75,13 +75,21 @@ MonoBehaviour:
   - powerupType: 0
     prefab: {fileID: 2417145895366636383, guid: cbb756f8f95fb4f4c8f74684594cf016, type: 3}
     sprite: {fileID: -251265314, guid: c9f28972eb642d44ca994fa2bdc15055, type: 3}
-    probabilityWeight: 10
+    probabilityWeight: 100
   - powerupType: 1
     prefab: {fileID: 7711912184056228656, guid: 30205c1326c2cd144949905604500761, type: 3}
     sprite: {fileID: -1597780027, guid: c823051450dfcb44a9a0c79dcfbf8ad7, type: 3}
-    probabilityWeight: 10
+    probabilityWeight: 100
   - powerupType: 2
     prefab: {fileID: 2417145895366636383, guid: 1cf5258657037e44e9528d223031f77a, type: 3}
     sprite: {fileID: 21300000, guid: abf8f64c47c37e6498533d0c4ecb760b, type: 3}
-    probabilityWeight: 4
+    probabilityWeight: 40
+  - powerupType: 3
+    prefab: {fileID: 2417145895366636383, guid: 59b25c3ff054ff4499ad0298d290f2e7, type: 3}
+    sprite: {fileID: 21300000, guid: c8904c4899df0d948b81401cdaec3154, type: 3}
+    probabilityWeight: 9940
+  - powerupType: 4
+    prefab: {fileID: 2417145895366636383, guid: 08d94bf2cb1ff164b92a8076143de1c8, type: 3}
+    sprite: {fileID: 21300000, guid: 6e56dcefcdeee8b4d8c768bcc07625c2, type: 3}
+    probabilityWeight: 25
   spawnRange: 11

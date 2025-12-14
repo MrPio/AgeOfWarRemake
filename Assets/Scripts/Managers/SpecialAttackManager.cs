@@ -126,11 +126,15 @@ namespace Managers
             IEnumerator SpawnRandomBullet()
             {
                 var rate = model.Rate;
+                var duration = model.Duration;
                 if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
-                    rate *= 1.75f;
+                {
+                    rate *= 1.85f;
+                    duration *= 1.35f;
+                }
 
                 var start = Time.time;
-                while (start + model.Duration > Time.time)
+                while (start + duration > Time.time)
                 {
                     var spawnX = Random.Range(_spawnX1, _spawnX2);
                     var angle = Random.Range(-model.MaxAngle, model.MaxAngle);
@@ -206,6 +210,14 @@ namespace Managers
         [Rpc(SendTo.Everyone)]
         private void SpawnHaloRpc(SpecialAttack model, ulong attackerId)
         {
+            var rate = model.Rate;
+            var duration = model.Duration;
+            if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
+            {
+                rate *= 1.666f;
+                duration *= 1.35f;
+            }
+            
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
             var units = isAlly ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy;
             _sm.logger.Log(
@@ -221,14 +233,11 @@ namespace Managers
             {
                 var elapsed = Time.time - _lastAttacks[attackerId];
                 var haloGo = Instantiate(halo, unit.transform);
-                haloGo.AddComponent<Destroyable>().Initialize(lifespan: model.Duration - elapsed);
+                haloGo.AddComponent<Destroyable>().Initialize(lifespan: duration - elapsed);
 
                 // Server-only
                 if (NetworkManager.Singleton.IsServer)
                 {
-                    var rate = model.Rate;
-                    if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
-                        rate *= 1.666f;
 
                     haloGo.AddComponent<Tickable>().Initialize(
                         tickLength: 1f / rate,
@@ -241,7 +250,7 @@ namespace Managers
             IEnumerator RemoveListener()
             {
                 // TODO: wait for pause (ignore)
-                yield return new WaitForSeconds(model.Duration);
+                yield return new WaitForSeconds(duration);
                 (isAlly ? _sm.GameManager.OnAllySpawn : _sm.GameManager.OnEnemySpawn).Remove(AddHalo);
             }
         }

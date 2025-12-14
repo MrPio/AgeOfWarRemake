@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ExtensionFunctions;
 using Interfaces;
+using Prefabs;
 using UnityEngine;
 
 namespace Managers.Singletons
@@ -55,6 +56,16 @@ namespace Managers.Singletons
             new[] { "future_tank_attack" },
             // other ages
         };
+
+        private readonly Dictionary<PowerupType, string> _powerupClips =
+            new()
+            {
+                { PowerupType.Coin, "powerup_coin" },
+                { PowerupType.Exp, "powerup_exp" },
+                { PowerupType.Special, "powerup_special" },
+                { PowerupType.Speed, "powerup_speed" },
+                { PowerupType.Health, "powerup_health" },
+            };
 
         private readonly float[] _specialVolumes = { 0.35f, 0.5f, 0.35f, 0.5f, 0.7f };
 
@@ -116,9 +127,9 @@ namespace Managers.Singletons
             PlaySfx(type);
         }
 
-        public void PlayPopPowerup(bool collect)
+        public void PlayPopPowerup(bool collect, PowerupType type)
         {
-            PlaySfx(collect ? "powerup_collect" : "powerup_pop");
+            PlaySfx(collect ? _powerupClips[type] : "powerup_pop");
         }
 
         public void StartLevel()

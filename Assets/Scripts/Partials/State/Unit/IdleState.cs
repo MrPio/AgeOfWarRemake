@@ -26,7 +26,15 @@ namespace Partials.State.Unit
             var model = unit.Model.Value;
             if (!model.HasValue) return;
 
-            if (Time.time - LastShoot > 1 / model.ShootRate)
+            var shootRate = model.ShootRate;
+            // Check if this unit benefits from the speed powerup
+            if (unit.Sm.PowerupManager.SpeedPowerupCollectedTime.TryGetValue(unit.Owner,
+                    out var speedPowerupCollectedTime))
+                if (Time.time - speedPowerupCollectedTime < PowerupManager.SpeedPowerupDuration)
+                    shootRate *= 1.4f;
+
+
+            if (Time.time - LastShoot > 1 / shootRate)
             {
                 LastShoot = Time.time;
                 unit.PlayAnimation(Prefabs.Unit.ShootTrigger);

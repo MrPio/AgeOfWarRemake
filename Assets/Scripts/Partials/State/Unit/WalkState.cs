@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Managers;
+using UnityEngine;
 
 namespace Partials.State.Unit
 {
@@ -35,11 +36,23 @@ namespace Partials.State.Unit
             if (!model.HasValue) return;
             if (unit.Sm.GameManager.IsGamePaused) return;
 
+            var speed = model.MoveSpeed;
+            var shootRate = model.ShootRate;
+
+            // Check if this unit benefits from the speed powerup
+            if (unit.Sm.PowerupManager.SpeedPowerupCollectedTime.TryGetValue(unit.Owner,
+                    out var speedPowerupCollectedTime))
+                if (Time.time - speedPowerupCollectedTime < PowerupManager.SpeedPowerupDuration)
+                {
+                    speed *= 1.4f;
+                    shootRate *= 1.4f;
+                }
+
             #region Walking
 
             // It doesn't matter if the NetVar is updated more frequently than the tick rate.
             // The doc states that "during each network tick, changes to NetworkVariables are collected".
-            var dx = model.MoveSpeed * Time.deltaTime / _basesDistance;
+            var dx = speed * Time.deltaTime / _basesDistance;
             unit.Movement.X.Value += dx;
 
             // The server sets the position immediately
@@ -50,7 +63,7 @@ namespace Partials.State.Unit
 
             #region Shooting
 
-            if (Shooting && Time.time - LastShoot > 1 / model.ShootRate)
+            if (Shooting && Time.time - LastShoot > 1 / shootRate)
             {
                 LastShoot = Time.time;
                 unit.PlayAnimation(Prefabs.Unit.ShootTrigger);

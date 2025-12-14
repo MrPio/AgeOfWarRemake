@@ -24,7 +24,7 @@ namespace Managers
         private ToastManager _tm;
         private static GameManager _instance;
         private readonly ISerializer _serializer = BinarySerializer.Instance;
-        private const float DelayBeforePowerup = 5f, PowerUpDelayWithoutUnits = 4f, PowerUpDelayWithUnits = 8f;
+        private const float DelayBeforePowerup = 5f, PowerUpDelayWithoutUnits = 4f, PowerUpDelayWithUnits = 9f;
         [NonSerialized] public ulong HostId, ClientId;
         [NonSerialized] public readonly List<Unit> UnitsAlly = new(), UnitsEnemy = new();
         [NonSerialized] public Base BaseAlly = null, BaseEnemy = null;
@@ -36,6 +36,10 @@ namespace Managers
         public Base OwnerId2Base(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
             ? _sm.GameManager.BaseAlly
             : _sm.GameManager.BaseEnemy;
+        
+        public List<Unit> OwnerId2Units(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
+            ? _sm.GameManager.UnitsAlly
+            : _sm.GameManager.UnitsEnemy;
 
         public bool IsGamePaused
         {

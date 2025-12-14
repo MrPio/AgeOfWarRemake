@@ -10,7 +10,9 @@ namespace Prefabs
     {
         Coin,
         Exp,
-        Special
+        Special,
+        Speed,
+        Health,
     }
 
     public class Powerup : MonoBehaviour
@@ -30,6 +32,7 @@ namespace Prefabs
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
             _animator = GetComponent<Animator>();
         }
+
         private void Start()
         {
             _spawnTime = Time.time;

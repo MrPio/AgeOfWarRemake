@@ -30,7 +30,14 @@ namespace Partials.State.Unit
             var model = unit.Model.Value;
             if (!model.HasValue) return;
 
-            if (Time.time - LastAttack > model.AttackDuration)
+            var attackDuration = model.AttackDuration;
+            // Check if this unit benefits from the speed powerup
+            if (unit.Sm.PowerupManager.SpeedPowerupCollectedTime.TryGetValue(unit.Owner,
+                    out var speedPowerupCollectedTime))
+                if (Time.time - speedPowerupCollectedTime < PowerupManager.SpeedPowerupDuration)
+                    attackDuration *= 0.75f;
+
+            if (Time.time - LastAttack > attackDuration)
             {
                 LastAttack = Time.time;
                 unit.PlayAnimation(Prefabs.Unit.AttackTrigger);
