@@ -31,7 +31,7 @@ namespace Prefabs
             if (!IsServer || damage <= 0 || !Model.Value.HasValue || _isDestroyed || _sm.GameManager.IsGameOver) return;
 
             // Bot resistance
-            if (!DataManager.IsMultiplayer && IsBot.Value)
+            if (DataManager.GameMode is GameMode.Singleplayer && IsBot.Value)
                 damage *= 0.5f;
 
             var newModel = Model.Value;
@@ -129,7 +129,7 @@ namespace Prefabs
         private void Start()
         {
             // Spawn HP bar
-            if (DataManager.IsMultiplayer)
+            if (DataManager.GameMode is GameMode.Multiplayer)
             {
                 LoadHpBar();
                 _hpBar.SetValue(BaseFactory.Cave().MaxHp, BaseFactory.Cave().MaxHp, alsoText: true);
@@ -353,7 +353,7 @@ namespace Prefabs
             go.transform.position = Vector3.down * 100;
             _hpBar = go.GetComponent<HpBar>();
             _hpBar.Target = hpBarPoint;
-            _hpBar.Initialize(username: !DataManager.IsMultiplayer
+            _hpBar.Initialize(username: DataManager.GameMode is GameMode.Singleplayer
                 ? null
                 : IsOwner
                     ? DataManager.Username

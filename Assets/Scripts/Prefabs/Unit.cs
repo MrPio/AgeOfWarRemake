@@ -32,7 +32,7 @@ namespace Prefabs
                 Sm.GameManager.IsGameOver) return;
 
             // Bot resistance
-            if (!DataManager.IsMultiplayer && IsBot.Value)
+            if (DataManager.GameMode is GameMode.Singleplayer && IsBot.Value)
                 damage *= 0.9f;
 
             var newModel = Model.Value;
@@ -46,9 +46,10 @@ namespace Prefabs
 
         // Unit constants (Server-only)
         private const float SpawnWalkDelay = 0.25f;
-        private const float DeadDelay = 10.0f;
+        private const float DeadDelay = 8.0f;
         private const float MinUnitsDistance = 0.2f;
         private const float MinDistanceFromEnemyBase = 1.2f;
+        [NonSerialized] public BoxCollider BoxCollider;
         [NonSerialized] public float ColliderWidth;
 
         // Animation trigger hashes
@@ -387,8 +388,8 @@ namespace Prefabs
             // Store the unit prefab component references
             _animator = _unitPrefab.GetComponent<Animator>();
             _hpBarPoint = _unitPrefab.hpBarPoint;
-            ColliderWidth = _unitPrefab.GetComponent<BoxCollider>().size.x *
-                            math.abs(_unitPrefab.transform.localScale.x);
+            BoxCollider = _unitPrefab.GetComponent<BoxCollider>();
+            ColliderWidth = BoxCollider.size.x * math.abs(_unitPrefab.transform.localScale.x);
             _animationNotify = _unitPrefab.GetComponent<UnitAnimationEvents>();
 
             #region Animation events listeners
@@ -438,6 +439,8 @@ namespace Prefabs
 
         #endregion
 
+        #region RPC
+
         // Host & Client
         [Rpc(SendTo.Everyone)]
         public void PlaySoundRpc(byte soundType, bool isRanged = false)
@@ -446,12 +449,14 @@ namespace Prefabs
             switch (soundType)
             {
                 case 0:
-                    Sm.MusicManager.PlayAttack(AllyBase.Model.Value.Age, Model.Value.Level, isRanged: isRanged);
+                    Sm.MusicManager.PlayAttack(model.Age, model.Level, isRanged: isRanged);
                     break;
                 case 1:
                     Sm.MusicManager.PlayDie(model.Age, model.Level);
                     break;
             }
         }
+
+        #endregion
     }
 }

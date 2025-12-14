@@ -36,12 +36,12 @@ namespace UI.Menu
             quitButton.OnClick = Application.Quit;
             singleplayerButton.OnClick = () =>
             {
-                DataManager.IsMultiplayer = false;
+                DataManager.GameMode = GameMode.Singleplayer;
                 SceneManager.LoadScene("Game", LoadSceneMode.Single);
             };
             multiplayerButton.OnClick = () =>
             {
-                DataManager.IsMultiplayer = true;
+                DataManager.GameMode = GameMode.Multiplayer;
                 mainMenu.SetActive(false);
                 multiplayerMenu.SetActive(true);
             };

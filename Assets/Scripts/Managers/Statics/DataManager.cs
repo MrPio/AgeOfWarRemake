@@ -2,9 +2,14 @@
 
 namespace Managers.Statics
 {
+    public enum GameMode
+    {
+        Singleplayer,
+        Multiplayer
+    }
     public static class DataManager
     {
-        public static bool IsMultiplayer { get; set; }
+        public static GameMode GameMode { get; set; }
         public static bool IsHost { get; set; }
 
         public static string Username

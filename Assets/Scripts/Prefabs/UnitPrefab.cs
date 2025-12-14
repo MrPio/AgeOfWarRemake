@@ -67,7 +67,7 @@ namespace Prefabs
             // destroyable.Target = target.gameObject;
             destroyable.AllowedTags = new List<string> { "Base", "Unit" };
             destroyable.TargetOwner = Unit.IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
-            if (!DataManager.IsMultiplayer && !Unit.IsBot.Value)
+            if (DataManager.GameMode is GameMode.Singleplayer && !Unit.IsBot.Value)
                 destroyable.TargetOwner = 2;
 
             if (Unit.IsServer)

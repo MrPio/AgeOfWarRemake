@@ -59,7 +59,7 @@ namespace Managers
             PowerupManager = Instantiate(powerupManagerPrefab).GetComponent<PowerupManager>();
             PowerupManager.gameObject.name = "PowerupManager";
             loadingMenu.gameObject.SetActive(true);
-            loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost);
+            loadingMenu.Initialize(DataManager.GameMode is GameMode.Multiplayer, DataManager.IsHost);
             actionMenu.transform.parent.gameObject.SetActive(false);
             cam.GetComponent<CameraZoom>().enabled = false;
             cam.GetComponent<CameraEdgePan>().enabled = false;
@@ -71,8 +71,8 @@ namespace Managers
             actionMenu.transform.parent.gameObject.SetActive(true);
             cam.GetComponent<CameraZoom>().enabled = true;
             cam.GetComponent<CameraEdgePan>().enabled = true;
-            HostClientBanner.gameObject.SetActive(DataManager.IsMultiplayer);
-            if (DataManager.IsMultiplayer)
+            HostClientBanner.gameObject.SetActive(DataManager.GameMode is GameMode.Multiplayer);
+            if (DataManager.GameMode is GameMode.Multiplayer)
                 HostClientBanner.text = DataManager.IsHost ? "Host" : "Client";
 
 
@@ -91,7 +91,7 @@ namespace Managers
                 // Spawn enemy base
                 var enemyBase = Instantiate(basePrefab).GetComponent<NetworkObject>();
                 enemyBase.name = "Base (Enemy)";
-                enemyBase.GetComponent<Base>().IsBot.Value = !DataManager.IsMultiplayer;
+                enemyBase.GetComponent<Base>().IsBot.Value = DataManager.GameMode is GameMode.Singleplayer;
                 enemyBase.SpawnWithOwnership(GameManager.ClientId);
             }
         }
@@ -106,7 +106,7 @@ namespace Managers
             {
                 yield return new WaitForSeconds(1f);
 
-                if (DataManager.IsMultiplayer)
+                if (DataManager.GameMode is GameMode.Multiplayer)
                     GameManager.Winner = GameManager.BaseAlly.Model.Value.Hp <= 0.01
                         ? GameManager.BaseEnemy.OwnerClientId
                         : GameManager.BaseAlly.OwnerClientId;

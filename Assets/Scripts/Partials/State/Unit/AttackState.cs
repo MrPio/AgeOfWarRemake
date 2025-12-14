@@ -15,7 +15,7 @@ namespace Partials.State.Unit
         {
             var model = unit.Model.Value;
             unit.PlayAnimation(Prefabs.Unit.IdleTrigger);
-            if (DataManager.IsMultiplayer)
+            if (DataManager.GameMode is GameMode.Multiplayer)
             {
                 // Add up to 2 seconds of delay
                 var toWait = (float)new System.Random().NextDouble() * 1.5f;
