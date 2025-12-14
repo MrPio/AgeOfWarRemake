@@ -20,14 +20,14 @@ namespace Prefabs
         [SerializeField] private Transform bombSpawnPoint;
         private Rigidbody _rb;
 
-        private void Start()
+        private void Awake()
         {
             _sm = GameObject.FindWithTag("SceneManager").GetComponent<SceneManager>();
         }
 
-        // Host&Client
+        // Host & Client
         public void Initialize(SpecialAttack model, bool isLeft, ulong attackerId, Action<GameObject> onBombSpawn,
-                               Action<GameObject> onBombExplode)
+                               Action<GameObject> onBombExplode, bool hasSpecialPowerup)
         {
             // Set dynamics
             transform.position = new Vector3(
@@ -52,10 +52,9 @@ namespace Prefabs
                 while (true)
                 {
                     var rate = model.Rate;
-                    if (_sm.SpecialAttackManager.HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) &&
-                        hasSpecialPowerup)
+                    if (hasSpecialPowerup)
                         rate *= 1.666f;
-                    
+
                     yield return new WaitForSeconds(1f / rate);
                     // Check allowed drop zone
                     if (Mathf.Abs(bombSpawnPoint.position.x) > _sm.fieldLenght / 2 - dropMarginFromBase) continue;

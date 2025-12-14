@@ -6384,7 +6384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1d9cbfc74d4f7342abdb11e1a318107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldLenght: 23
+  fieldLenght: 25
   hpBarHorizontal: {fileID: 5319533488982568307, guid: 6c842d3db0c83e241b74020aadfa3cd1, type: 3}
   hpBarVertical: {fileID: 5319533488982568307, guid: bab97e2e710181049b68b1e27a5595e7, type: 3}
   floatingText: {fileID: 4782190510778225800, guid: 52366de1db3659c4baef15f10b2fef22, type: 3}

@@ -91,19 +91,21 @@ namespace Managers
             IsAttacking = true; // Must go after any return
 
             InitializeSpecialAttackRpc(model, attackerId);
+
+            var hasSpecialPowerup = HasSpecialPowerup.ContainsKey(attackerId) && HasSpecialPowerup[attackerId];
             switch (model.Type)
             {
                 case SpecialType.Rain:
-                    RainSpecial(model, attackerId);
+                    RainSpecial(model, attackerId, hasSpecialPowerup);
                     break;
                 case SpecialType.Heal:
-                    SpawnHaloRpc(model, attackerId);
+                    SpawnHaloRpc(model, attackerId, hasSpecialPowerup);
                     break;
                 case SpecialType.Scan:
                     if (model.Age == 4)
-                        SpawnPlaneRpc(model, attackerId);
+                        SpawnPlaneRpc(model, attackerId, hasSpecialPowerup);
                     else if (model.Age == 5)
-                        RunSatelliteRpc(model, attackerId);
+                        RunSatelliteRpc(model, attackerId, hasSpecialPowerup);
                     break;
             }
 
@@ -118,7 +120,7 @@ namespace Managers
             }
         }
 
-        private void RainSpecial(SpecialAttack model, ulong attackerId)
+        private void RainSpecial(SpecialAttack model, ulong attackerId, bool hasSpecialPowerup)
         {
             StartCoroutine(SpawnRandomBullet());
             return;
@@ -127,7 +129,7 @@ namespace Managers
             {
                 var rate = model.Rate;
                 var duration = model.Duration;
-                if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
+                if (hasSpecialPowerup)
                 {
                     rate *= 1.85f;
                     duration *= 1.35f;
@@ -208,16 +210,16 @@ namespace Managers
         }
 
         [Rpc(SendTo.Everyone)]
-        private void SpawnHaloRpc(SpecialAttack model, ulong attackerId)
+        private void SpawnHaloRpc(SpecialAttack model, ulong attackerId, bool hasSpecialPowerup)
         {
             var rate = model.Rate;
             var duration = model.Duration;
-            if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) && hasSpecialPowerup)
+            if (hasSpecialPowerup)
             {
                 rate *= 1.666f;
                 duration *= 1.35f;
             }
-            
+
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
             var units = isAlly ? _sm.GameManager.UnitsAlly : _sm.GameManager.UnitsEnemy;
             _sm.logger.Log(
@@ -238,7 +240,6 @@ namespace Managers
                 // Server-only
                 if (NetworkManager.Singleton.IsServer)
                 {
-
                     haloGo.AddComponent<Tickable>().Initialize(
                         tickLength: 1f / rate,
                         // Note: the damage for special 3 is negative
@@ -256,7 +257,7 @@ namespace Managers
         }
 
         [Rpc(SendTo.Everyone)]
-        private void SpawnPlaneRpc(SpecialAttack model, ulong attackerId)
+        private void SpawnPlaneRpc(SpecialAttack model, ulong attackerId, bool hasSpecialPowerup)
         {
             var isAlly = NetworkManager.Singleton.LocalClientId == attackerId;
             var planeGo = Instantiate(plane, Vector3.up * 999f, Quaternion.identity).GetComponent<Plane>();
@@ -272,12 +273,13 @@ namespace Managers
                     if (_sm.GameManager.IsGamePaused)
                         pausableRb.Pause();
                 },
-                onBombExplode: bomb => { _bulletRBs.Remove(bomb.GetComponentInChildren<PausableRigidbody>()); }
+                onBombExplode: bomb => { _bulletRBs.Remove(bomb.GetComponentInChildren<PausableRigidbody>()); },
+                hasSpecialPowerup: hasSpecialPowerup
             );
         }
 
         [Rpc(SendTo.Everyone)]
-        private void RunSatelliteRpc(SpecialAttack model, ulong attackerId)
+        private void RunSatelliteRpc(SpecialAttack model, ulong attackerId, bool hasSpecialPowerup)
         {
             var steps = model.Duration * model.Rate;
             var xMin = _sm.fieldLenght / 2 - 1.5f;
@@ -291,8 +293,7 @@ namespace Managers
                 for (var i = 0; i < steps; i++)
                 {
                     var rate = model.Rate;
-                    if (HasSpecialPowerup.TryGetValue(attackerId, out var hasSpecialPowerup) &&
-                        hasSpecialPowerup)
+                    if (hasSpecialPowerup)
                         rate *= 1.666f;
 
                     yield return new WaitForSeconds(1f / rate);

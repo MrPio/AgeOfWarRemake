@@ -155,17 +155,17 @@ namespace Prefabs
                 Model.Value = newModel;
             }
 
+#if UNITY_EDITOR
             // Add cheats to both players
-            if (IsCheating && IsHost && !IsBot.Value)
+            if (IsCheating && !IsBot.Value)
             {
                 // Add infinite money and exp
                 var newModel = Model.Value;
-#if UNITY_EDITOR
                 newModel.Money = 9_999_999;
                 newModel.Exp = 9_999_999;
-#endif
                 Model.Value = newModel;
             }
+#endif
 
             Model.OnValueChanged += OnModelChanged;
             OnModelChanged(default, Model.Value);

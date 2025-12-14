@@ -2359,6 +2359,8 @@ MonoBehaviour:
   onTrigger: 0
   spawnOnDestroy: {fileID: 0}
   lifespan: 5
+  destroyDelay: 0.06
+  AllowedTags: []
 --- !u!1 &1099805815232518
 GameObject:
   m_ObjectHideFlags: 0
@@ -9320,7 +9322,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d1e8cfe56c1c0d4eb2b2a2cc37be991, type: 2}
+  - {fileID: 2100000, guid: 2017532490caf3041bf56b45e5218414, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13998,7 +14000,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0d1e8cfe56c1c0d4eb2b2a2cc37be991, type: 2}
+  - {fileID: 2100000, guid: 2017532490caf3041bf56b45e5218414, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

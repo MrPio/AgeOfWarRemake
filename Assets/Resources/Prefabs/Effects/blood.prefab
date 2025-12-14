@@ -403,7 +403,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1000
+      scalar: 1250
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -2327,3 +2327,5 @@ MonoBehaviour:
   onTrigger: 0
   spawnOnDestroy: {fileID: 0}
   lifespan: 5
+  destroyDelay: 0.06
+  AllowedTags: []
