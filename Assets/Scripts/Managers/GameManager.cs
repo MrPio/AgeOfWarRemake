@@ -33,7 +33,7 @@ namespace Managers
         [NonSerialized] public float GameTime, GameStartTime;
         private bool _isGamePaused;
 
-        public Base Player2Enemy(ulong ownerId) => ownerId == HostId
+        public ulong Player2Enemy(ulong ownerId) => ownerId == HostId
             ? ClientId
             : HostId;
 
