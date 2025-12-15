@@ -20,7 +20,7 @@ namespace Prefabs
         // Animation trigger hashes
         private static readonly int IdleTrigger = Animator.StringToHash("idle");
         private static readonly int AttackTrigger = Animator.StringToHash("attack");
-        public static readonly float UnitAimUp = 0.5f;
+        public static readonly float UnitAimUp = 0.3f;
 
         #endregion
 
@@ -229,8 +229,8 @@ namespace Prefabs
                 destroyable.TargetOwner = (DataManager.IsSingleplayer && !IsBot.Value) ? 2 :
                     IsOwnedByServer ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
 
-                _sm.logger.Log(
-                    $"Launch bullet. (TargetOwner={destroyable.TargetOwner})");
+                // _sm.logger.Log(
+                //     $"Launch bullet. (TargetOwner={destroyable.TargetOwner})");
 
                 if (IsServer)
                     destroyable.OnDamage = target => target.Damage(Model.Value.Damage);

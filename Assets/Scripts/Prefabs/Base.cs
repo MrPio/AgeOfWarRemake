@@ -111,8 +111,8 @@ namespace Prefabs
 
             if (_isLeft)
                 _sm.statsMenu.UpdateUI(Model.Value.Money, Model.Value.Exp);
-            else if (IsBot.Value)
-                _sm.logger.Log($"[BOT Status] Money={Model.Value.Money}, Exp={Model.Value.Exp}.");
+            // else if (IsBot.Value)
+            //     _sm.logger.Log($"[BOT Status] Money={Model.Value.Money}, Exp={Model.Value.Exp}.");
         }
 
         #endregion
@@ -371,8 +371,8 @@ namespace Prefabs
             for (var i = 0; i < Turrets.Count; i++)
                 if (Turrets[i] is not null)
                 {
-                    _sm.logger.Log(
-                        $"Setting Pos for turret {i}. From={Turrets[i].transform.position}, to={BasePrefab.turretsPos[i].transform.position}");
+                    // _sm.logger.Log(
+                    //     $"Setting Pos for turret {i}. From={Turrets[i].transform.position}, to={BasePrefab.turretsPos[i].transform.position}");
                     Turrets[i].transform.position = BasePrefab.turretsPos[i].transform.position;
                 }
         }

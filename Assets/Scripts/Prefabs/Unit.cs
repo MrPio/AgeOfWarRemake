@@ -403,7 +403,7 @@ namespace Prefabs
 
             if (IsServer)
             {
-                Sm.logger.Log($"Registering Animation OnAttack events for {name}");
+                // Sm.logger.Log($"Registering Animation OnAttack events for {name}");
                 _animationNotify.OnAttack = () =>
                 {
                     // If not dying

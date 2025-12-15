@@ -53,10 +53,10 @@ namespace Model.Turrets
         private static Turret TitaniumShooter() => new(damage: 100, range: 8.5f, cost: 24_000,
             displayName: "Titanium Shooter", "turret_5_1", bulletSpeed: 4f, level: 1, age: 5);
 
-        private static Turret LaserCannon() => new(damage: 65, range: 10f, cost: 40_000,
+        private static Turret LaserCannon() => new(damage: 60, range: 10f, cost: 40_000,
             displayName: "Laser Cannon", "turret_5_2", bulletSpeed: 5f, level: 2, age: 5);
 
-        private static Turret IonCannon() => new(damage: 85, range: 14f, cost: 100_000,
+        private static Turret IonCannon() => new(damage: 75, range: 13f, cost: 100_000,
             displayName: "Ion Cannon", "turret_5_3", bulletSpeed: 6f, level: 3, age: 5);
 
         public static readonly List<List<Func<Turret>>> Turrets = new()
