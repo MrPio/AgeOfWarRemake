@@ -65,7 +65,7 @@ namespace Model.Units
             damage: 600, shootDamage: 500f, shootRate: 0.55f, attackDuration: 1f / 0.45f, maxShootingDistance: 4f,
             cost: 20_000, revenue: 26_000, spawnTime: 8, level: 3, age: 5);
 
-        private static Unit Trooper4() => new(displayName: "Super Soldier", prefabName: "trooper_4", maxHp: 6_000,
+        private static Unit Trooper4() => new(displayName: "Super Soldier", prefabName: "trooper_4", maxHp: 5_000,
             damage: 400, shootDamage: 80f, attackDuration: 1.5f, shootRate: 0.85f, cost: 150_000, revenue: 200_000,
             spawnTime: 3, level: 4, maxShootingDistance: 6.5f, age: 5);
 

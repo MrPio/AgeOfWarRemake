@@ -30,7 +30,7 @@ namespace Managers
         [SerializeField] private float spawnRange = 10f;
         private readonly List<Powerup> _spawnedPowerups = new();
         public readonly Dictionary<ulong, float> SpeedPowerupCollectedTime = new();
-        public const float SpeedPowerupDuration = 15f;
+        public const float SpeedPowerupDuration = 30f;
 
 
         private void Awake()
@@ -115,8 +115,8 @@ namespace Managers
             _spawnedPowerups.Remove(powerup);
 
             // Add money/exp to collector's base
-            var collectorBase = _sm.GameManager.OwnerId2Base(collectorId);
-            var collectorUnits = _sm.GameManager.OwnerId2Units(collectorId);
+            var collectorBase = _sm.GameManager.Owner2Base(collectorId);
+            var collectorUnits = _sm.GameManager.Owner2Units(collectorId);
             var newModel = collectorBase.Model.Value;
             if (powerup.Type == PowerupType.Coin)
                 newModel.Money += powerup.Value;

@@ -31,9 +31,16 @@ namespace Prefabs
             if (!IsServer /*|| damage <= 0*/ || !Model.Value.HasValue || State is DieState || _isDestroyed ||
                 Sm.GameManager.IsGameOver) return;
 
-            // Bot resistance
-            if (DataManager.GameMode is GameMode.Singleplayer && IsBot.Value)
-                damage *= 0.9f;
+            // Bot has more resistance
+            if (DataManager.IsSingleplayer && IsBot.Value)
+                damage *= 0.85f;
+
+            // When attacker belongs to a lower age, it deals less damage, to encourage that player to evolve
+            var attackedBase = Sm.GameManager.Owner2Base(OwnerClientId).Model.value;
+            var attackerId=Sm.GameManager.Player2Enemy(OwnerClientId);
+            var attackerBase = Sm.GameManager.Owner2Base(attackerId).Model.value;
+            if (attackerBase.Age<attackedBase.Age)
+                damage *= 0.75f;
 
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);

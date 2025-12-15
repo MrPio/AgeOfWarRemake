@@ -33,18 +33,22 @@ namespace Managers
         [NonSerialized] public float GameTime, GameStartTime;
         private bool _isGamePaused;
 
-        public Base OwnerId2Base(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
+        public Base Player2Enemy(ulong ownerId) => ownerId == HostId
+            ? ClientId
+            : HostId;
+
+        public Base Owner2Base(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
             ? _sm.GameManager.BaseAlly
             : _sm.GameManager.BaseEnemy;
-        
-        public List<Unit> OwnerId2Units(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
+
+        public List<Unit> Owner2Units(ulong ownerId) => ownerId == NetworkManager.Singleton.LocalClientId
             ? _sm.GameManager.UnitsAlly
             : _sm.GameManager.UnitsEnemy;
 
         public bool IsGamePaused
         {
             get => _isGamePaused;
-            set => _isGamePaused = DataManager.GameMode is GameMode.Singleplayer
+            set => _isGamePaused = DataManager.IsSingleplayer
                 ? value
                 : throw new InvalidOperationException("Cannot pause in multiplayer mode.");
         }
@@ -81,7 +85,7 @@ namespace Managers
                 }
             }
 
-            if (DataManager.GameMode is GameMode.Singleplayer)
+            if (DataManager.IsSingleplayer)
                 ClientId = HostId; // the bot is the same machine as the host TODO: client is not 2, check ownerships in bullets collisions
 
             if (newValue)
@@ -122,9 +126,9 @@ namespace Managers
         {
             // Initialize logger
             _sm.logger.LOGFileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") +
-                                     $" {(DataManager.GameMode is GameMode.Multiplayer ? DataManager.IsHost ? "Host" : "Client" : "Singleplayer")}";
+                                     $" {(DataManager.IsMultiplayer ? DataManager.IsHost ? "Host" : "Client" : "Singleplayer")}";
             _sm.logger.Log(
-                $"Starting a {(DataManager.GameMode is GameMode.Multiplayer ? "Multiplayer" : "Singleplayer")} game");
+                $"Starting a {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")} game");
 
             // Login Unity services 
             await UnityServices.InitializeAsync();
@@ -133,7 +137,7 @@ namespace Managers
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
             // Start Host or Client depending on isMultiplayer bool
-            if (DataManager.GameMode is GameMode.Multiplayer)
+            if (DataManager.IsMultiplayer)
             {
                 _sm.logger.Log($"Starting as {(DataManager.IsHost ? "Host" : "Client")}");
                 /*PlayAsHost = _serializer.Deserialize(ISerializer.DebugDir, "NeedHost", true);
@@ -147,7 +151,7 @@ namespace Managers
                 {
                     _tm.MakeToast("Creating lobby...", ToastColor.Cyan);
                     DataManager.LobbyCode = await _sm.RelayManager.CreateRelay();
-                    _sm.loadingMenu.Initialize(DataManager.GameMode is GameMode.Multiplayer, DataManager.IsHost,
+                    _sm.loadingMenu.Initialize(DataManager.IsMultiplayer, DataManager.IsHost,
                         DataManager.LobbyCode);
                 }
                 else
@@ -186,7 +190,7 @@ namespace Managers
             {
                 NetworkManager.Singleton.OnClientDisconnectCallback += EndGameClient;
                 if (NetworkManager.Singleton.ConnectedClients.Count !=
-                    (DataManager.GameMode is GameMode.Multiplayer ? 2 : 1))
+                    (DataManager.IsMultiplayer ? 2 : 1))
                     EndGameClient(0);
             }
 
@@ -229,7 +233,7 @@ namespace Managers
 
             // Add money per second if multiplayer (Server-only)
             if (IsServer && BaseAlly is not null && BaseEnemy is not null &&
-                DataManager.GameMode is GameMode.Multiplayer)
+                DataManager.IsMultiplayer)
                 if (Time.time - _lastMoneyPerSecond > 1)
                 {
                     _lastMoneyPerSecond = Time.time;
@@ -243,7 +247,7 @@ namespace Managers
                 }
 
             // Spawn Powerup (if multiplayer) (Server-only)
-            if (IsServer && DataManager.GameMode is GameMode.Multiplayer)
+            if (IsServer && DataManager.IsMultiplayer)
             {
                 if (UnitsAlly.Count > 0 || UnitsEnemy.Count > 0)
                     LastSpawnedUnit += Time.deltaTime;
@@ -287,7 +291,7 @@ namespace Managers
         private void TryStartGame()
         {
             if (NetworkManager.Singleton.ConnectedClients.Count ==
-                (DataManager.GameMode is GameMode.Multiplayer ? 2 : 1)) // This includes the host
+                (DataManager.IsMultiplayer ? 2 : 1)) // This includes the host
             {
                 _sm.logger.Log("Both players connected. Starting game.", LogType.HostClientConnection);
                 _gameStarted.Value = true;

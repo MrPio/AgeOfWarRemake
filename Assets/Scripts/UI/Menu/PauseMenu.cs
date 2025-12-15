@@ -34,7 +34,7 @@ namespace UI.Menu
             timerText.text = $"{_sm.GameManager.GameTime / 60f:00}m  {_sm.GameManager.GameTime % 60f:00}s";
             cameraEdgePan.enabled = false;
             cameraZoom.enabled = false;
-            if (DataManager.GameMode is GameMode.Singleplayer)
+            if (DataManager.IsSingleplayer)
                 _sm.GameManager.IsGamePaused = true;
         }
 
@@ -42,7 +42,7 @@ namespace UI.Menu
         {
             cameraEdgePan.enabled = true;
             cameraZoom.enabled = true;
-            if (DataManager.GameMode is GameMode.Singleplayer)
+            if (DataManager.IsSingleplayer)
                 _sm.GameManager.IsGamePaused = false;
         }
 

@@ -308,7 +308,7 @@ namespace Managers
 
                     var destroyable = beamGo.GetComponent<Destroyable>();
                     destroyable.AllowedTags = new List<string> { "Unit", "Ground" };
-                    destroyable.TargetOwner = DataManager.GameMode is GameMode.Singleplayer && isAlly ? 2 :
+                    destroyable.TargetOwner = DataManager.IsSingleplayer && isAlly ? 2 :
                         attackerId == _sm.GameManager.HostId ? _sm.GameManager.ClientId : _sm.GameManager.HostId;
                     destroyable.OnDestroy = () =>
                     {

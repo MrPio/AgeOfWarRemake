@@ -41,7 +41,7 @@ namespace Prefabs
         // Server & Client
         public void Init(PowerupType powerupType, int value)
         {
-            if (DataManager.GameMode is GameMode.Singleplayer)
+            if (DataManager.IsSingleplayer)
                 throw new Exception("Powerup works only in multiplayer!");
 
             Type = powerupType;

@@ -36,7 +36,7 @@ namespace UI
         private void Start()
         {
             Log(
-                $"[{LOGFileName}] (DataManager) Playing {(DataManager.GameMode is GameMode.Multiplayer ? "Multiplayer" : "Singleplayer")}");
+                $"[{LOGFileName}] (DataManager) Playing {(DataManager.IsMultiplayer ? "Multiplayer" : "Singleplayer")}");
             _canvasGroup = GetComponent<CanvasGroup>();
             _canvasGroup.alpha = 0;
         }
