@@ -13,8 +13,6 @@ And one day I thought, why not add *multiplayer* to Age of War? Imagine what gre
 
 ### ⬇️ Download it [HERE](https://github.com/MrPio/AgeOfWarRemake/releases)
 
-### [🌍 Play it on the web!](https://play.unity.com/en/games/8855a17f-c0de-4228-b5c1-584523992a17/age-of-war-remake)
-
 
 These are some of the models I've already made in Blender:
 <p align="center">
