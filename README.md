@@ -2,7 +2,7 @@
 
 ### Age of War + 3D + Multiplayer = ❤️
 
-And one day I thought, why not add *multiplayer* to Age of War? Imagine what great fights you could experience instead of the same static AI!
+And one day I thought, why not add some *multiplayer* to Age of War? Imagine what great fights you could experience with your friends instead of the same static AI!
 
 ### [⬇️ Download it HERE](https://github.com/MrPio/AgeOfWarRemake/releases)
 
@@ -13,7 +13,7 @@ And one day I thought, why not add *multiplayer* to Age of War? Imagine what gre
   </a>
 </p>
 
-These are some of the models I've already made in Blender:
+These are some of the models I've made in Blender:
 <p align="center">
   <img width="100%" alt="Base3" src="https://github.com/user-attachments/assets/d250082f-a4a5-4af1-9367-aa43fedace4c" />
     <img width="75%" alt="Knight3-2" src="https://github.com/user-attachments/assets/08ff6eed-0826-4a3b-8088-d52ab07b7455" />
