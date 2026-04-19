@@ -24,16 +24,16 @@ namespace Partials.AI
         public const float BotIncomeMultiplier = 1.75f;
 
         [SerializeField]
-        private float[] phaseDurations = { 60f, 60f }; // [0]=melee, [1]=melee+range, [2]=melee+range+tank
+        private float[] phaseDurations = { 90f, 90f }; // [0]=melee, [1]=melee+range, [2]=melee+range+tank
 
         private readonly Dictionary<Phase, List<float>> _turretWeights = new()
         {
-            { Phase.Melee, new List<float> { 1f, 0.33f, 0f } },
-            { Phase.Range, new List<float> { 1f, 0.75f, 0.5f } },
-            { Phase.Tank, new List<float> { 1f, 1f, 1f } }
+            { Phase.Melee, new List<float> { 1f, 0.25f, 0f } },
+            { Phase.Range, new List<float> { 1f, 0.75f, 0.2f } },
+            { Phase.Tank, new List<float> { 1f, 1f, 0.65f } }
         };
 
-        [SerializeField] private float[] initialAgeIntervals = { 360f, 380f, 400f, 420f };
+        [SerializeField] private float[] initialAgeIntervals = { 300f, 300f, 300f, 300f };
         [SerializeField] private float initialTurretInterval = 30f;
         private Base _base;
         private SceneManager _sm;
