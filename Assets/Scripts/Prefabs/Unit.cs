@@ -37,10 +37,10 @@ namespace Prefabs
 
             // When attacker belongs to a lower age, it deals less damage, to encourage that player to evolve
             var attackedBase = Sm.GameManager.Owner2Base(OwnerClientId).Model.Value;
-            var attackerId=Sm.GameManager.Player2Enemy(OwnerClientId);
+            var attackerId = Sm.GameManager.Player2Enemy(OwnerClientId);
             var attackerBase = Sm.GameManager.Owner2Base(attackerId).Model.Value;
-            if (attackerBase.Age<attackedBase.Age)
-                damage *= 0.75f;
+            if (attackerBase.Age < attackedBase.Age)
+                damage *= Mathf.Pow(0.9f, attackedBase.Age - attackerBase.Age);
 
             var newModel = Model.Value;
             newModel.Hp = Mathf.Clamp(newModel.Hp - damage, 0, newModel.MaxHp);
